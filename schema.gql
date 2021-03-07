@@ -1,0 +1,93 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Order {
+  """Id of order"""
+  id: String!
+
+  """Order name"""
+  name: String!
+}
+
+type Customer {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type Employee {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type Material {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type Query {
+  orders: [Order!]!
+  order(id: String!): Order!
+  customer(id: Int!): Customer!
+  employee(id: Int!): Employee!
+  material(id: Int!): Material!
+}
+
+type Mutation {
+  createOrder(createOrderInput: CreateOrderInput!): Order!
+  updateOrder(updateOrderInput: UpdateOrderInput!): Order!
+  removeOrder(id: Int!): Order!
+  createCustomer(createCustomerInput: CreateCustomerInput!): Customer!
+  updateCustomer(updateCustomerInput: UpdateCustomerInput!): Customer!
+  removeCustomer(id: Int!): Customer!
+  createEmployee(createEmployeeInput: CreateEmployeeInput!): Employee!
+  updateEmployee(updateEmployeeInput: UpdateEmployeeInput!): Employee!
+  removeEmployee(id: Int!): Employee!
+  createMaterial(createMaterialInput: CreateMaterialInput!): Material!
+  updateMaterial(updateMaterialInput: UpdateMaterialInput!): Material!
+  removeMaterial(id: Int!): Material!
+}
+
+input CreateOrderInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateOrderInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateCustomerInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateCustomerInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateEmployeeInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateEmployeeInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateMaterialInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateMaterialInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
