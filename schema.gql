@@ -11,13 +11,18 @@ type Order {
 }
 
 type Customer {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  """Id of Customer"""
+  id: Int!
+  fullName: String!
+  company: String!
+  notes: String!
 }
 
 type Employee {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  """Id of employee"""
+  id: Int!
+  fullName: String!
+  position: String!
 }
 
 type Material {
@@ -28,7 +33,9 @@ type Material {
 type Query {
   orders: [Order!]!
   order(id: String!): Order!
+  customers: [Customer!]!
   customer(id: Int!): Customer!
+  employees: [Employee!]!
   employee(id: Int!): Employee!
   material(id: Int!): Material!
 }
@@ -71,14 +78,25 @@ input UpdateCustomerInput {
 }
 
 input CreateEmployeeInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  """Id of employee"""
+  id: Int!
+
+  """Full Name of employee"""
+  fullName: String!
+
+  """Position of employee"""
+  position: String!
 }
 
 input UpdateEmployeeInput {
-  """Example field (placeholder)"""
-  exampleField: Int
+  """Id of employee"""
   id: Int!
+
+  """Full Name of employee"""
+  fullName: String!
+
+  """Position of employee"""
+  position: String!
 }
 
 input CreateMaterialInput {

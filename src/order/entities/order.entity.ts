@@ -6,6 +6,7 @@ import {
   ObjectIdColumn,
   // PrimaryGeneratedColumn,
 } from 'typeorm';
+
 @ObjectType()
 @Entity({})
 export class Order {
@@ -13,7 +14,7 @@ export class Order {
   @ObjectIdColumn()
   // @PrimaryGeneratedColumn('uuid')
   // id: ObjectID;
-  id: String;
+  id: string;
 
   @Field(() => String, { nullable: false, description: 'Order name' })
   name: string;

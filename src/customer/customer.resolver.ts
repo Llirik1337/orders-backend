@@ -13,7 +13,7 @@ export class CustomerResolver {
     return this.customerService.create(createCustomerInput);
   }
 
-  @Query(() => [Customer], { name: 'customer' })
+  @Query(() => [Customer], { name: 'customers' })
   findAll() {
     return this.customerService.findAll();
   }
