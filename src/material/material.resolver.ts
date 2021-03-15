@@ -13,7 +13,7 @@ export class MaterialResolver {
     return this.materialService.create(createMaterialInput);
   }
 
-  @Query(() => [Material], { name: 'material' })
+  @Query(() => [Material], { name: 'materials' })
   findAll() {
     return this.materialService.findAll();
   }

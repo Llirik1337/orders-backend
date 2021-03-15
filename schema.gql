@@ -26,8 +26,12 @@ type Employee {
 }
 
 type Material {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  """Id of Customer"""
+  id: Int!
+  name: String!
+  units: String!
+  cost: Float!
+  isAvailable: Boolean!
 }
 
 type Query {
@@ -37,6 +41,7 @@ type Query {
   customer(id: Int!): Customer!
   employees: [Employee!]!
   employee(id: Int!): Employee!
+  materials: [Material!]!
   material(id: Int!): Material!
 }
 

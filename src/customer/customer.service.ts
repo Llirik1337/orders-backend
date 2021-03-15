@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { CreateCustomerInput } from './dto/create-customer.input';
 import { UpdateCustomerInput } from './dto/update-customer.input';
 import { Customer } from './entities/customer.entity';
-import { Employee } from '../employee/entities/employee.entity';
 
 let customers: Customer[] = [];
 
