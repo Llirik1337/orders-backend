@@ -1,19 +1,43 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCustomerInput } from './dto/create-customer.input';
 import { UpdateCustomerInput } from './dto/update-customer.input';
+import { Customer } from './entities/customer.entity';
+import { Employee } from '../employee/entities/employee.entity';
+
+let customers: Customer[] = [];
+
+// Да сука обычный for. ВО - первых нахуй иди, один тут работаю за двоих,
+// а во - вторых, хули ты мне сделаешь, в третьих за мат извини
+for (let i = 1; i <= 60; ++i) {
+  customers.push({
+    id: i,
+    fullName: `Заказчик ${i}`,
+    company: `Компанич ${i}`,
+    notes: '',
+  });
+}
+
+let maxIdCustomers = 60;
 
 @Injectable()
 export class CustomerService {
   create(createCustomerInput: CreateCustomerInput) {
-    return 'This action adds a new customer';
+    const item = new Customer();
+
+    item.id = ++maxIdCustomers;
+    item.fullName = createCustomerInput.fullName;
+
+    customers.push(item);
+
+    return item;
   }
 
   findAll() {
-    return `This action returns all customer`;
+    return customers;
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} customer`;
+    return customers.find((item) => item.id === id);
   }
 
   update(id: number, updateCustomerInput: UpdateCustomerInput) {

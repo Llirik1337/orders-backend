@@ -67,20 +67,22 @@ input UpdateOrderInput {
 }
 
 input CreateCustomerInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  """Full Name of customer"""
+  fullName: String!
+  company: String!
+  notes: String!
 }
 
 input UpdateCustomerInput {
-  """Example field (placeholder)"""
-  exampleField: Int
+  fullName: String!
+  company: String!
+  notes: String!
+
+  """Id of Customer"""
   id: Int!
 }
 
 input CreateEmployeeInput {
-  """Id of employee"""
-  id: Int!
-
   """Full Name of employee"""
   fullName: String!
 
@@ -89,14 +91,14 @@ input CreateEmployeeInput {
 }
 
 input UpdateEmployeeInput {
-  """Id of employee"""
-  id: Int!
-
   """Full Name of employee"""
   fullName: String!
 
   """Position of employee"""
   position: String!
+
+  """Id of employee"""
+  id: Int!
 }
 
 input CreateMaterialInput {

@@ -39,7 +39,7 @@ export class EmployeeService {
   }
 
   findOne(id: number) {
-    return employees.find((emp) => emp.id === id);
+    return employees.find((item) => item.id === id);
   }
 
   update(id: number, updateEmployeeInput: UpdateEmployeeInput) {
