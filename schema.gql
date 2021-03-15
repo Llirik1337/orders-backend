@@ -2,20 +2,24 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Order {
-  """Id of order"""
-  id: String!
-
-  """Order name"""
-  name: String!
-}
-
 type Customer {
   """Id of Customer"""
   id: Int!
   fullName: String!
   company: String!
   notes: String!
+}
+
+type Order {
+  """Id of Customer"""
+  id: Int!
+
+  """Order name"""
+  name: String!
+
+  """Order customer"""
+  customer: Customer!
+  status: String!
 }
 
 type Employee {

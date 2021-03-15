@@ -3,7 +3,7 @@ import { CreateCustomerInput } from './dto/create-customer.input';
 import { UpdateCustomerInput } from './dto/update-customer.input';
 import { Customer } from './entities/customer.entity';
 
-let customers: Customer[] = [];
+export let customers: Customer[] = [];
 
 // Да сука обычный for. ВО - первых нахуй иди, один тут работаю за двоих,
 // а во - вторых, хули ты мне сделаешь, в третьих за мат извини
@@ -11,7 +11,7 @@ for (let i = 1; i <= 60; ++i) {
   customers.push({
     id: i,
     fullName: `Заказчик ${i}`,
-    company: `Компанич ${i}`,
+    company: `Компания ${i}`,
     notes: '',
   });
 }
