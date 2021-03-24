@@ -14,5 +14,14 @@ export class Customer {
   company: string;
 
   @Field(() => String)
+  email: string;
+
+  @Field(() => String)
+  phone: string;
+
+  @Field(() => String)
+  address: string;
+
+  @Field(() => String)
   notes: string;
 }

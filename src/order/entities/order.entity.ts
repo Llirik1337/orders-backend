@@ -1,16 +1,11 @@
-import { ObjectType, Field, Int } from '@nestjs/graphql';
-// import { Customer } from 'src/customer/entities/customer.entity';
-import {
-  Entity,
-  // ObjectID,
-  ObjectIdColumn,
-  // PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Component } from 'src/component/entities/component.entity';
+import { Entity, OneToMany } from 'typeorm';
 import { Customer } from '../../customer/entities/customer.entity';
 
 export enum OrderStatus {
   CREATE = 'КП Создано',
-  SENT = 'NOT_PAID',
+  SENT = 'Не оплачено',
   RENOUNCEMENT = 'Отказ',
   MANUFACTURING = 'Изготовление',
   COMPLETED = 'Исполнен',
@@ -28,6 +23,12 @@ export class Order {
   @Field(() => Customer, { nullable: false, description: 'Order customer' })
   customer: Customer;
 
-  @Field()
-  status: OrderStatus;
+  @Field(() => Component, { nullable: false, description: 'Order customer' })
+  @OneToMany(() => Component, (component) => component.id)
+  components: Component[];
+
+  // @Field()
+  // status: OrderStatus;
+
+  //TODO Added calculate price
 }

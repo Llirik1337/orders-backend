@@ -1,23 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { CreateOrderInput } from './dto/create-order.input';
 import { UpdateOrderInput } from './dto/update-order.input';
-import { Order, OrderStatus } from './entities/order.entity';
-import { customers } from '../customer/customer.service';
+import { Order } from './entities/order.entity';
 
-let orders: Order[] = [];
+// const orders: Order[] = [];
 
-// Да сука обычный for. ВО - первых нахуй иди, один тут работаю за двоих,
-// а во - вторых, хули ты мне сделаешь, в третьих за мат извини
-for (let i = 1; i <= 60; ++i) {
-  orders.push({
-    id: i,
-    name: `Наименование ${i}`,
-    customer: customers[0],
-    status: OrderStatus.CREATE,
-  });
-}
+// // Да сука обычный for. ВО - первых нахуй иди, один тут работаю за двоих,
+// // а во - вторых, хули ты мне сделаешь, в третьих за мат извини
+// for (let i = 1; i <= 60; ++i) {
+//   orders.push({
+//     id: i,
+//     name: `Наименование ${i}`,
+//     customer: customers[0],
+//     status: OrderStatus.CREATE,
+//   });
+// }
 
-let maxIdOrders = 60;
+// let maxIdOrders = 60;
 
 @Injectable()
 export class OrderService {
@@ -26,7 +25,8 @@ export class OrderService {
   }
 
   findAll(): Array<Order> {
-    return orders;
+    return [];
+    // return orders;
   }
 
   findOne(id: string) {

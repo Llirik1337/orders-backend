@@ -2,11 +2,48 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Equipment {
+  """Id of Customer"""
+  id: Int!
+
+  """Name of Equipment"""
+  name: String!
+
+  """Notes of Equipment"""
+  notes: String!
+
+  """Count of Equipment"""
+  count: Int!
+
+  """Count of Equipment"""
+  photos: Operation!
+}
+
+type Material {
+  """Id of Customer"""
+  id: Int!
+  name: String!
+  units: String!
+  cost: String!
+  count: Int!
+}
+
+type Operation {
+  """Id of Customer"""
+  id: Int!
+
+  """notes"""
+  price: String!
+}
+
 type Customer {
   """Id of Customer"""
   id: Int!
   fullName: String!
   company: String!
+  email: String!
+  phone: String!
+  address: String!
   notes: String!
 }
 
@@ -19,7 +56,23 @@ type Order {
 
   """Order customer"""
   customer: Customer!
-  status: String!
+}
+
+type Component {
+  """Id of Customer"""
+  id: Int!
+
+  """notes"""
+  name: String!
+
+  """notes"""
+  notes: String!
+
+  """notes"""
+  order: Order!
+
+  """notes"""
+  operations: Operation!
 }
 
 type Employee {
@@ -29,13 +82,35 @@ type Employee {
   position: String!
 }
 
-type Material {
+type OperationPrice {
   """Id of Customer"""
   id: Int!
-  name: String!
-  units: String!
-  cost: Float!
-  isAvailable: Boolean!
+
+  """notes"""
+  notes: String!
+
+  """notes"""
+  count: Int!
+
+  """notes"""
+  operation: Operation!
+
+  """notes"""
+  component: Component!
+
+  """notes"""
+  responsible: Employee!
+}
+
+type User {
+  """Id of Customer"""
+  id: Int!
+
+  """Login"""
+  login: String!
+
+  """Password"""
+  password: String!
 }
 
 type Query {
@@ -47,6 +122,11 @@ type Query {
   employee(id: Int!): Employee!
   materials: [Material!]!
   material(id: Int!): Material!
+  user(id: Int!): User!
+  equipment(id: Int!): Equipment!
+  operationPrice(id: Int!): OperationPrice!
+  operation(id: Int!): Operation!
+  component(id: Int!): Component!
 }
 
 type Mutation {
@@ -62,6 +142,21 @@ type Mutation {
   createMaterial(createMaterialInput: CreateMaterialInput!): Material!
   updateMaterial(updateMaterialInput: UpdateMaterialInput!): Material!
   removeMaterial(id: Int!): Material!
+  createUser(createUserInput: CreateUserInput!): User!
+  updateUser(updateUserInput: UpdateUserInput!): User!
+  removeUser(id: Int!): User!
+  createEquipment(createEquipmentInput: CreateEquipmentInput!): Equipment!
+  updateEquipment(updateEquipmentInput: UpdateEquipmentInput!): Equipment!
+  removeEquipment(id: Int!): Equipment!
+  createOperationPrice(createOperationPriceInput: CreateOperationPriceInput!): OperationPrice!
+  updateOperationPrice(updateOperationPriceInput: UpdateOperationPriceInput!): OperationPrice!
+  removeOperationPrice(id: Int!): OperationPrice!
+  createOperation(createOperationInput: CreateOperationInput!): Operation!
+  updateOperation(updateOperationInput: UpdateOperationInput!): Operation!
+  removeOperation(id: Int!): Operation!
+  createComponent(createComponentInput: CreateComponentInput!): Component!
+  updateComponent(updateComponentInput: UpdateComponentInput!): Component!
+  removeComponent(id: Int!): Component!
 }
 
 input CreateOrderInput {
@@ -116,6 +211,61 @@ input CreateMaterialInput {
 }
 
 input UpdateMaterialInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateUserInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateUserInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateEquipmentInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateEquipmentInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateOperationPriceInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateOperationPriceInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateOperationInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateOperationInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateComponentInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateComponentInput {
   """Example field (placeholder)"""
   exampleField: Int
   id: Int!

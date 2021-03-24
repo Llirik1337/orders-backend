@@ -1,4 +1,4 @@
-import { ObjectType, Field, Int, Float } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
 export class Material {
@@ -11,9 +11,9 @@ export class Material {
   @Field(() => String)
   units: string;
 
-  @Field(() => Float)
-  cost: number;
+  @Field(() => String)
+  cost: string;
 
-  @Field(() => Boolean)
-  isAvailable: boolean;
+  @Field(() => Int, { defaultValue: 0 })
+  count: number;
 }

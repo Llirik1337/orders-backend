@@ -1,12 +1,14 @@
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
-import { OrderModule } from './order/order.module';
+import { ComponentModule } from './component/component.module';
 import { CustomerModule } from './customer/customer.module';
 import { EmployeeModule } from './employee/employee.module';
+import { EquipmentModule } from './equipment/equipment.module';
 import { MaterialModule } from './material/material.module';
-import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
-import { AppController } from './controllers/app.controller';
+import { OperationPriceModule } from './operation-price/operation-price.module';
+import { OperationModule } from './operation/operation.module';
+import { OrderModule } from './order/order.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -22,9 +24,12 @@ import { AppController } from './controllers/app.controller';
     CustomerModule,
     EmployeeModule,
     MaterialModule,
-    AuthModule,
-    UsersModule,
+    UserModule,
+    EquipmentModule,
+    OperationPriceModule,
+    OperationModule,
+    ComponentModule,
   ],
-  controllers: [AppController],
+  controllers: [],
 })
 export class AppModule {}
