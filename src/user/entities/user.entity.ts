@@ -1,13 +1,20 @@
-import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
+export type UserDocument = User & Document;
+
+@Schema({ timestamps: true, id: true })
 @ObjectType()
 export class User {
-  @Field(() => Int, { nullable: false, description: 'Id of Customer' })
-  id: number;
-
+  @Field(() => String)
+  _id: string;
+  @Prop({ required: true })
   @Field(() => String, { description: 'Login' })
-  login: number;
-
+  login: string;
+  @Prop({ required: true })
   @Field(() => String, { description: 'Password' })
-  password: number;
+  password: string;
 }
+
+export const UserSchema = SchemaFactory.createForClass(User);

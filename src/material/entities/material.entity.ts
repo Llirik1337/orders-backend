@@ -1,19 +1,27 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
-
+import { Field, Int, Float, ObjectType } from '@nestjs/graphql';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, Schema as MongooseSchema } from 'mongoose';
+export type MaterialDocument = Material & Document;
+@Schema({ timestamps: true, id: true })
 @ObjectType()
 export class Material {
-  @Field(() => Int, { nullable: false, description: 'Id of Customer' })
-  id: number;
+  @Field(() => String)
+  _id: string;
 
+  @Prop({ type: MongooseSchema.Types.String, unique: true })
   @Field(() => String)
   name: string;
 
+  @Prop({ type: MongooseSchema.Types.String })
   @Field(() => String)
   units: string;
 
-  @Field(() => String)
-  cost: string;
+  @Prop({ type: MongooseSchema.Types.Number })
+  @Field(() => Float)
+  cost: number;
 
-  @Field(() => Int, { defaultValue: 0 })
+  @Prop({ type: MongooseSchema.Types.Number })
+  @Field(() => Int)
   count: number;
 }
+export const MaterialSchema = SchemaFactory.createForClass(Material);

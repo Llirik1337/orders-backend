@@ -1,24 +1,36 @@
-import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, Schema as MongooseSchema } from 'mongoose';
 import { Operation } from 'src/operation/entities/operation.entity';
 import { Order } from 'src/order/entities/order.entity';
-import { OneToMany } from 'typeorm';
-
+export type ComponentDocument = Component & Document;
 @ObjectType()
+@Schema({ timestamps: true, id: true, _id: true })
 export class Component {
-  @Field(() => Int, { nullable: false, description: 'Id of Customer' })
-  id: number;
+  @Field(() => String)
+  _id: string;
 
+  @Prop({ type: MongooseSchema.Types.String, required: true })
   @Field(() => String, { nullable: false, description: 'notes' })
   name: string;
 
-  @Field(() => String, { nullable: false, description: 'notes' })
+  @Prop({ type: MongooseSchema.Types.String, required: false })
+  @Field(() => String, { nullable: false })
   notes: string;
 
-  @Field(() => Order, { nullable: false, description: 'notes' })
-  @OneToMany(() => Order, (order) => order.id)
-  order: Order[];
+  //TODO Добавить потом
+  // @Prop({
+  //   type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Order' }],
+  //   default: [],
+  // })
+  // @Field(() => Order, { defaultValue: [] })
+  // orders: Order[];
 
-  @Field(() => Operation, { nullable: false, description: 'notes' })
-  @OneToMany(() => Operation, (operation) => operation.id)
+  @Prop({
+    type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Operation' }],
+    default: [],
+  })
+  @Field(() => [Operation], { defaultValue: [] })
   operations: Operation[];
 }
+export const ComponentSchema = SchemaFactory.createForClass(Component);

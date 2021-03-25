@@ -1,44 +1,44 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { CreateMaterialInput } from './dto/create-material.input';
 import { UpdateMaterialInput } from './dto/update-material.input';
-import { Material } from './entities/material.entity';
-
-// let materials: Material[] = [];
-
-// // Да сука обычный for. ВО - первых нахуй иди, один тут работаю за двоих,
-// // а во - вторых, хули ты мне сделаешь, в третьих за мат извини
-// for (let i = 1; i <= 60; ++i) {
-//   materials.push({
-//     id: i,
-//     name: `Наименование ${i}`,
-//     units: `${i}0 мм`,
-//     cost: i * 1000,
-//     isAvailable: i % 2 == 0,
-//   });
-// }
-
-// let maxIdMaterials = 60;
+import { Material, MaterialDocument } from './entities/material.entity';
 
 @Injectable()
 export class MaterialService {
-  create(createMaterialInput: CreateMaterialInput) {
-    return 'This action adds a new material';
+  constructor(
+    @InjectModel(Material.name) private materialModel: Model<MaterialDocument>,
+  ) {}
+  async create(
+    createMaterialInput: CreateMaterialInput,
+  ): Promise<MaterialDocument> {
+    const createdMaterial = new this.materialModel();
+    createdMaterial.name = createMaterialInput.name;
+    createdMaterial.cost = createMaterialInput.cost;
+    createdMaterial.count = createMaterialInput.count;
+    createdMaterial.units = createMaterialInput.units;
+    return await createdMaterial.save();
   }
 
-  findAll() {
-    return [];
-    // return materials;
+  async findAll(): Promise<Array<MaterialDocument>> {
+    return this.materialModel.find().lean();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} material`;
+  async findById(id: string): Promise<MaterialDocument> {
+    return await this.materialModel.findById(id);
   }
 
-  update(id: number, updateMaterialInput: UpdateMaterialInput) {
-    return `This action updates a #${id} material`;
+  async update(
+    id: string,
+    updateMaterialInput: UpdateMaterialInput,
+  ): Promise<MaterialDocument> {
+    return await this.materialModel
+      .findByIdAndUpdate(id, updateMaterialInput)
+      .exec();
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} material`;
+  async remove(id: string) {
+    return await this.materialModel.findByIdAndRemove(id).exec();
   }
 }

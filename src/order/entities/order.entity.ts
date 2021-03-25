@@ -1,34 +1,48 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Field, Float, ObjectType } from '@nestjs/graphql';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, Mongoose, Schema as MongooseSchema } from 'mongoose';
 import { Component } from 'src/component/entities/component.entity';
-import { Entity, OneToMany } from 'typeorm';
+import { OrderStatus } from 'src/order-status/entities/order-status.entity';
 import { Customer } from '../../customer/entities/customer.entity';
 
-export enum OrderStatus {
-  CREATE = 'КП Создано',
-  SENT = 'Не оплачено',
-  RENOUNCEMENT = 'Отказ',
-  MANUFACTURING = 'Изготовление',
-  COMPLETED = 'Исполнен',
-}
+export type OrderDocument = Order & Document;
 
 @ObjectType()
-@Entity({})
+@Schema({ timestamps: true, id: true })
 export class Order {
-  @Field(() => Int, { nullable: false, description: 'Id of Customer' })
-  id: number;
+  @Field(() => String)
+  _id: string;
 
-  @Field(() => String, { nullable: false, description: 'Order name' })
+  @Prop({ required: true, type: MongooseSchema.Types.String })
+  @Field(() => String, { nullable: false })
   name: string;
 
-  @Field(() => Customer, { nullable: false, description: 'Order customer' })
+  @Prop({
+    required: true,
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'Customer',
+  })
+  @Field(() => Customer, { nullable: false })
   customer: Customer;
 
-  @Field(() => Component, { nullable: false, description: 'Order customer' })
-  @OneToMany(() => Component, (component) => component.id)
+  @Field(() => [Component], { nullable: false })
+  @Prop({
+    required: true,
+    type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Component' }],
+  })
   components: Component[];
 
-  // @Field()
-  // status: OrderStatus;
+  @Prop({
+    required: true,
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'Customer',
+  })
+  @Field(() => OrderStatus, { nullable: false })
+  status: OrderStatus;
 
-  //TODO Added calculate price
+  @Field(() => Float, { nullable: false })
+  @Prop({ type: MongooseSchema.Types.Number })
+  price: number;
 }
+
+export const OrderSchema = SchemaFactory.createForClass(Order);

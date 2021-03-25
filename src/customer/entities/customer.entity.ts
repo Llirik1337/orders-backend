@@ -1,27 +1,36 @@
-import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { Entity } from 'typeorm';
+import { Field, ObjectType } from '@nestjs/graphql';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, Schema as MongooseSchema } from 'mongoose';
+export type CustomerDocument = Customer & Document;
 
 @ObjectType()
-@Entity({})
+@Schema({ timestamps: true, id: true })
 export class Customer {
-  @Field(() => Int, { nullable: false, description: 'Id of Customer' })
-  id: number;
-
   @Field(() => String)
+  _id: string;
+
+  @Prop({ type: MongooseSchema.Types.String })
+  @Field(() => String, { nullable: false })
   fullName: string;
 
-  @Field(() => String)
+  @Prop({ type: MongooseSchema.Types.String })
+  @Field(() => String, { nullable: false })
   company: string;
 
-  @Field(() => String)
+  @Prop({ type: MongooseSchema.Types.String })
+  @Field(() => String, { nullable: false })
   email: string;
 
-  @Field(() => String)
+  @Prop({ type: MongooseSchema.Types.String })
+  @Field(() => String, { nullable: false })
   phone: string;
 
-  @Field(() => String)
+  @Prop({ type: MongooseSchema.Types.String })
+  @Field(() => String, { nullable: false })
   address: string;
 
-  @Field(() => String)
+  @Prop({ type: MongooseSchema.Types.String })
+  @Field(() => String, { nullable: true })
   notes: string;
 }
+export const CustomerSchema = SchemaFactory.createForClass(Customer);

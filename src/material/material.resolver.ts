@@ -9,27 +9,34 @@ export class MaterialResolver {
   constructor(private readonly materialService: MaterialService) {}
 
   @Mutation(() => Material)
-  createMaterial(@Args('createMaterialInput') createMaterialInput: CreateMaterialInput) {
-    return this.materialService.create(createMaterialInput);
+  async createMaterial(
+    @Args('createMaterialInput') createMaterialInput: CreateMaterialInput,
+  ) {
+    return await this.materialService.create(createMaterialInput);
   }
 
   @Query(() => [Material], { name: 'materials' })
-  findAll() {
-    return this.materialService.findAll();
+  async findAll() {
+    return await this.materialService.findAll();
   }
 
   @Query(() => Material, { name: 'material' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.materialService.findOne(id);
+  async findOne(@Args('id', { type: () => Int }) id: string) {
+    return await this.materialService.findById(id);
   }
 
   @Mutation(() => Material)
-  updateMaterial(@Args('updateMaterialInput') updateMaterialInput: UpdateMaterialInput) {
-    return this.materialService.update(updateMaterialInput.id, updateMaterialInput);
+  async updateMaterial(
+    @Args('updateMaterialInput') updateMaterialInput: UpdateMaterialInput,
+  ) {
+    return await this.materialService.update(
+      updateMaterialInput.id,
+      updateMaterialInput,
+    );
   }
 
   @Mutation(() => Material)
-  removeMaterial(@Args('id', { type: () => Int }) id: number) {
-    return this.materialService.remove(id);
+  async removeMaterial(@Args('id', { type: () => Int }) id: string) {
+    return await this.materialService.remove(id);
   }
 }

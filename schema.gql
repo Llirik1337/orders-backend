@@ -3,108 +3,80 @@
 # ------------------------------------------------------
 
 type Equipment {
-  """Id of Customer"""
-  id: Int!
-
-  """Name of Equipment"""
+  _id: String!
   name: String!
-
-  """Notes of Equipment"""
   notes: String!
-
-  """Count of Equipment"""
   count: Int!
-
-  """Count of Equipment"""
-  photos: Operation!
 }
 
 type Material {
-  """Id of Customer"""
-  id: Int!
+  _id: String!
   name: String!
   units: String!
-  cost: String!
+  cost: Float!
   count: Int!
 }
 
 type Operation {
-  """Id of Customer"""
-  id: Int!
+  _id: String!
 
   """notes"""
-  price: String!
+  price: Float!
+
+  """notes"""
+  notes: String
+  equipment: Equipment!
+
+  """notes"""
+  materials: [Material!]!
+}
+
+type OrderStatus {
+  _id: String!
+  name: String!
 }
 
 type Customer {
-  """Id of Customer"""
-  id: Int!
+  _id: String!
   fullName: String!
   company: String!
   email: String!
   phone: String!
   address: String!
-  notes: String!
+  notes: String
 }
 
 type Order {
-  """Id of Customer"""
-  id: Int!
-
-  """Order name"""
+  _id: String!
   name: String!
-
-  """Order customer"""
   customer: Customer!
+  components: [Component!]!
+  status: OrderStatus!
+  price: Float!
 }
 
 type Component {
-  """Id of Customer"""
-  id: Int!
+  _id: String!
 
   """notes"""
   name: String!
-
-  """notes"""
   notes: String!
+  operations: [Operation!]!
+}
 
-  """notes"""
-  order: Order!
-
-  """notes"""
-  operations: Operation!
+type Position {
+  _id: String!
+  name: String!
 }
 
 type Employee {
-  """Id of employee"""
-  id: Int!
+  _id: String!
   fullName: String!
-  position: String!
-}
-
-type OperationPrice {
-  """Id of Customer"""
-  id: Int!
-
-  """notes"""
-  notes: String!
-
-  """notes"""
-  count: Int!
-
-  """notes"""
-  operation: Operation!
-
-  """notes"""
-  component: Component!
-
-  """notes"""
-  responsible: Employee!
+  position: Position!
 }
 
 type User {
-  """Id of Customer"""
-  id: Int!
+  _id: String!
 
   """Login"""
   login: String!
@@ -113,160 +85,250 @@ type User {
   password: String!
 }
 
+type Currency {
+  _id: String!
+  NumCode: String!
+  CharCode: String!
+  Nominal: Int!
+  Name: String!
+  Value: Float!
+}
+
 type Query {
   orders: [Order!]!
   order(id: String!): Order!
   customers: [Customer!]!
-  customer(id: Int!): Customer!
-  employees: [Employee!]!
-  employee(id: Int!): Employee!
+  customer(id: String!): Customer!
+  components: [Component!]!
+  component(id: String!): Component!
+  operations: [Operation!]!
+  operation(id: String!): Operation!
   materials: [Material!]!
   material(id: Int!): Material!
-  user(id: Int!): User!
-  equipment(id: Int!): Equipment!
-  operationPrice(id: Int!): OperationPrice!
-  operation(id: Int!): Operation!
-  component(id: Int!): Component!
+  equipments: [Equipment!]!
+  equipment(id: String!): Equipment!
+  ordersStatus: [OrderStatus!]!
+  orderStatus(id: String!): OrderStatus!
+  employees: [Employee!]!
+  employee(id: String!): Employee!
+  positions: [Position!]!
+  position(id: String!): Position!
+  users: [User!]!
+  user(id: String!): User!
+  currencies: [Currency!]!
+  currency(id: String!): Currency!
 }
 
 type Mutation {
   createOrder(createOrderInput: CreateOrderInput!): Order!
   updateOrder(updateOrderInput: UpdateOrderInput!): Order!
-  removeOrder(id: Int!): Order!
+  removeOrder(id: String!): Order!
   createCustomer(createCustomerInput: CreateCustomerInput!): Customer!
   updateCustomer(updateCustomerInput: UpdateCustomerInput!): Customer!
-  removeCustomer(id: Int!): Customer!
-  createEmployee(createEmployeeInput: CreateEmployeeInput!): Employee!
-  updateEmployee(updateEmployeeInput: UpdateEmployeeInput!): Employee!
-  removeEmployee(id: Int!): Employee!
+  removeCustomer(id: String!): Customer!
+  createComponent(createComponentInput: CreateComponentInput!): Component!
+  updateComponent(updateComponentInput: UpdateComponentInput!): Component!
+  addComponentOperations(addComponentOperations: AddComponentOperations!): Component!
+  removeComponent(id: String!): Component!
+  createOperation(createOperationInput: CreateOperationInput!): Operation!
+  updateOperation(updateOperationInput: UpdateOperationInput!): Operation!
+  removeOperation(id: String!): Operation!
   createMaterial(createMaterialInput: CreateMaterialInput!): Material!
   updateMaterial(updateMaterialInput: UpdateMaterialInput!): Material!
   removeMaterial(id: Int!): Material!
-  createUser(createUserInput: CreateUserInput!): User!
-  updateUser(updateUserInput: UpdateUserInput!): User!
-  removeUser(id: Int!): User!
   createEquipment(createEquipmentInput: CreateEquipmentInput!): Equipment!
   updateEquipment(updateEquipmentInput: UpdateEquipmentInput!): Equipment!
-  removeEquipment(id: Int!): Equipment!
-  createOperationPrice(createOperationPriceInput: CreateOperationPriceInput!): OperationPrice!
-  updateOperationPrice(updateOperationPriceInput: UpdateOperationPriceInput!): OperationPrice!
-  removeOperationPrice(id: Int!): OperationPrice!
-  createOperation(createOperationInput: CreateOperationInput!): Operation!
-  updateOperation(updateOperationInput: UpdateOperationInput!): Operation!
-  removeOperation(id: Int!): Operation!
-  createComponent(createComponentInput: CreateComponentInput!): Component!
-  updateComponent(updateComponentInput: UpdateComponentInput!): Component!
-  removeComponent(id: Int!): Component!
+  removeEquipment(id: String!): Equipment!
+  createOrderStatus(createOrderStatusInput: CreateOrderStatusInput!): OrderStatus!
+  updateOrderStatus(updateOrderStatusInput: UpdateOrderStatusInput!): OrderStatus!
+  removeOrderStatus(id: String!): OrderStatus!
+  createEmployee(createEmployeeInput: CreateEmployeeInput!): Employee!
+  updateEmployee(updateEmployeeInput: UpdateEmployeeInput!): Employee!
+  removeEmployee(id: String!): Employee!
+  createPosition(createPositionInput: CreatePositionInput!): Position!
+  updatePosition(updatePositionInput: UpdatePositionInput!): Position!
+  removePosition(id: String!): Position!
+  createUser(createUserInput: CreateUserInput!): User!
+  updateUser(updateUserInput: UpdateUserInput!): User!
+  removeUser(id: String!): User!
+  createCurrency(createCurrencyInput: CreateCurrencyInput!): Currency!
+  updateCurrency(updateCurrencyInput: UpdateCurrencyInput!): Currency!
+  removeCurrency(id: String!): Currency!
 }
 
 input CreateOrderInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  name: String!
+  customerId: String!
+  componentsId: [String!]!
+  statusId: String!
+  price: Float!
 }
 
 input UpdateOrderInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  name: String
+  customerId: String
+  componentsId: [String!]
+  statusId: String
+  price: Float
+  id: String!
 }
 
 input CreateCustomerInput {
-  """Full Name of customer"""
   fullName: String!
   company: String!
-  notes: String!
+  email: String!
+  phone: String!
+  address: String!
+  notes: String
 }
 
 input UpdateCustomerInput {
-  fullName: String!
-  company: String!
-  notes: String!
+  fullName: String
+  company: String
+  email: String
+  phone: String
+  address: String
+  notes: String
 
   """Id of Customer"""
-  id: Int!
+  id: String!
+}
+
+input CreateComponentInput {
+  """notes"""
+  name: String!
+  notes: String!
+  operationsId: [String!]!
+}
+
+input UpdateComponentInput {
+  """notes"""
+  name: String
+  notes: String
+  operationsId: [String!]
+  id: String!
+}
+
+input AddComponentOperations {
+  """notes"""
+  id: String!
+  operations: [String!]!
+}
+
+input CreateOperationInput {
+  price: Float!
+  notes: String!
+  equipmentId: String!
+  materialsId: [String!]!
+}
+
+input UpdateOperationInput {
+  price: Float
+  notes: String
+  equipmentId: String
+  materialsId: [String!]
+  id: String!
+}
+
+input CreateMaterialInput {
+  name: String!
+  units: String!
+  cost: Float!
+  count: Int = 0
+}
+
+input UpdateMaterialInput {
+  name: String
+  units: String
+  cost: Float
+  count: Int = 0
+  id: String!
+}
+
+input CreateEquipmentInput {
+  """Name of Equipment"""
+  name: String!
+
+  """Notes of Equipment"""
+  notes: String = ""
+
+  """Count of Equipment"""
+  count: Int = 0
+}
+
+input UpdateEquipmentInput {
+  """Name of Equipment"""
+  name: String
+
+  """Notes of Equipment"""
+  notes: String = ""
+
+  """Count of Equipment"""
+  count: Int = 0
+  id: String!
+}
+
+input CreateOrderStatusInput {
+  name: String!
+}
+
+input UpdateOrderStatusInput {
+  name: String
+  id: String!
 }
 
 input CreateEmployeeInput {
   """Full Name of employee"""
   fullName: String!
-
-  """Position of employee"""
-  position: String!
+  positionId: String!
 }
 
 input UpdateEmployeeInput {
   """Full Name of employee"""
-  fullName: String!
-
-  """Position of employee"""
-  position: String!
-
-  """Id of employee"""
-  id: Int!
+  fullName: String
+  positionId: String
+  id: String!
 }
 
-input CreateMaterialInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+input CreatePositionInput {
+  name: String!
 }
 
-input UpdateMaterialInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+input UpdatePositionInput {
+  name: String
+  id: String!
 }
 
 input CreateUserInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  """Login"""
+  login: String!
+
+  """Password"""
+  password: String!
 }
 
 input UpdateUserInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  """Login"""
+  login: String
+
+  """Password"""
+  password: String
+  id: String!
 }
 
-input CreateEquipmentInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+input CreateCurrencyInput {
+  NumCode: String!
+  CharCode: String!
+  Nominal: Int!
+  Name: String!
+  Value: Float!
 }
 
-input UpdateEquipmentInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
-}
-
-input CreateOperationPriceInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-input UpdateOperationPriceInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
-}
-
-input CreateOperationInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-input UpdateOperationInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
-}
-
-input CreateComponentInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-input UpdateComponentInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+input UpdateCurrencyInput {
+  NumCode: String
+  CharCode: String
+  Nominal: Int
+  Name: String
+  Value: Float
+  id: String!
 }

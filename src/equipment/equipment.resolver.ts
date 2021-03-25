@@ -9,27 +9,34 @@ export class EquipmentResolver {
   constructor(private readonly equipmentService: EquipmentService) {}
 
   @Mutation(() => Equipment)
-  createEquipment(@Args('createEquipmentInput') createEquipmentInput: CreateEquipmentInput) {
-    return this.equipmentService.create(createEquipmentInput);
+  async createEquipment(
+    @Args('createEquipmentInput') createEquipmentInput: CreateEquipmentInput,
+  ) {
+    return await this.equipmentService.create(createEquipmentInput);
   }
 
-  @Query(() => [Equipment], { name: 'equipment' })
-  findAll() {
-    return this.equipmentService.findAll();
+  @Query(() => [Equipment], { name: 'equipments' })
+  async findAll() {
+    return await this.equipmentService.findAll();
   }
 
   @Query(() => Equipment, { name: 'equipment' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.equipmentService.findOne(id);
+  async findOne(@Args('id', { type: () => String }) id: string) {
+    return await this.equipmentService.findById(id);
   }
 
   @Mutation(() => Equipment)
-  updateEquipment(@Args('updateEquipmentInput') updateEquipmentInput: UpdateEquipmentInput) {
-    return this.equipmentService.update(updateEquipmentInput.id, updateEquipmentInput);
+  async updateEquipment(
+    @Args('updateEquipmentInput') updateEquipmentInput: UpdateEquipmentInput,
+  ) {
+    return await this.equipmentService.update(
+      updateEquipmentInput.id,
+      updateEquipmentInput,
+    );
   }
 
   @Mutation(() => Equipment)
-  removeEquipment(@Args('id', { type: () => Int }) id: number) {
-    return this.equipmentService.remove(id);
+  async removeEquipment(@Args('id', { type: () => String }) id: string) {
+    return await this.equipmentService.remove(id);
   }
 }

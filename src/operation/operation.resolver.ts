@@ -9,27 +9,34 @@ export class OperationResolver {
   constructor(private readonly operationService: OperationService) {}
 
   @Mutation(() => Operation)
-  createOperation(@Args('createOperationInput') createOperationInput: CreateOperationInput) {
-    return this.operationService.create(createOperationInput);
+  async createOperation(
+    @Args('createOperationInput') createOperationInput: CreateOperationInput,
+  ) {
+    return await this.operationService.create(createOperationInput);
   }
 
-  @Query(() => [Operation], { name: 'operation' })
-  findAll() {
-    return this.operationService.findAll();
+  @Query(() => [Operation], { name: 'operations' })
+  async findAll() {
+    return await this.operationService.findAll();
   }
 
   @Query(() => Operation, { name: 'operation' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.operationService.findOne(id);
+  async findOne(@Args('id', { type: () => String }) id: string) {
+    return await this.operationService.findOne(id);
   }
 
   @Mutation(() => Operation)
-  updateOperation(@Args('updateOperationInput') updateOperationInput: UpdateOperationInput) {
-    return this.operationService.update(updateOperationInput.id, updateOperationInput);
+  async updateOperation(
+    @Args('updateOperationInput') updateOperationInput: UpdateOperationInput,
+  ) {
+    return await this.operationService.update(
+      updateOperationInput.id,
+      updateOperationInput,
+    );
   }
 
   @Mutation(() => Operation)
-  removeOperation(@Args('id', { type: () => Int }) id: number) {
-    return this.operationService.remove(id);
+  async removeOperation(@Args('id', { type: () => String }) id: string) {
+    return await this.operationService.remove(id);
   }
 }

@@ -5,6 +5,6 @@ export class CreateEmployeeInput {
   @Field(() => String, { description: 'Full Name of employee' })
   fullName: string;
 
-  @Field(() => String, { description: 'Position of employee' })
-  position: string;
+  @Field(() => String)
+  positionId: string;
 }

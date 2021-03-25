@@ -1,43 +1,94 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { LeanDocument, Model } from 'mongoose';
+import { ComponentService } from 'src/component/component.service';
+import { ComponentDocument } from 'src/component/entities/component.entity';
+import { CustomerService } from 'src/customer/customer.service';
+import { OrderStatusService } from 'src/order-status/order-status.service';
 import { CreateOrderInput } from './dto/create-order.input';
 import { UpdateOrderInput } from './dto/update-order.input';
-import { Order } from './entities/order.entity';
-
-// const orders: Order[] = [];
-
-// // Да сука обычный for. ВО - первых нахуй иди, один тут работаю за двоих,
-// // а во - вторых, хули ты мне сделаешь, в третьих за мат извини
-// for (let i = 1; i <= 60; ++i) {
-//   orders.push({
-//     id: i,
-//     name: `Наименование ${i}`,
-//     customer: customers[0],
-//     status: OrderStatus.CREATE,
-//   });
-// }
-
-// let maxIdOrders = 60;
+import { Order, OrderDocument } from './entities/order.entity';
 
 @Injectable()
 export class OrderService {
-  create(createOrderInput: CreateOrderInput) {
-    return 'This action adds a new order';
+  constructor(
+    @InjectModel(Order.name) private readonly orderModel: Model<OrderDocument>,
+    private readonly customerService: CustomerService,
+    private readonly componentService: ComponentService,
+    private readonly orderStatusService: OrderStatusService,
+  ) {}
+  async create(createOrderInput: CreateOrderInput): Promise<OrderDocument> {
+    const createdOrder = new this.orderModel();
+    createdOrder.name = createOrderInput.name;
+    createdOrder.price = createOrderInput.price;
+
+    const promiseComponents = [];
+    for (const id of createOrderInput.componentsId) {
+      promiseComponents.push(this.componentService.findOne(id));
+    }
+
+    const components = (await Promise.all(promiseComponents)) || [];
+
+    createdOrder.components.push(...components);
+
+    const status = await this.orderStatusService.findById(
+      createOrderInput.statusId,
+    );
+
+    const customer = await this.customerService.findById(
+      createOrderInput.customerId,
+    );
+
+    createdOrder.customer = customer;
+    createdOrder.status = status;
+    return await createdOrder.save();
   }
 
-  findAll(): Array<Order> {
-    return [];
-    // return orders;
+  async findAll(): Promise<LeanDocument<OrderDocument>> {
+    return await this.orderModel.find().lean();
   }
 
-  findOne(id: string) {
-    return ' ';
+  async findOne(id: string): Promise<OrderDocument> {
+    return await this.orderModel.findById(id);
   }
 
-  update(id: number, updateOrderInput: UpdateOrderInput) {
-    return `This action updates a #${id} order`;
+  async update(
+    id: string,
+    updateOrderInput: UpdateOrderInput,
+  ): Promise<OrderDocument> {
+    const updatedOrder = await this.orderModel.findById(id);
+    if (updateOrderInput.name) updatedOrder.name = updateOrderInput.name;
+    if (updateOrderInput.price) updatedOrder.price = updateOrderInput.price;
+
+    if (updateOrderInput?.componentsId?.length) {
+      const promiseComponents = [];
+      for (const id of updateOrderInput.componentsId) {
+        promiseComponents.push(this.componentService.findOne(id));
+      }
+
+      const components =
+        (await Promise.all<ComponentDocument>(promiseComponents)) || [];
+
+      updatedOrder.components.push(...components);
+    }
+    if (updateOrderInput.statusId) {
+      const status = await this.orderStatusService.findById(
+        updateOrderInput.statusId,
+      );
+      updatedOrder.status = status;
+    }
+    if (updateOrderInput.customerId) {
+      const customer = await this.customerService.findById(
+        updateOrderInput.customerId,
+      );
+
+      updatedOrder.customer = customer;
+    }
+
+    return await updatedOrder.save();
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} order`;
+  async remove(id: string): Promise<OrderDocument> {
+    return await this.orderModel.findByIdAndDelete(id);
   }
 }

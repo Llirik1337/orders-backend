@@ -9,27 +9,34 @@ export class CustomerResolver {
   constructor(private readonly customerService: CustomerService) {}
 
   @Mutation(() => Customer)
-  createCustomer(@Args('createCustomerInput') createCustomerInput: CreateCustomerInput) {
-    return this.customerService.create(createCustomerInput);
+  async createCustomer(
+    @Args('createCustomerInput') createCustomerInput: CreateCustomerInput,
+  ) {
+    return await this.customerService.create(createCustomerInput);
   }
 
   @Query(() => [Customer], { name: 'customers' })
-  findAll() {
-    return this.customerService.findAll();
+  async findAll() {
+    return await this.customerService.findAll();
   }
 
   @Query(() => Customer, { name: 'customer' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.customerService.findOne(id);
+  async findOne(@Args('id', { type: () => String }) id: string) {
+    return await this.customerService.findById(id);
   }
 
   @Mutation(() => Customer)
-  updateCustomer(@Args('updateCustomerInput') updateCustomerInput: UpdateCustomerInput) {
-    return this.customerService.update(updateCustomerInput.id, updateCustomerInput);
+  async updateCustomer(
+    @Args('updateCustomerInput') updateCustomerInput: UpdateCustomerInput,
+  ) {
+    return await this.customerService.update(
+      updateCustomerInput.id,
+      updateCustomerInput,
+    );
   }
 
   @Mutation(() => Customer)
-  removeCustomer(@Args('id', { type: () => Int }) id: number) {
-    return this.customerService.remove(id);
+  async removeCustomer(@Args('id', { type: () => String }) id: string) {
+    return await this.customerService.remove(id);
   }
 }

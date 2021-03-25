@@ -1,26 +1,45 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { LeanDocument, Model } from 'mongoose';
 import { CreateEquipmentInput } from './dto/create-equipment.input';
 import { UpdateEquipmentInput } from './dto/update-equipment.input';
+import { Equipment, EquipmentDocument } from './entities/equipment.entity';
 
 @Injectable()
 export class EquipmentService {
-  create(createEquipmentInput: CreateEquipmentInput) {
-    return 'This action adds a new equipment';
+  constructor(
+    @InjectModel(Equipment.name)
+    private equipmentModel: Model<EquipmentDocument>,
+  ) {}
+  async create(
+    createEquipmentInput: CreateEquipmentInput,
+  ): Promise<EquipmentDocument> {
+    const createdEquipment = new this.equipmentModel();
+    createdEquipment.count = createEquipmentInput.count;
+    createdEquipment.name = createEquipmentInput.name;
+    createdEquipment.notes = createEquipmentInput.notes;
+    return await createdEquipment.save();
   }
 
-  findAll() {
-    return `This action returns all equipment`;
+  async findAll(): Promise<LeanDocument<EquipmentDocument>> {
+    return await this.equipmentModel.find().lean();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} equipment`;
+  async findById(id: string): Promise<EquipmentDocument> {
+    return await this.equipmentModel.findById(id);
   }
 
-  update(id: number, updateEquipmentInput: UpdateEquipmentInput) {
-    return `This action updates a #${id} equipment`;
+  async update(
+    id: string,
+    updateEquipmentInput: UpdateEquipmentInput,
+  ): Promise<EquipmentDocument> {
+    return await this.equipmentModel.findByIdAndUpdate(
+      id,
+      updateEquipmentInput,
+    );
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} equipment`;
+  async remove(id: string): Promise<EquipmentDocument> {
+    return await this.equipmentModel.findByIdAndRemove(id);
   }
 }

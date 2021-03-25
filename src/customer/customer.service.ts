@@ -1,47 +1,46 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { LeanDocument, Model } from 'mongoose';
 import { CreateCustomerInput } from './dto/create-customer.input';
 import { UpdateCustomerInput } from './dto/update-customer.input';
-import { Customer } from './entities/customer.entity';
-
-// export let customers: Customer[] = [];
-
-// // Да сука обычный for. ВО - первых нахуй иди, один тут работаю за двоих,
-// // а во - вторых, хули ты мне сделаешь, в третьих за мат извини
-// for (let i = 1; i <= 60; ++i) {
-//   customers.push({
-//     id: i,
-//     fullName: `Заказчик ${i}`,
-//     company: `Компания ${i}`,
-//     notes: '',
-//   });
-// }
-
-// let maxIdCustomers = 60;
+import { Customer, CustomerDocument } from './entities/customer.entity';
 
 @Injectable()
 export class CustomerService {
-  create(createCustomerInput: CreateCustomerInput) {
-    // const item = new Customer();
-    // item.id = ++maxIdCustomers;
-    // item.fullName = createCustomerInput.fullName;
-    // customers.push(item);
-    // return item;
+  constructor(
+    @InjectModel(Customer.name) private customerModel: Model<CustomerDocument>,
+  ) {}
+
+  async create(
+    createCustomerInput: CreateCustomerInput,
+  ): Promise<CustomerDocument> {
+    const createdCustomer = new this.customerModel();
+    createdCustomer.address = createCustomerInput.address;
+    createdCustomer.company = createCustomerInput.company;
+    createdCustomer.email = createCustomerInput.email;
+    createdCustomer.fullName = createCustomerInput.fullName;
+    createdCustomer.notes = createCustomerInput.notes;
+    createdCustomer.phone = createCustomerInput.phone;
+
+    return await createdCustomer.save();
   }
 
-  findAll() {
-    return [];
-    // return customers;
+  async findAll(): Promise<LeanDocument<CustomerDocument>> {
+    return await this.customerModel.find().lean();
   }
 
-  findOne(id: number) {
-    // return customers.find((item) => item.id === id);
+  async findById(id: string): Promise<CustomerDocument> {
+    return await this.customerModel.findById(id);
   }
 
-  update(id: number, updateCustomerInput: UpdateCustomerInput) {
-    return `This action updates a #${id} customer`;
+  async update(
+    id: string,
+    updateCustomerInput: UpdateCustomerInput,
+  ): Promise<CustomerDocument> {
+    return await this.customerModel.findByIdAndUpdate(id, updateCustomerInput);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} customer`;
+  async remove(id: string): Promise<CustomerDocument> {
+    return await this.customerModel.findByIdAndRemove(id);
   }
 }

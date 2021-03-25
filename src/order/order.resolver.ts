@@ -9,27 +9,34 @@ export class OrderResolver {
   constructor(private readonly orderService: OrderService) {}
 
   @Mutation(() => Order)
-  createOrder(@Args('createOrderInput') createOrderInput: CreateOrderInput) {
-    return this.orderService.create(createOrderInput);
+  async createOrder(
+    @Args('createOrderInput') createOrderInput: CreateOrderInput,
+  ) {
+    return await this.orderService.create(createOrderInput);
   }
 
   @Query(() => [Order], { name: 'orders' })
-  findAll() {
-    return this.orderService.findAll();
+  async findAll() {
+    return await this.orderService.findAll();
   }
 
   @Query(() => Order, { name: 'order' })
-  findOne(@Args('id', { type: () => String }) id: string) {
-    return this.orderService.findOne(id);
+  async findOne(@Args('id', { type: () => String }) id: string) {
+    return await this.orderService.findOne(id);
   }
 
   @Mutation(() => Order)
-  updateOrder(@Args('updateOrderInput') updateOrderInput: UpdateOrderInput) {
-    return this.orderService.update(updateOrderInput.id, updateOrderInput);
+  async updateOrder(
+    @Args('updateOrderInput') updateOrderInput: UpdateOrderInput,
+  ) {
+    return await this.orderService.update(
+      updateOrderInput.id,
+      updateOrderInput,
+    );
   }
 
   @Mutation(() => Order)
-  removeOrder(@Args('id', { type: () => Int }) id: number) {
-    return this.orderService.remove(id);
+  async removeOrder(@Args('id', { type: () => String }) id: string) {
+    return await this.orderService.remove(id);
   }
 }

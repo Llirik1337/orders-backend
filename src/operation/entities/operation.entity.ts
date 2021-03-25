@@ -1,21 +1,37 @@
-import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { ObjectType, Float, Field } from '@nestjs/graphql';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, Schema as MongooseSchema } from 'mongoose';
 import { Equipment } from 'src/equipment/entities/equipment.entity';
 import { Material } from 'src/material/entities/material.entity';
-import { ManyToOne, OneToMany } from 'typeorm';
+export type OperationDocument = Operation & Document;
 
 @ObjectType()
+@Schema({ timestamps: true, id: true })
 export class Operation {
-  @Field(() => Int, { nullable: false, description: 'Id of Customer' })
-  id: number;
+  @Field(() => String)
+  _id: string;
 
-  @Field(() => String, { nullable: false, description: 'notes' })
-  price: string;
+  @Prop({ type: MongooseSchema.Types.Number })
+  @Field(() => Float, { nullable: false, description: 'notes' })
+  price: number;
 
-  @Field(() => Equipment, { nullable: false, description: 'notes' })
-  @ManyToOne(() => Equipment, (equipment) => equipment.id)
+  @Prop({ type: MongooseSchema.Types.String })
+  @Field(() => String, {
+    nullable: true,
+    description: 'notes',
+  })
+  notes: string;
+
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Equipment' })
+  @Field(() => Equipment, { nullable: false })
   equipment: Equipment;
 
-  @Field(() => Material, { nullable: false, description: 'notes' })
-  @OneToMany(() => Material, (material) => material.id)
-  material: Material[];
+  @Prop({
+    required: true,
+    type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Material' }],
+  })
+  @Field(() => [Material], { nullable: false, description: 'notes' })
+  materials: Material[];
 }
+
+export const OperationSchema = SchemaFactory.createForClass(Operation);

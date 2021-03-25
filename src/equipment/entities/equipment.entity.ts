@@ -1,28 +1,35 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { Operation } from 'src/operation/entities/operation.entity';
-import { OneToMany } from 'typeorm';
-
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, Schema as MongooseSchema } from 'mongoose';
+import {
+  Operation,
+  OperationDocument,
+} from 'src/operation/entities/operation.entity';
+export type EquipmentDocument = Equipment & Document;
 @ObjectType()
+@Schema({ timestamps: true, id: true })
 export class Equipment {
-  @Field(() => Int, { nullable: false, description: 'Id of Customer' })
-  id: number;
+  @Field(() => String)
+  _id: string;
 
+  @Prop({ type: MongooseSchema.Types.String, unique: true })
   @Field(() => String, {
     nullable: false,
-    description: 'Name of Equipment',
   })
   name: string;
-
-  @Field(() => String, { defaultValue: '', description: 'Notes of Equipment' })
+  @Prop({ type: MongooseSchema.Types.String })
+  @Field(() => String, { defaultValue: '' })
   notes: string;
 
-  @Field(() => Int, { defaultValue: 0, description: 'Count of Equipment' })
+  @Prop({ type: MongooseSchema.Types.Number })
+  @Field(() => Int, { defaultValue: 0 })
   count: number;
 
-  @Field(() => Operation, {
-    defaultValue: 0,
-    description: 'Count of Equipment',
-  })
-  @OneToMany(() => Operation, (operation) => operation.equipment)
-  photos: Operation[];
+  // @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Operation' }] })
+  // @Field(() => Operation, {
+  //   description: 'Count of Equipment',
+  // })
+  // operations: OperationDocument[];
 }
+
+export const EquipmentSchema = SchemaFactory.createForClass(Equipment);
