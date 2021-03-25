@@ -12,9 +12,13 @@ export class Material {
   @Field(() => String)
   name: string;
 
-  @Prop({ type: MongooseSchema.Types.String })
-  @Field(() => String)
-  units: string;
+  @Prop({ type: MongooseSchema.Types.Number })
+  @Field(() => Float)
+  length: number;
+
+  @Prop({ type: MongooseSchema.Types.Number })
+  @Field(() => Float)
+  width: number;
 
   @Prop({ type: MongooseSchema.Types.Number })
   @Field(() => Float)

@@ -1,12 +1,15 @@
-import { InputType, Int, Field } from '@nestjs/graphql';
+import { InputType, Int, Field, Float } from '@nestjs/graphql';
 
 @InputType()
 export class CreateMaterialInput {
   @Field(() => String)
   name: string;
 
-  @Field(() => String)
-  units: string;
+  @Field(() => Float)
+  length: number;
+
+  @Field(() => Float)
+  width: number;
 
   @Field(() => Number)
   cost: number;

@@ -17,7 +17,8 @@ export class MaterialService {
     createdMaterial.name = createMaterialInput.name;
     createdMaterial.cost = createMaterialInput.cost;
     createdMaterial.count = createMaterialInput.count;
-    createdMaterial.units = createMaterialInput.units;
+    createdMaterial.length = createMaterialInput.length;
+    createdMaterial.width = createMaterialInput.width;
     return await createdMaterial.save();
   }
 
