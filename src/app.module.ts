@@ -12,6 +12,8 @@ import { UserModule } from './user/user.module';
 import { OrderStatusModule } from './order-status/order-status.module';
 import { CurrencyModule } from './currency/currency.module';
 import { PositionsModule } from './positions/positions.module';
+import { BlankMaterialModule } from './blank-material/blank-material.module';
+import { ComponentOperationModule } from './component-operation/component-operation.module';
 
 @Module({
   imports: [
@@ -23,17 +25,20 @@ import { PositionsModule } from './positions/positions.module';
         credentials: true,
       },
     }),
-    MongooseModule.forRoot('mongodb://localhost/orders', {
-      autoCreate: true,
-      autoIndex: true,
-      autoReconnect: true,
-      logger: console.log,
-      connectionFactory: (connection) => {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        connection.plugin(require('mongoose-autopopulate'));
-        return connection;
+    MongooseModule.forRoot(
+      'mongodb+srv://Llirik1337:123@cluster0.vojcr.mongodb.net/orders?retryWrites=true&w=majority',
+      {
+        autoCreate: true,
+        autoIndex: true,
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        connectionFactory: (connection) => {
+          // eslint-disable-next-line @typescript-eslint/no-var-requires
+          connection.plugin(require('mongoose-autopopulate'));
+          return connection;
+        },
       },
-    }),
+    ),
     OrderModule,
     CustomerModule,
     EmployeeModule,
@@ -45,6 +50,8 @@ import { PositionsModule } from './positions/positions.module';
     OrderStatusModule,
     CurrencyModule,
     PositionsModule,
+    BlankMaterialModule,
+    ComponentOperationModule,
   ],
   controllers: [],
 })
