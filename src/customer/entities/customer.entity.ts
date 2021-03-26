@@ -33,5 +33,11 @@ export class Customer {
   @Prop({ type: MongooseSchema.Types.String })
   @Field(() => String, { nullable: true })
   notes: string;
+
+  @Field(() => Date)
+  createdAt: Date;
+
+  @Field(() => Date)
+  updatedAt: Date;
 }
 export const CustomerSchema = SchemaFactory.createForClass(Customer);

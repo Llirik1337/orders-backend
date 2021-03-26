@@ -25,7 +25,13 @@ export class Currency {
   Name: string;
 
   @Field(() => Float, { nullable: false })
-  @Prop({ type: MongooseSchema.Types.Decimal128, required: true })
+  @Prop({ type: MongooseSchema.Types.Number, required: true })
   Value: number;
+
+  @Field(() => Date)
+  createdAt: Date;
+
+  @Field(() => Date)
+  updatedAt: Date;
 }
 export const CurrencySchema = SchemaFactory.createForClass(Currency);

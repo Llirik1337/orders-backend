@@ -7,7 +7,14 @@ type Equipment {
   name: String!
   notes: String!
   count: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
 
 type Material {
   _id: String!
@@ -16,6 +23,8 @@ type Material {
   width: Float!
   cost: Float!
   count: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type Operation {
@@ -31,11 +40,24 @@ type Operation {
 
   """notes"""
   materials: [Material!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type ComponentOperation {
+  _id: String!
+  time: Float!
+  operation: Operation!
+  isBatch: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type OrderStatus {
   _id: String!
   name: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type Customer {
@@ -46,6 +68,8 @@ type Customer {
   phone: String
   address: String
   notes: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type Order {
@@ -55,6 +79,8 @@ type Order {
   components: [Component!]!
   status: OrderStatus!
   price: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type Component {
@@ -63,18 +89,25 @@ type Component {
   """notes"""
   name: String!
   notes: String
-  operations: [Operation!]!
+  operations: [ComponentOperation!]!
+  cost: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type Position {
   _id: String!
   name: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type Employee {
   _id: String!
   fullName: String!
   position: Position!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type User {
@@ -82,9 +115,8 @@ type User {
 
   """Login"""
   login: String!
-
-  """Password"""
-  password: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type Currency {
@@ -94,6 +126,19 @@ type Currency {
   Nominal: Int!
   Name: String!
   Value: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type BlankMaterial {
+  _id: String!
+  material: Material!
+  length: Float!
+  width: Float!
+  cost: Float!
+  diff: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type Query {
@@ -103,6 +148,8 @@ type Query {
   customer(id: String!): Customer!
   components: [Component!]!
   component(id: String!): Component!
+  componentOperations: [ComponentOperation!]!
+  componentOperation(id: String!): ComponentOperation!
   operations: [Operation!]!
   operation(id: String!): Operation!
   materials: [Material!]!
@@ -119,6 +166,8 @@ type Query {
   user(id: String!): User!
   currencies: [Currency!]!
   currency(id: String!): Currency!
+  blankMaterials: [BlankMaterial!]!
+  blankMaterial(id: String!): BlankMaterial!
 }
 
 type Mutation {
@@ -130,8 +179,10 @@ type Mutation {
   removeCustomer(id: String!): Customer!
   createComponent(createComponentInput: CreateComponentInput!): Component!
   updateComponent(updateComponentInput: UpdateComponentInput!): Component!
-  addComponentOperations(addComponentOperations: AddComponentOperations!): Component!
   removeComponent(id: String!): Component!
+  createComponentOperation(createComponentOperationInput: CreateComponentOperationInput!): ComponentOperation!
+  updateComponentOperation(updateComponentOperationInput: UpdateComponentOperationInput!): ComponentOperation!
+  removeComponentOperation(id: String!): ComponentOperation!
   createOperation(createOperationInput: CreateOperationInput!): Operation!
   updateOperation(updateOperationInput: UpdateOperationInput!): Operation!
   removeOperation(id: String!): Operation!
@@ -156,6 +207,9 @@ type Mutation {
   createCurrency(createCurrencyInput: CreateCurrencyInput!): Currency!
   updateCurrency(updateCurrencyInput: UpdateCurrencyInput!): Currency!
   removeCurrency(id: String!): Currency!
+  createBlankMaterial(createBlankMaterialInput: CreateBlankMaterialInput!): BlankMaterial!
+  updateBlankMaterial(updateBlankMaterialInput: UpdateBlankMaterialInput!): BlankMaterial!
+  removeBlankMaterial(id: String!): BlankMaterial!
 }
 
 input CreateOrderInput {
@@ -211,10 +265,17 @@ input UpdateComponentInput {
   id: String!
 }
 
-input AddComponentOperations {
-  """notes"""
+input CreateComponentOperationInput {
+  time: Float!
+  operationId: String!
+  isBatch: Boolean!
+}
+
+input UpdateComponentOperationInput {
+  time: Float
+  operationId: String
+  isBatch: Boolean
   id: String!
-  operations: [String!]!
 }
 
 input CreateOperationInput {
@@ -336,5 +397,18 @@ input UpdateCurrencyInput {
   Nominal: Int
   Name: String
   Value: Float
+  id: String!
+}
+
+input CreateBlankMaterialInput {
+  materialId: String!
+  length: Float!
+  width: Float!
+}
+
+input UpdateBlankMaterialInput {
+  materialId: String
+  length: Float
+  width: Float
   id: String!
 }

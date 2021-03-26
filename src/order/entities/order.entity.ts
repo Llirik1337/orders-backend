@@ -43,6 +43,12 @@ export class Order {
   @Field(() => Float, { nullable: false })
   @Prop({ type: MongooseSchema.Types.Number })
   price: number;
+
+  @Field(() => Date)
+  createdAt: Date;
+
+  @Field(() => Date)
+  updatedAt: Date;
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);

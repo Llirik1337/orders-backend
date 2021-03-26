@@ -12,5 +12,10 @@ export class Position {
   @Field(() => String)
   @Prop({ require: true, type: MongooseSchema.Types.String, unique: true })
   name: string;
+  @Field(() => Date)
+  createdAt: Date;
+
+  @Field(() => Date)
+  updatedAt: Date;
 }
 export const PositionSchema = SchemaFactory.createForClass(Position);

@@ -36,16 +36,16 @@ export class ComponentResolver {
     );
   }
 
-  @Mutation(() => Component)
-  async addComponentOperations(
-    @Args('addComponentOperations')
-    addComponentOperations: AddComponentOperations,
-  ) {
-    return await this.componentService.addComponentOperations(
-      addComponentOperations.id,
-      addComponentOperations.operations,
-    );
-  }
+  // @Mutation(() => Component)
+  // async addComponentOperations(
+  //   @Args('addComponentOperations')
+  //   addComponentOperations: AddComponentOperations,
+  // ) {
+  //   return await this.componentService.addComponentOperations(
+  //     addComponentOperations.id,
+  //     addComponentOperations.operations,
+  //   );
+  // }
 
   @Mutation(() => Component)
   async removeComponent(@Args('id', { type: () => String }) id: string) {

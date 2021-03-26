@@ -36,6 +36,12 @@ export class Operation {
   })
   @Field(() => [Material], { nullable: false, description: 'notes' })
   materials: Material[];
+
+  @Field(() => Date)
+  createdAt: Date;
+
+  @Field(() => Date)
+  updatedAt: Date;
 }
 
 export const OperationSchema = SchemaFactory.createForClass(Operation);

@@ -1,10 +1,6 @@
-import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
-import {
-  Operation,
-  OperationDocument,
-} from 'src/operation/entities/operation.entity';
 export type EquipmentDocument = Equipment & Document;
 @ObjectType()
 @Schema({ timestamps: true, id: true })
@@ -23,6 +19,12 @@ export class Equipment {
   @Prop({ type: MongooseSchema.Types.Number })
   @Field(() => Int, { defaultValue: 0 })
   count: number;
+
+  @Field(() => Date)
+  createdAt: Date;
+
+  @Field(() => Date)
+  updatedAt: Date;
 
   // @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Operation' }] })
   // @Field(() => Operation, {

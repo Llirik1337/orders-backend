@@ -29,7 +29,7 @@ export class OrderService {
 
     const components = (await Promise.all(promiseComponents)) || [];
 
-    createdOrder.components.push(...components);
+    createdOrder.components = components;
 
     const status = await this.orderStatusService.findById(
       createOrderInput.statusId,

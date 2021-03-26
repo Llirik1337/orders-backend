@@ -12,9 +12,15 @@ export class User {
   @Prop({ required: true })
   @Field(() => String, { description: 'Login' })
   login: string;
+
   @Prop({ required: true })
-  @Field(() => String, { description: 'Password' })
   password: string;
+
+  @Field(() => Date)
+  createdAt: Date;
+
+  @Field(() => Date)
+  updatedAt: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

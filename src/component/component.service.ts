@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { LeanDocument, Model } from 'mongoose';
-import { OperationDocument } from 'src/operation/entities/operation.entity';
-import { OperationService } from 'src/operation/operation.service';
+import { ComponentOperationService } from 'src/component-operation/component-operation.service';
 import { CreateComponentInput } from './dto/create-component.input';
 import { UpdateComponentInput } from './dto/update-component.input';
 import { Component, ComponentDocument } from './entities/component.entity';
@@ -12,7 +11,7 @@ export class ComponentService {
   constructor(
     @InjectModel(Component.name)
     private readonly componentModel: Model<ComponentDocument>,
-    private readonly operationService: OperationService,
+    private readonly componentOperationService: ComponentOperationService,
   ) {}
   async create(
     createComponentInput: CreateComponentInput,
@@ -23,17 +22,16 @@ export class ComponentService {
 
     const promiseOperations = [];
     for (const id of createComponentInput.operationsId) {
-      promiseOperations.push(this.operationService.findOne(id));
+      promiseOperations.push(this.componentOperationService.findOne(id));
     }
-    const operations =
-      (await Promise.all<OperationDocument>(promiseOperations)) || [];
+    const operations = (await Promise.all(promiseOperations)) || [];
 
     createdComponent.operations = operations;
     return await createdComponent.save();
   }
 
   async findAll(): Promise<LeanDocument<ComponentDocument>> {
-    return await this.componentModel.find().lean();
+    return await this.componentModel.find().populate('operations').lean();
   }
 
   async findOne(id: string): Promise<ComponentDocument> {
@@ -50,31 +48,32 @@ export class ComponentService {
 
     const promiseOperations = [];
     for (const id of updateComponentInput.operationsId) {
-      promiseOperations.push(this.operationService.findOne(id));
+      promiseOperations.push(this.componentOperationService.findOne(id));
     }
-    const operations =
-      (await Promise.all<OperationDocument>(promiseOperations)) || [];
+    const operations = (await Promise.all(promiseOperations)) || [];
 
     updatedComponent.operations = operations;
     return await updatedComponent.save();
   }
 
-  async addComponentOperations(
-    id: string,
-    operationsId: Array<string>,
-  ): Promise<ComponentDocument> {
-    const foundComponent = await this.findOne(id);
-    const promiseFoundOperations = [];
-    for (const id of operationsId) {
-      promiseFoundOperations.push(this.operationService.findOne(id));
-    }
-    const foundOperations = await Promise.all(promiseFoundOperations);
+  // async addComponentOperations(
+  //   id: string,
+  //   operationsId: Array<string>,
+  // ): Promise<ComponentDocument> {
+  //   const foundComponent = await this.findOne(id);
+  //   const promiseFoundOperations = [];
+  //   for (const id of operationsId) {
+  //     promiseFoundOperations.push(this.componentOperationService.findOne(id));
+  //   }
+  //   const foundOperations = await Promise.all(promiseFoundOperations);
 
-    for (const operation of foundOperations) {
-      foundComponent.operations.push(operation);
-    }
-    return await foundComponent.save();
-  }
+  //   for (const operation of foundOperations) {
+  //     foundComponent.operations.push(operation);
+  //   }
+  //   return await foundComponent.save();
+  // }
+
+  // async getCost(componentDocument: ComponentDocument) {}
 
   async remove(id: string): Promise<ComponentDocument> {
     return await this.componentModel.findByIdAndDelete(id);

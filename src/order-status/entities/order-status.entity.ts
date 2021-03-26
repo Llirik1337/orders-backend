@@ -12,6 +12,12 @@ export class OrderStatus {
   @Prop({ require: true, type: MongooseSchema.Types.String, unique: true })
   @Field(() => String, { nullable: false })
   name: string;
+
+  @Field(() => Date)
+  createdAt: Date;
+
+  @Field(() => Date)
+  updatedAt: Date;
 }
 
 export const OrderStatusSchema = SchemaFactory.createForClass(OrderStatus);

@@ -27,5 +27,11 @@ export class Material {
   @Prop({ type: MongooseSchema.Types.Number })
   @Field(() => Int)
   count: number;
+
+  @Field(() => Date)
+  createdAt: Date;
+
+  @Field(() => Date)
+  updatedAt: Date;
 }
 export const MaterialSchema = SchemaFactory.createForClass(Material);

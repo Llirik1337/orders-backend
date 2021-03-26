@@ -12,6 +12,7 @@ import { UserModule } from './user/user.module';
 import { OrderStatusModule } from './order-status/order-status.module';
 import { CurrencyModule } from './currency/currency.module';
 import { PositionsModule } from './positions/positions.module';
+import { BlankMaterialModule } from './blank-material/blank-material.module';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { PositionsModule } from './positions/positions.module';
     OrderStatusModule,
     CurrencyModule,
     PositionsModule,
+    BlankMaterialModule,
   ],
   controllers: [],
 })

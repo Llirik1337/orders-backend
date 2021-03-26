@@ -25,5 +25,11 @@ export class Employee {
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Position' })
   @Field(() => Position)
   position: PositionDocument;
+
+  @Field(() => Date)
+  createdAt: Date;
+
+  @Field(() => Date)
+  updatedAt: Date;
 }
 export const EmployeeSchema = SchemaFactory.createForClass(Employee);

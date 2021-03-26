@@ -1,6 +1,10 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
+import {
+  ComponentOperation,
+  ComponentOperationDocument,
+} from 'src/component-operation/entities/component-operation.entity';
 import { Operation } from 'src/operation/entities/operation.entity';
 import { Order } from 'src/order/entities/order.entity';
 export type ComponentDocument = Component & Document;
@@ -27,10 +31,20 @@ export class Component {
   // orders: Order[];
 
   @Prop({
-    type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Operation' }],
+    type: [{ type: MongooseSchema.Types.ObjectId, ref: 'ComponentOperation' }],
     default: [],
   })
-  @Field(() => [Operation], { defaultValue: [] })
-  operations: Operation[];
+  @Field(() => [ComponentOperation], { defaultValue: [] })
+  operations: ComponentOperationDocument[];
+
+  @Prop({ type: MongooseSchema.Types.String, required: false })
+  @Field(() => Number, { nullable: false })
+  cost: number;
+
+  @Field(() => Date)
+  createdAt: Date;
+
+  @Field(() => Date)
+  updatedAt: Date;
 }
 export const ComponentSchema = SchemaFactory.createForClass(Component);
