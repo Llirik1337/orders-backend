@@ -2,11 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { BlankMaterialService } from 'src/blank-material/blank-material.service';
-import {
-  BlankMaterial,
-  BlankMaterialDocument,
-} from 'src/blank-material/entities/blank-material.entity';
-import { MaterialService } from 'src/material/material.service';
+import { BlankMaterialDocument } from 'src/blank-material/entities/blank-material.entity';
 import { OperationService } from 'src/operation/operation.service';
 import { CreateComponentOperationInput } from './dto/create-component-operation.input';
 import { UpdateComponentOperationInput } from './dto/update-component-operation.input';

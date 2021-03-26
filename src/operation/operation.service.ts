@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { EquipmentService } from 'src/equipment/equipment.service';
-import { MaterialService } from 'src/material/material.service';
 import { CreateOperationInput } from './dto/create-operation.input';
 import { UpdateOperationInput } from './dto/update-operation.input';
 import { Operation, OperationDocument } from './entities/operation.entity';
@@ -47,12 +45,6 @@ export class OperationService {
       id,
       updateOperationInput,
     );
-
-    // const updatedOperation = await this.operationModel.findById(id);
-
-    // updatedOperation.name = updateOperationInput.name;
-
-    // return await updatedOperation.save();
   }
 
   async remove(id: string): Promise<OperationDocument> {

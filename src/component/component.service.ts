@@ -27,6 +27,9 @@ export class ComponentService {
     const operations = (await Promise.all(promiseOperations)) || [];
 
     createdComponent.operations = operations;
+
+    await createdComponent.save();
+    await this.updateCost(createdComponent);
     return await createdComponent.save();
   }
 
@@ -53,7 +56,28 @@ export class ComponentService {
     const operations = (await Promise.all(promiseOperations)) || [];
 
     updatedComponent.operations = operations;
+    await updatedComponent.save();
+    await this.updateCost(updatedComponent);
     return await updatedComponent.save();
+  }
+
+  async updateCost(component: ComponentDocument) {
+    await component.populate('operations').execPopulate();
+    let cost = 0;
+
+    for (const operation of component.operations) {
+      await operation
+        .populate('blankMaterials')
+        .populate('operation')
+        .execPopulate();
+      if (operation.blankMaterials)
+        for (const material of operation.blankMaterials) {
+          cost += material.cost;
+        }
+      if (operation.operation) cost += operation.operation.price;
+    }
+
+    component.cost = cost;
   }
 
   // async addComponentOperations(
