@@ -39,7 +39,7 @@ export class Order {
   @Prop({
     required: true,
     type: MongooseSchema.Types.ObjectId,
-    ref: 'Customer',
+    ref: 'OrderStatus',
   })
   @Field(() => OrderStatus, { nullable: false })
   status: OrderStatus;

@@ -1,8 +1,6 @@
-import { ObjectType, Float, Field } from '@nestjs/graphql';
+import { Field, Float, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
-import { Equipment } from 'src/equipment/entities/equipment.entity';
-import { Material } from 'src/material/entities/material.entity';
 export type OperationDocument = Operation & Document;
 
 @ObjectType()
