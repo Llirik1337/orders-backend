@@ -6,7 +6,7 @@ export class CreateComponentInput {
   @Field(() => String, { nullable: false, description: 'notes' })
   name: string;
 
-  @Field(() => String, { nullable: false })
+  @Field(() => String, { nullable: true })
   notes: string;
 
   //TODO Добавить потом
@@ -17,6 +17,6 @@ export class CreateComponentInput {
   // @Field(() => Order, { defaultValue: [] })
   // orders: Order[];
 
-  @Field(() => [String])
+  @Field(() => [String], { nullable: false })
   operationsId: string[];
 }

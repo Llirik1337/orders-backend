@@ -62,7 +62,7 @@ type Component {
 
   """notes"""
   name: String!
-  notes: String!
+  notes: String
   operations: [Operation!]!
 }
 
@@ -161,9 +161,9 @@ type Mutation {
 input CreateOrderInput {
   name: String!
   customerId: String!
-  componentsId: [String!]!
+  componentsId: [String!]
   statusId: String!
-  price: Float!
+  price: Float
 }
 
 input UpdateOrderInput {
@@ -199,7 +199,7 @@ input UpdateCustomerInput {
 input CreateComponentInput {
   """notes"""
   name: String!
-  notes: String!
+  notes: String
   operationsId: [String!]!
 }
 

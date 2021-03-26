@@ -15,7 +15,7 @@ export class Component {
   name: string;
 
   @Prop({ type: MongooseSchema.Types.String, required: false })
-  @Field(() => String, { nullable: false })
+  @Field(() => String, { nullable: true })
   notes: string;
 
   //TODO Добавить потом

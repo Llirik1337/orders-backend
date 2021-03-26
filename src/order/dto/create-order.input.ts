@@ -8,12 +8,12 @@ export class CreateOrderInput {
   @Field(() => String, { nullable: false })
   customerId: string;
 
-  @Field(() => [String], { nullable: false })
+  @Field(() => [String], { nullable: true })
   componentsId: string[];
 
   @Field(() => String, { nullable: false })
   statusId: string;
 
-  @Field(() => Number, { nullable: false })
+  @Field(() => Number, { nullable: true })
   price: number;
 }
