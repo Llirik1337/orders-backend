@@ -15,5 +15,5 @@ export class CreateOrderInput {
   statusId: string;
 
   @Field(() => Number, { nullable: true })
-  price: number;
+  cost: number;
 }

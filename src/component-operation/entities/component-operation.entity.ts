@@ -22,20 +22,32 @@ export class ComponentOperation {
   @Field(() => Float)
   time: number;
 
+  @Prop({ type: MongooseSchema.Types.Number })
+  @Field(() => Float)
+  cost: number;
+
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Material' })
   @Field(() => Operation)
   operation: OperationDocument;
 
-  @Prop({ type: MongooseSchema.Types.Boolean })
-  @Field(() => Boolean)
-  isBatch: boolean;
-
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Equipment' })
-  @Field(() => Equipment, { nullable: false })
+  @Prop({
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'Equipment',
+    required: false,
+  })
+  @Field(() => Equipment, { nullable: true })
   equipment: Equipment;
 
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'BlankMaterial' })
-  @Field(() => [BlankMaterial], { nullable: false })
+  @Prop({
+    type: [
+      {
+        type: MongooseSchema.Types.ObjectId,
+        ref: 'BlankMaterial',
+      },
+    ],
+    required: false,
+  })
+  @Field(() => [BlankMaterial], { nullable: true })
   blankMaterials: BlankMaterialDocument[];
 
   @Field(() => Date)

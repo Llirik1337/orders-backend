@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
-import { ComponentOperationService } from './component-operation.service';
-import { ComponentOperationResolver } from './component-operation.resolver';
+import { MongooseModule } from '@nestjs/mongoose';
+import { BlankMaterialModule } from 'src/blank-material/blank-material.module';
+import { EquipmentModule } from 'src/equipment/equipment.module';
 import { OperationModule } from 'src/operation/operation.module';
+import { ComponentOperationResolver } from './component-operation.resolver';
+import { ComponentOperationService } from './component-operation.service';
 import {
   ComponentOperation,
   ComponentOperationSchema,
 } from './entities/component-operation.entity';
-import { MongooseModule } from '@nestjs/mongoose';
-import { MaterialModule } from 'src/material/material.module';
-import { BlankMaterialModule } from 'src/blank-material/blank-material.module';
 
 @Module({
   imports: [
@@ -16,6 +16,7 @@ import { BlankMaterialModule } from 'src/blank-material/blank-material.module';
       { name: ComponentOperation.name, schema: ComponentOperationSchema },
     ]),
     OperationModule,
+    EquipmentModule,
     BlankMaterialModule,
   ],
   providers: [ComponentOperationResolver, ComponentOperationService],

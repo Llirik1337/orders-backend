@@ -54,40 +54,10 @@ type Operation {
 type ComponentOperation {
   _id: String!
   time: Float!
+  cost: Float!
   operation: Operation!
-  isBatch: Boolean!
-  equipment: Equipment!
-  blankMaterials: [BlankMaterial!]!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-type OrderStatus {
-  _id: String!
-  name: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-type Customer {
-  _id: String!
-  fullName: String!
-  company: String!
-  email: String
-  phone: String
-  address: String
-  notes: String
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-type Order {
-  _id: String!
-  name: String!
-  customer: Customer!
-  components: [Component!]!
-  status: OrderStatus!
-  price: Float!
+  equipment: Equipment
+  blankMaterials: [BlankMaterial!]
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -104,6 +74,18 @@ type Component {
   updatedAt: DateTime!
 }
 
+type Customer {
+  _id: String!
+  fullName: String!
+  company: String!
+  email: String
+  phone: String
+  address: String
+  notes: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type Position {
   _id: String!
   name: String!
@@ -115,6 +97,34 @@ type Employee {
   _id: String!
   fullName: String!
   position: Position!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type OrderComponent {
+  _id: String!
+  count: Int!
+  cost: Float!
+  components: [Component!]!
+  batchOperations: [ComponentOperation!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type OrderStatus {
+  _id: String!
+  name: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Order {
+  _id: String!
+  name: String!
+  customer: Customer!
+  components: [Component!]!
+  status: OrderStatus!
+  cost: Float!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -144,6 +154,7 @@ type Query {
   order(id: String!): Order!
   customers: [Customer!]!
   customer(id: String!): Customer!
+  orderComponent(id: String!): OrderComponent!
   components: [Component!]!
   component(id: String!): Component!
   componentOperations: [ComponentOperation!]!
@@ -175,6 +186,9 @@ type Mutation {
   createCustomer(createCustomerInput: CreateCustomerInput!): Customer!
   updateCustomer(updateCustomerInput: UpdateCustomerInput!): Customer!
   removeCustomer(id: String!): Customer!
+  createOrderComponent(createOrderComponentInput: CreateOrderComponentInput!): OrderComponent!
+  updateOrderComponent(updateOrderComponentInput: UpdateOrderComponentInput!): OrderComponent!
+  removeOrderComponent(id: String!): OrderComponent!
   createComponent(createComponentInput: CreateComponentInput!): Component!
   updateComponent(updateComponentInput: UpdateComponentInput!): Component!
   removeComponent(id: String!): Component!
@@ -215,7 +229,7 @@ input CreateOrderInput {
   customerId: String!
   componentsId: [String!]
   statusId: String!
-  price: Float
+  cost: Float
 }
 
 input UpdateOrderInput {
@@ -223,7 +237,7 @@ input UpdateOrderInput {
   customerId: String
   componentsId: [String!]
   statusId: String
-  price: Float
+  cost: Float
   id: String!
 }
 
@@ -248,6 +262,19 @@ input UpdateCustomerInput {
   id: String!
 }
 
+input CreateOrderComponentInput {
+  count: Int!
+  componentsId: [String!]!
+  batchOperationsId: [String!]!
+}
+
+input UpdateOrderComponentInput {
+  count: Int
+  componentsId: [String!]
+  batchOperationsId: [String!]
+  id: String!
+}
+
 input CreateComponentInput {
   """notes"""
   name: String!
@@ -266,15 +293,13 @@ input UpdateComponentInput {
 input CreateComponentOperationInput {
   time: Float!
   operationId: String!
-  isBatch: Boolean!
-  equipmentId: String!
-  blankMaterialsId: [String!]!
+  equipmentId: String
+  blankMaterialsId: [String!]
 }
 
 input UpdateComponentOperationInput {
   time: Float
   operationId: String
-  isBatch: Boolean
   equipmentId: String
   blankMaterialsId: [String!]
   id: String!

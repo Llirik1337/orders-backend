@@ -1,18 +1,14 @@
 import { Module } from '@nestjs/common';
-import { OperationService } from './operation.service';
-import { OperationResolver } from './operation.resolver';
-import { Operation, OperationSchema } from './entities/operation.entity';
 import { MongooseModule } from '@nestjs/mongoose';
-import { MaterialModule } from 'src/material/material.module';
-import { EquipmentModule } from 'src/equipment/equipment.module';
+import { Operation, OperationSchema } from './entities/operation.entity';
+import { OperationResolver } from './operation.resolver';
+import { OperationService } from './operation.service';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: Operation.name, schema: OperationSchema },
     ]),
-
-    EquipmentModule,
   ],
   providers: [OperationResolver, OperationService],
   exports: [OperationService],

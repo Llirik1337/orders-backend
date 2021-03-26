@@ -5,8 +5,6 @@ import {
   ComponentOperation,
   ComponentOperationDocument,
 } from 'src/component-operation/entities/component-operation.entity';
-import { Operation } from 'src/operation/entities/operation.entity';
-import { Order } from 'src/order/entities/order.entity';
 export type ComponentDocument = Component & Document;
 @ObjectType()
 @Schema({ timestamps: true, id: true, _id: true })

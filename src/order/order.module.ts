@@ -1,16 +1,16 @@
 import { Module } from '@nestjs/common';
-import { OrderService } from './order.service';
-import { OrderResolver } from './order.resolver';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Order, OrderSchema } from './entities/order.entity';
 import { CustomerModule } from 'src/customer/customer.module';
-import { ComponentModule } from 'src/component/component.module';
+import { OrderComponentModule } from 'src/order-component/order-component.module';
 import { OrderStatusModule } from 'src/order-status/order-status.module';
+import { Order, OrderSchema } from './entities/order.entity';
+import { OrderResolver } from './order.resolver';
+import { OrderService } from './order.service';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Order.name, schema: OrderSchema }]),
     CustomerModule,
-    ComponentModule,
+    OrderComponentModule,
     OrderStatusModule,
   ],
   providers: [OrderResolver, OrderService],
