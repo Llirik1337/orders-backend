@@ -30,7 +30,7 @@ export class OrderService {
     const components =
       (await Promise.all<OrderComponentDocument>(promiseComponents)) || [];
 
-    createdOrder.components = components;
+    createdOrder.orderComponents = components;
 
     const status = await this.orderStatusService.findById(
       createOrderInput.statusId,
@@ -63,7 +63,7 @@ export class OrderService {
   async updateCost(order: OrderDocument) {
     await order.populate('components').execPopulate();
     let cost = 0;
-    for (const component of order.components) {
+    for (const component of order.orderComponents) {
       cost += component.cost;
     }
 
@@ -88,7 +88,7 @@ export class OrderService {
       const components =
         (await Promise.all<OrderComponentDocument>(promiseComponents)) || [];
 
-      updatedOrder.components = components;
+      updatedOrder.orderComponents = components;
     }
     if (updateOrderInput.statusId) {
       const status = await this.orderStatusService.findById(

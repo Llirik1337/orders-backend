@@ -29,12 +29,12 @@ export class Order {
   @Field(() => Customer, { nullable: false })
   customer: Customer;
 
-  @Field(() => [Component], { nullable: false })
+  @Field(() => [OrderComponent], { nullable: false })
   @Prop({
     required: true,
     type: [{ type: MongooseSchema.Types.ObjectId, ref: 'OrderComponent' }],
   })
-  components: OrderComponentDocument[];
+  orderComponents: OrderComponentDocument[];
 
   @Prop({
     required: true,
