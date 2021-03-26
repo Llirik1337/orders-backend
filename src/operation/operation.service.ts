@@ -47,8 +47,12 @@ export class OperationService {
     return result;
   }
 
-  async findAll(): Promise<LeanDocument<OperationDocument>> {
-    return await this.operationModel.find().lean();
+  async findAll() {
+    return await this.operationModel
+      .find()
+      .populate('materials')
+      .populate('equipment')
+      .exec();
   }
 
   async findOne(id: string): Promise<OperationDocument> {
