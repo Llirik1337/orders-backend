@@ -13,10 +13,9 @@ export class Equipment {
   _id: string;
 
   @Prop({ type: MongooseSchema.Types.String, unique: true })
-  @Field(() => String, {
-    nullable: false,
-  })
+  @Field(() => String, { nullable: false })
   name: string;
+
   @Prop({ type: MongooseSchema.Types.String })
   @Field(() => String, { defaultValue: '' })
   notes: string;

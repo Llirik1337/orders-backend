@@ -4,10 +4,13 @@ import { Material } from 'src/material/entities/material.entity';
 
 @InputType()
 export class CreateOperationInput {
+  @Field(() => String, { nullable: false })
+  name: string;
+
   @Field(() => Number, { nullable: false })
   price: number;
 
-  @Field(() => String, { nullable: false })
+  @Field(() => String, { nullable: true })
   notes: string;
 
   @Field(() => String, { nullable: false })

@@ -12,13 +12,15 @@ type Equipment {
 type Material {
   _id: String!
   name: String!
-  units: String!
+  length: Float!
+  width: Float!
   cost: Float!
   count: Int!
 }
 
 type Operation {
   _id: String!
+  name: String!
 
   """notes"""
   price: Float!
@@ -40,9 +42,9 @@ type Customer {
   _id: String!
   fullName: String!
   company: String!
-  email: String!
-  phone: String!
-  address: String!
+  email: String
+  phone: String
+  address: String
   notes: String
 }
 
@@ -135,7 +137,7 @@ type Mutation {
   removeOperation(id: String!): Operation!
   createMaterial(createMaterialInput: CreateMaterialInput!): Material!
   updateMaterial(updateMaterialInput: UpdateMaterialInput!): Material!
-  removeMaterial(id: Int!): Material!
+  removeMaterial(id: String!): Material!
   createEquipment(createEquipmentInput: CreateEquipmentInput!): Equipment!
   updateEquipment(updateEquipmentInput: UpdateEquipmentInput!): Equipment!
   removeEquipment(id: String!): Equipment!
@@ -179,7 +181,7 @@ input CreateCustomerInput {
   email: String!
   phone: String!
   address: String!
-  notes: String
+  notes: String!
 }
 
 input UpdateCustomerInput {
@@ -216,13 +218,15 @@ input AddComponentOperations {
 }
 
 input CreateOperationInput {
+  name: String!
   price: Float!
-  notes: String!
+  notes: String
   equipmentId: String!
   materialsId: [String!]!
 }
 
 input UpdateOperationInput {
+  name: String!
   price: Float
   notes: String
   equipmentId: String
@@ -232,14 +236,16 @@ input UpdateOperationInput {
 
 input CreateMaterialInput {
   name: String!
-  units: String!
+  length: Float!
+  width: Float!
   cost: Float!
   count: Int = 0
 }
 
 input UpdateMaterialInput {
   name: String
-  units: String
+  length: Float
+  width: Float
   cost: Float
   count: Int = 0
   id: String!

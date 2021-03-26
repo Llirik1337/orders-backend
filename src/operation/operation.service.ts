@@ -28,8 +28,9 @@ export class OperationService {
     }
 
     const materials = await Promise.all(promiseMaterials);
-    createdOperation.notes = createOperationInput.notes;
 
+    createdOperation.name = createOperationInput.name;
+    createdOperation.notes = createOperationInput.notes;
     createdOperation.price = createOperationInput.price;
 
     for (const material of materials) {
@@ -84,6 +85,8 @@ export class OperationService {
       );
 
       updatedOperation.equipment = equipment;
+
+      updatedOperation.name = updateOperationInput.name;
     }
 
     return await updatedOperation.save();

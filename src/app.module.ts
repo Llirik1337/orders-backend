@@ -12,8 +12,6 @@ import { UserModule } from './user/user.module';
 import { OrderStatusModule } from './order-status/order-status.module';
 import { CurrencyModule } from './currency/currency.module';
 import { PositionsModule } from './positions/positions.module';
-import { BlankMaterialModule } from './blank-material/blank-material.module';
-import { ComponentOperationModule } from './component-operation/component-operation.module';
 
 @Module({
   imports: [
@@ -50,8 +48,6 @@ import { ComponentOperationModule } from './component-operation/component-operat
     OrderStatusModule,
     CurrencyModule,
     PositionsModule,
-    BlankMaterialModule,
-    ComponentOperationModule,
   ],
   controllers: [],
 })

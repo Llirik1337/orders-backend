@@ -11,6 +11,10 @@ export class Operation {
   @Field(() => String)
   _id: string;
 
+  @Prop({ type: MongooseSchema.Types.String, unique: true })
+  @Field(() => String, { nullable: false })
+  name: string;
+
   @Prop({ type: MongooseSchema.Types.Number })
   @Field(() => Float, { nullable: false, description: 'notes' })
   price: number;
