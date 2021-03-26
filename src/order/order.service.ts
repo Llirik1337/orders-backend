@@ -44,8 +44,13 @@ export class OrderService {
     return await createdOrder.save();
   }
 
-  async findAll(): Promise<LeanDocument<OrderDocument>> {
-    return await this.orderModel.find().lean();
+  async findAll() {
+    return await this.orderModel
+      .find()
+      .populate('status')
+      .populate('components')
+      .populate('customer')
+      .exec();
   }
 
   async findOne(id: string): Promise<OrderDocument> {
