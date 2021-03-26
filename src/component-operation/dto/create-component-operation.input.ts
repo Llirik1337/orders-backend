@@ -11,4 +11,10 @@ export class CreateComponentOperationInput {
 
   @Field(() => Boolean)
   isBatch: boolean;
+
+  @Field(() => String, { nullable: false })
+  equipmentId: string;
+
+  @Field(() => [String], { nullable: false })
+  blankMaterialsId: string[];
 }

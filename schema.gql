@@ -2,10 +2,12 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Equipment {
+type Material {
   _id: String!
   name: String!
-  notes: String!
+  length: Float!
+  width: Float!
+  cost: Float!
   count: Int!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -16,12 +18,21 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type Material {
+type BlankMaterial {
   _id: String!
-  name: String!
+  material: Material!
   length: Float!
   width: Float!
   cost: Float!
+  diff: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Equipment {
+  _id: String!
+  name: String!
+  notes: String!
   count: Int!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -36,10 +47,6 @@ type Operation {
 
   """notes"""
   notes: String
-  equipment: Equipment!
-
-  """notes"""
-  materials: [Material!]!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -49,6 +56,8 @@ type ComponentOperation {
   time: Float!
   operation: Operation!
   isBatch: Boolean!
+  equipment: Equipment!
+  blankMaterials: [BlankMaterial!]!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -130,17 +139,6 @@ type Currency {
   updatedAt: DateTime!
 }
 
-type BlankMaterial {
-  _id: String!
-  material: Material!
-  length: Float!
-  width: Float!
-  cost: Float!
-  diff: Float!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
 type Query {
   orders: [Order!]!
   order(id: String!): Order!
@@ -152,10 +150,12 @@ type Query {
   componentOperation(id: String!): ComponentOperation!
   operations: [Operation!]!
   operation(id: String!): Operation!
-  materials: [Material!]!
-  material(id: Int!): Material!
   equipments: [Equipment!]!
   equipment(id: String!): Equipment!
+  blankMaterials: [BlankMaterial!]!
+  blankMaterial(id: String!): BlankMaterial!
+  materials: [Material!]!
+  material(id: Int!): Material!
   ordersStatus: [OrderStatus!]!
   orderStatus(id: String!): OrderStatus!
   employees: [Employee!]!
@@ -166,8 +166,6 @@ type Query {
   user(id: String!): User!
   currencies: [Currency!]!
   currency(id: String!): Currency!
-  blankMaterials: [BlankMaterial!]!
-  blankMaterial(id: String!): BlankMaterial!
 }
 
 type Mutation {
@@ -186,12 +184,15 @@ type Mutation {
   createOperation(createOperationInput: CreateOperationInput!): Operation!
   updateOperation(updateOperationInput: UpdateOperationInput!): Operation!
   removeOperation(id: String!): Operation!
-  createMaterial(createMaterialInput: CreateMaterialInput!): Material!
-  updateMaterial(updateMaterialInput: UpdateMaterialInput!): Material!
-  removeMaterial(id: String!): Material!
   createEquipment(createEquipmentInput: CreateEquipmentInput!): Equipment!
   updateEquipment(updateEquipmentInput: UpdateEquipmentInput!): Equipment!
   removeEquipment(id: String!): Equipment!
+  createBlankMaterial(createBlankMaterialInput: CreateBlankMaterialInput!): BlankMaterial!
+  updateBlankMaterial(updateBlankMaterialInput: UpdateBlankMaterialInput!): BlankMaterial!
+  removeBlankMaterial(id: String!): BlankMaterial!
+  createMaterial(createMaterialInput: CreateMaterialInput!): Material!
+  updateMaterial(updateMaterialInput: UpdateMaterialInput!): Material!
+  removeMaterial(id: String!): Material!
   createOrderStatus(createOrderStatusInput: CreateOrderStatusInput!): OrderStatus!
   updateOrderStatus(updateOrderStatusInput: UpdateOrderStatusInput!): OrderStatus!
   removeOrderStatus(id: String!): OrderStatus!
@@ -207,9 +208,6 @@ type Mutation {
   createCurrency(createCurrencyInput: CreateCurrencyInput!): Currency!
   updateCurrency(updateCurrencyInput: UpdateCurrencyInput!): Currency!
   removeCurrency(id: String!): Currency!
-  createBlankMaterial(createBlankMaterialInput: CreateBlankMaterialInput!): BlankMaterial!
-  updateBlankMaterial(updateBlankMaterialInput: UpdateBlankMaterialInput!): BlankMaterial!
-  removeBlankMaterial(id: String!): BlankMaterial!
 }
 
 input CreateOrderInput {
@@ -269,12 +267,16 @@ input CreateComponentOperationInput {
   time: Float!
   operationId: String!
   isBatch: Boolean!
+  equipmentId: String!
+  blankMaterialsId: [String!]!
 }
 
 input UpdateComponentOperationInput {
   time: Float
   operationId: String
   isBatch: Boolean
+  equipmentId: String
+  blankMaterialsId: [String!]
   id: String!
 }
 
@@ -282,33 +284,12 @@ input CreateOperationInput {
   name: String!
   price: Float!
   notes: String
-  equipmentId: String!
-  materialsId: [String!]!
 }
 
 input UpdateOperationInput {
   name: String!
   price: Float
   notes: String
-  equipmentId: String
-  materialsId: [String!]
-  id: String!
-}
-
-input CreateMaterialInput {
-  name: String!
-  length: Float!
-  width: Float!
-  cost: Float!
-  count: Int = 0
-}
-
-input UpdateMaterialInput {
-  name: String
-  length: Float
-  width: Float
-  cost: Float
-  count: Int = 0
   id: String!
 }
 
@@ -331,6 +312,36 @@ input UpdateEquipmentInput {
   notes: String = ""
 
   """Count of Equipment"""
+  count: Int = 0
+  id: String!
+}
+
+input CreateBlankMaterialInput {
+  materialId: String!
+  length: Float!
+  width: Float!
+}
+
+input UpdateBlankMaterialInput {
+  materialId: String
+  length: Float
+  width: Float
+  id: String!
+}
+
+input CreateMaterialInput {
+  name: String!
+  length: Float!
+  width: Float!
+  cost: Float!
+  count: Int = 0
+}
+
+input UpdateMaterialInput {
+  name: String
+  length: Float
+  width: Float
+  cost: Float
   count: Int = 0
   id: String!
 }
@@ -397,18 +408,5 @@ input UpdateCurrencyInput {
   Nominal: Int
   Name: String
   Value: Float
-  id: String!
-}
-
-input CreateBlankMaterialInput {
-  materialId: String!
-  length: Float!
-  width: Float!
-}
-
-input UpdateBlankMaterialInput {
-  materialId: String
-  length: Float
-  width: Float
   id: String!
 }

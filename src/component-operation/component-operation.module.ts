@@ -7,6 +7,8 @@ import {
   ComponentOperationSchema,
 } from './entities/component-operation.entity';
 import { MongooseModule } from '@nestjs/mongoose';
+import { MaterialModule } from 'src/material/material.module';
+import { BlankMaterialModule } from 'src/blank-material/blank-material.module';
 
 @Module({
   imports: [
@@ -14,6 +16,7 @@ import { MongooseModule } from '@nestjs/mongoose';
       { name: ComponentOperation.name, schema: ComponentOperationSchema },
     ]),
     OperationModule,
+    BlankMaterialModule,
   ],
   providers: [ComponentOperationResolver, ComponentOperationService],
   exports: [ComponentOperationService],

@@ -11,7 +11,7 @@ import { EquipmentModule } from 'src/equipment/equipment.module';
     MongooseModule.forFeature([
       { name: Operation.name, schema: OperationSchema },
     ]),
-    MaterialModule,
+
     EquipmentModule,
   ],
   providers: [OperationResolver, OperationService],

@@ -12,10 +12,4 @@ export class CreateOperationInput {
 
   @Field(() => String, { nullable: true })
   notes: string;
-
-  @Field(() => String, { nullable: false })
-  equipmentId: string;
-
-  @Field(() => [String], { nullable: false })
-  materialsId: string[];
 }

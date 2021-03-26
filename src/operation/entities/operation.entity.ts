@@ -26,17 +26,6 @@ export class Operation {
   })
   notes: string;
 
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Equipment' })
-  @Field(() => Equipment, { nullable: false })
-  equipment: Equipment;
-
-  @Prop({
-    required: true,
-    type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Material' }],
-  })
-  @Field(() => [Material], { nullable: false, description: 'notes' })
-  materials: Material[];
-
   @Field(() => Date)
   createdAt: Date;
 
