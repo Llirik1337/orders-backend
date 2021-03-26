@@ -64,7 +64,7 @@ export class OrderService {
     await order.populate('components').execPopulate();
     let cost = 0;
     for (const component of order.orderComponents) {
-      cost += component.cost;
+      if (component.cost) cost += component.cost;
     }
 
     order.cost = cost;

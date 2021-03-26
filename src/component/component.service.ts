@@ -72,7 +72,7 @@ export class ComponentService {
         .execPopulate();
       if (operation.blankMaterials)
         for (const material of operation.blankMaterials) {
-          cost += material.cost;
+          if (material) cost += material.cost;
         }
       if (operation.operation) cost += operation.operation.price;
     }

@@ -57,10 +57,11 @@ export class OrderComponentService {
 
     let cost = 0;
     for (const component of orderComponent.components) {
-      cost += component.cost;
+      if (component.cost) cost += component.cost;
     }
     for (const operation of orderComponent.batchOperations) {
-      cost += operation.cost / orderComponent.count;
+      if (operation.cost && orderComponent.count)
+        cost += operation.cost / orderComponent.count;
     }
     orderComponent.cost = cost;
     await orderComponent.save();
