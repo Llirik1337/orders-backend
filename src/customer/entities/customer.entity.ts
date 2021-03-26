@@ -1,6 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
+import { truncate } from 'node:fs';
 export type CustomerDocument = Customer & Document;
 
 @ObjectType()
@@ -18,15 +19,15 @@ export class Customer {
   company: string;
 
   @Prop({ type: MongooseSchema.Types.String })
-  @Field(() => String, { nullable: false })
+  @Field(() => String, { nullable: true })
   email: string;
 
   @Prop({ type: MongooseSchema.Types.String })
-  @Field(() => String, { nullable: false })
+  @Field(() => String, { nullable: true })
   phone: string;
 
   @Prop({ type: MongooseSchema.Types.String })
-  @Field(() => String, { nullable: false })
+  @Field(() => String, { nullable: true })
   address: string;
 
   @Prop({ type: MongooseSchema.Types.String })

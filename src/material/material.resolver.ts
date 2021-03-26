@@ -36,7 +36,7 @@ export class MaterialResolver {
   }
 
   @Mutation(() => Material)
-  async removeMaterial(@Args('id', { type: () => Int }) id: string) {
+  async removeMaterial(@Args('id', { type: () => String }) id: string) {
     return await this.materialService.remove(id);
   }
 }

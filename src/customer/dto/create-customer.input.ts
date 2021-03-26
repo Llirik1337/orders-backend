@@ -17,6 +17,6 @@ export class CreateCustomerInput {
   @Field(() => String, { nullable: false })
   address: string;
 
-  @Field(() => String, { nullable: true })
+  @Field(() => String, { nullable: false })
   notes: string;
 }
