@@ -51,7 +51,7 @@ export class OrderService {
     return await this.orderModel
       .find()
       .populate('status')
-      .populate('components')
+      .populate('orderComponents')
       .populate('customer')
       .lean();
   }
@@ -61,7 +61,7 @@ export class OrderService {
   }
 
   async updateCost(order: OrderDocument) {
-    await order.populate('components').execPopulate();
+    await order.populate('orderComponents').execPopulate();
     let cost = 0;
     for (const component of order.orderComponents) {
       if (component.cost) cost += component.cost;
