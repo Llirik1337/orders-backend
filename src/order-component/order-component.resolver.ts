@@ -16,7 +16,7 @@ export class OrderComponentResolver {
     return this.orderComponentService.create(createOrderComponentInput);
   }
 
-  @Query(() => [OrderComponent], { name: 'orderComponent' })
+  @Query(() => [OrderComponent], { name: 'orderComponents' })
   findAll() {
     return this.orderComponentService.findAll();
   }

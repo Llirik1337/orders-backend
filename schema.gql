@@ -154,6 +154,7 @@ type Query {
   order(id: String!): Order!
   customers: [Customer!]!
   customer(id: String!): Customer!
+  orderComponents: [OrderComponent!]!
   orderComponent(id: String!): OrderComponent!
   components: [Component!]!
   component(id: String!): Component!
