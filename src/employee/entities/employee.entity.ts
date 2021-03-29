@@ -22,7 +22,11 @@ export class Employee {
   @Field(() => String, { nullable: false })
   fullName: string;
 
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Position' })
+  @Prop({
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'Position',
+    autopopulate: true,
+  })
   @Field(() => Position)
   position: PositionDocument;
 

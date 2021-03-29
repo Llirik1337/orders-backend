@@ -16,8 +16,8 @@ export class UserService {
     return await createdUser.save();
   }
 
-  async findAll(): Promise<LeanDocument<UserDocument>> {
-    return this.userModel.find({}, { id: 1, login: 1 }).lean();
+  async findAll() {
+    return this.userModel.find({}, { id: 1, login: 1 }).exec();
   }
 
   async findById(id: string): Promise<UserDocument> {

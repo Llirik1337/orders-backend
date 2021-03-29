@@ -22,8 +22,8 @@ export class MaterialService {
     return await createdMaterial.save();
   }
 
-  async findAll(): Promise<Array<MaterialDocument>> {
-    return this.materialModel.find().lean();
+  async findAll() {
+    return await this.materialModel.find().exec();
   }
 
   async findById(id: string): Promise<MaterialDocument> {

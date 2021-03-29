@@ -22,8 +22,8 @@ export class CurrencyService {
     return await createdCurrency.save();
   }
 
-  async findAll(): Promise<LeanDocument<CurrencyDocument>> {
-    return await this.currencyModel.find().lean();
+  async findAll() {
+    return await this.currencyModel.find().exec();
   }
 
   async findById(id: string): Promise<CurrencyDocument> {

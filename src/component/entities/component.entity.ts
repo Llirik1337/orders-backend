@@ -29,7 +29,13 @@ export class Component {
   // orders: Order[];
 
   @Prop({
-    type: [{ type: MongooseSchema.Types.ObjectId, ref: 'ComponentOperation' }],
+    type: [
+      {
+        type: MongooseSchema.Types.ObjectId,
+        ref: 'ComponentOperation',
+        autopopulate: true,
+      },
+    ],
     default: [],
   })
   @Field(() => [ComponentOperation], { defaultValue: [] })

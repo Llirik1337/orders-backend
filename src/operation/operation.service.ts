@@ -26,11 +26,7 @@ export class OperationService {
   }
 
   async findAll() {
-    return await this.operationModel
-      .find()
-      .populate('materials')
-      .populate('equipment')
-      .exec();
+    return await this.operationModel.find().exec();
   }
 
   async findOne(id: string): Promise<OperationDocument> {

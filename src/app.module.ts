@@ -15,16 +15,10 @@ import { PositionsModule } from './positions/positions.module';
 import { BlankMaterialModule } from './blank-material/blank-material.module';
 import { OrderComponentModule } from './order-component/order-component.module';
 
+import * as mongooseAutopopulate from 'mongoose-autopopulate';
+
 @Module({
   imports: [
-    GraphQLModule.forRoot({
-      installSubscriptionHandlers: true,
-      autoSchemaFile: 'schema.gql',
-      cors: {
-        origin: true,
-        credentials: true,
-      },
-    }),
     MongooseModule.forRoot(
       'mongodb+srv://Llirik1337:123@cluster0.vojcr.mongodb.net/orders?retryWrites=true&w=majority',
       {
@@ -34,11 +28,19 @@ import { OrderComponentModule } from './order-component/order-component.module';
         useUnifiedTopology: true,
         connectionFactory: (connection) => {
           // eslint-disable-next-line @typescript-eslint/no-var-requires
-          connection.plugin(require('mongoose-autopopulate'));
+          connection.plugin(mongooseAutopopulate);
           return connection;
         },
       },
     ),
+    GraphQLModule.forRoot({
+      installSubscriptionHandlers: true,
+      autoSchemaFile: 'schema.gql',
+      cors: {
+        origin: true,
+        credentials: true,
+      },
+    }),
     OrderModule,
     CustomerModule,
     EmployeeModule,

@@ -30,6 +30,7 @@ export class ComponentOperation {
     type: MongooseSchema.Types.ObjectId,
     ref: 'Operation',
     required: false,
+    autopopulate: true,
   })
   @Field(() => Operation, { nullable: true })
   operation: OperationDocument;
@@ -37,6 +38,7 @@ export class ComponentOperation {
   @Prop({
     type: MongooseSchema.Types.ObjectId,
     ref: 'Equipment',
+    autopopulate: true,
     required: false,
   })
   @Field(() => Equipment, { nullable: true })
@@ -48,6 +50,7 @@ export class ComponentOperation {
         type: MongooseSchema.Types.ObjectId,
         ref: 'BlankMaterial',
         required: true,
+        autopopulate: true,
       },
     ],
     default: [],

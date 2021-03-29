@@ -21,8 +21,8 @@ export class EquipmentService {
     return await createdEquipment.save();
   }
 
-  async findAll(): Promise<LeanDocument<EquipmentDocument>> {
-    return await this.equipmentModel.find().lean();
+  async findAll() {
+    return await this.equipmentModel.find().exec();
   }
 
   async findById(id: string): Promise<EquipmentDocument> {

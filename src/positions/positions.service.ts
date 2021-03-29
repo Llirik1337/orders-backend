@@ -19,7 +19,7 @@ export class PositionsService {
   }
 
   async findAll() {
-    return await this.positionModel.find().lean();
+    return await this.positionModel.find().exec();
   }
 
   async findById(id: string): Promise<PositionDocument> {

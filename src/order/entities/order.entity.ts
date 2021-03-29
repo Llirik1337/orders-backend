@@ -24,6 +24,7 @@ export class Order {
     required: true,
     type: MongooseSchema.Types.ObjectId,
     ref: 'Customer',
+    autopopulate: true,
   })
   @Field(() => Customer, { nullable: false })
   customer: Customer;
@@ -31,7 +32,13 @@ export class Order {
   @Field(() => [OrderComponent], { nullable: true })
   @Prop({
     required: false,
-    type: [{ type: MongooseSchema.Types.ObjectId, ref: 'OrderComponent' }],
+    type: [
+      {
+        type: MongooseSchema.Types.ObjectId,
+        ref: 'OrderComponent',
+        autopopulate: true,
+      },
+    ],
     default: [],
   })
   orderComponents: OrderComponentDocument[];
@@ -40,6 +47,7 @@ export class Order {
     required: true,
     type: MongooseSchema.Types.ObjectId,
     ref: 'OrderStatus',
+    autopopulate: true,
   })
   @Field(() => OrderStatus, { nullable: false })
   status: OrderStatus;

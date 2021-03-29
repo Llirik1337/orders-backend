@@ -48,16 +48,11 @@ export class OrderService {
   }
 
   async findAll() {
-    return await this.orderModel
-      .find()
-      .populate('status')
-      .populate('orderComponents')
-      .populate('customer')
-      .lean();
+    return await this.orderModel.find().exec();
   }
 
   async findOne(id: string): Promise<OrderDocument> {
-    return await this.orderModel.findById(id);
+    return await this.orderModel.findById(id).exec();
   }
 
   async updateCost(order: OrderDocument) {

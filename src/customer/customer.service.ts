@@ -25,8 +25,8 @@ export class CustomerService {
     return await createdCustomer.save();
   }
 
-  async findAll(): Promise<LeanDocument<CustomerDocument>> {
-    return await this.customerModel.find().lean();
+  async findAll() {
+    return await this.customerModel.find().exec();
   }
 
   async findById(id: string): Promise<CustomerDocument> {

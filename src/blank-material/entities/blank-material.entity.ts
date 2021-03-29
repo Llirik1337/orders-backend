@@ -14,7 +14,11 @@ export class BlankMaterial {
   @Field(() => String)
   _id: string;
 
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Material' })
+  @Prop({
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'Material',
+    autopopulate: true,
+  })
   @Field(() => Material)
   material: MaterialDocument;
 

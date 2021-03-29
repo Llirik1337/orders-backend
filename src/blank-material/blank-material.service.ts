@@ -29,10 +29,7 @@ export class BlankMaterialService {
     return createdBlankMaterial;
   }
   async findAll() {
-    const res = await this.blankMaterialModel
-      .find()
-      .populate('material')
-      .lean();
+    const res = await this.blankMaterialModel.find().exec();
     return res;
   }
 

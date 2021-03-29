@@ -35,11 +35,8 @@ export class ComponentService {
     return await createdComponent.save();
   }
 
-  async findAll(): Promise<LeanDocument<ComponentDocument>> {
-    return await this.componentModel
-      .find()
-      .populate('componentOperations')
-      .lean();
+  async findAll() {
+    return await this.componentModel.find().exec();
   }
 
   async findOne(id: string): Promise<ComponentDocument> {

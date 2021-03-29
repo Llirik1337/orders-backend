@@ -56,19 +56,10 @@ export class ComponentOperationService {
   }
 
   async findAll() {
-    return await this.componentOperationModel
-      .find()
-      .populate('operation')
-      .populate('blankMaterials')
-      .populate('equipment')
-      .lean();
+    return await this.componentOperationModel.find().exec();
   }
 
   async updateCost(componentOperation: ComponentOperationDocument) {
-    await componentOperation
-      .populate('operation')
-      .populate('blankMaterials')
-      .execPopulate();
     let cost = 0;
     for (const blankMaterial of componentOperation.blankMaterials) {
       if (blankMaterial?.cost) cost += blankMaterial.cost;
