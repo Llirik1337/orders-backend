@@ -60,7 +60,7 @@ export class OrderComponentService {
     return await this.orderComponentModel
       .find()
       .populate('batchOperations')
-      .populate('components')
+      .populate('component')
       .lean();
   }
 
