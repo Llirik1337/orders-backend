@@ -27,11 +27,11 @@ export class OrderComponent {
   cost: number;
 
   @Prop({
-    type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Component' }],
-    default: [],
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'Component',
   })
   @Field(() => [Component])
-  components: ComponentDocument[];
+  component: ComponentDocument;
 
   @Prop({
     type: [{ type: MongooseSchema.Types.ObjectId, ref: 'ComponentOperation' }],

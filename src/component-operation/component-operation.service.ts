@@ -73,7 +73,7 @@ export class ComponentOperationService {
       .execPopulate();
     let cost = 0;
     for (const blankMaterial of componentOperation.blankMaterials) {
-      if (blankMaterial.cost) cost += blankMaterial.cost;
+      if (blankMaterial?.cost) cost += blankMaterial.cost;
     }
     if (componentOperation.operation?.price)
       cost += componentOperation.operation.price;

@@ -68,7 +68,7 @@ export class ComponentService {
     for (const operation of component.operations) {
       await operation
         .populate('blankMaterials')
-        .populate('operation')
+        .populate('operations')
         .execPopulate();
       if (operation.blankMaterials)
         for (const material of operation.blankMaterials) {

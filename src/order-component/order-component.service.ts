@@ -4,7 +4,6 @@ import { Model } from 'mongoose';
 import { ComponentOperationService } from 'src/component-operation/component-operation.service';
 import { ComponentOperationDocument } from 'src/component-operation/entities/component-operation.entity';
 import { ComponentService } from 'src/component/component.service';
-import { ComponentDocument } from 'src/component/entities/component.entity';
 import { CreateOrderComponentInput } from './dto/create-order-component.input';
 import { UpdateOrderComponentInput } from './dto/update-order-component.input';
 import {
@@ -24,14 +23,11 @@ export class OrderComponentService {
     const createdOrderComponent = new this.orderComponentModel();
     createdOrderComponent.count = createOrderComponentInput.count;
 
-    const promiseComponents = [];
-    for (const id of createOrderComponentInput.componentsId) {
-      promiseComponents.push(this.componentService.findOne(id));
-    }
+    const component = await this.componentService.findOne(
+      createOrderComponentInput.componentId,
+    );
 
-    const components = await Promise.all<ComponentDocument>(promiseComponents);
-
-    createdOrderComponent.components = components;
+    createdOrderComponent.component = component;
 
     const promiseBatchOperations = [];
     for (const id of createOrderComponentInput.batchOperationsId) {
@@ -55,14 +51,7 @@ export class OrderComponentService {
       .populate('components')
       .execPopulate();
 
-    let cost = 0;
-    for (const component of orderComponent.components) {
-      if (component.cost) cost += component.cost;
-    }
-    for (const operation of orderComponent.batchOperations) {
-      if (operation.cost && orderComponent.count)
-        cost += operation.cost / orderComponent.count;
-    }
+    const cost = orderComponent.component.cost * orderComponent.count;
     orderComponent.cost = cost;
     await orderComponent.save();
   }
@@ -86,14 +75,9 @@ export class OrderComponentService {
     const createdOrderComponent = await this.findOne(id);
     createdOrderComponent.count = updateOrderComponentInput.count;
 
-    const promiseComponents = [];
-    for (const id of updateOrderComponentInput.componentsId) {
-      promiseComponents.push(this.componentService.findOne(id));
-    }
+    const component = await this.componentService.findOne(id);
 
-    const components = await Promise.all<ComponentDocument>(promiseComponents);
-
-    createdOrderComponent.components = components;
+    createdOrderComponent.component = component;
 
     const promiseBatchOperations = [];
     for (const id of updateOrderComponentInput.batchOperationsId) {

@@ -1,7 +1,6 @@
 import { Field, Float, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Mongoose, Schema as MongooseSchema } from 'mongoose';
-import { Component } from 'src/component/entities/component.entity';
+import { Document, Schema as MongooseSchema } from 'mongoose';
 import {
   OrderComponent,
   OrderComponentDocument,
@@ -29,10 +28,11 @@ export class Order {
   @Field(() => Customer, { nullable: false })
   customer: Customer;
 
-  @Field(() => [OrderComponent], { nullable: false })
+  @Field(() => [OrderComponent], { nullable: true })
   @Prop({
-    required: true,
+    required: false,
     type: [{ type: MongooseSchema.Types.ObjectId, ref: 'OrderComponent' }],
+    default: [],
   })
   orderComponents: OrderComponentDocument[];
 

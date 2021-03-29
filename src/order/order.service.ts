@@ -23,7 +23,7 @@ export class OrderService {
     createdOrder.cost = createOrderInput.cost;
 
     const promiseComponents = [];
-    for (const id of createOrderInput.componentsId) {
+    for (const id of createOrderInput.orderComponentsId) {
       promiseComponents.push(this.orderComponentService.findOne(id));
     }
 
@@ -79,9 +79,9 @@ export class OrderService {
     if (updateOrderInput.name) updatedOrder.name = updateOrderInput.name;
     if (updateOrderInput.cost) updatedOrder.cost = updateOrderInput.cost;
 
-    if (updateOrderInput?.componentsId?.length) {
+    if (updateOrderInput?.orderComponentsId?.length) {
       const promiseComponents = [];
-      for (const id of updateOrderInput.componentsId) {
+      for (const id of updateOrderInput.orderComponentsId) {
         promiseComponents.push(this.orderComponentService.findOne(id));
       }
 

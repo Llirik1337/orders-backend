@@ -5,8 +5,8 @@ export class CreateOrderComponentInput {
   @Field(() => Int)
   count: number;
 
-  @Field(() => [String])
-  componentsId: string[];
+  @Field(() => String)
+  componentId: string;
 
   @Field(() => [String])
   batchOperationsId: string[];
