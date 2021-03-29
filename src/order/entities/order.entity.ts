@@ -45,7 +45,7 @@ export class Order {
   status: OrderStatus;
 
   @Field(() => Float, { nullable: false })
-  @Prop({ type: MongooseSchema.Types.Number })
+  @Prop({ type: MongooseSchema.Types.Number, default: 0 })
   cost: number;
 
   @Field(() => Date)

@@ -105,7 +105,7 @@ type OrderComponent {
   _id: String!
   count: Int!
   cost: Float!
-  components: [Component!]!
+  component: Component!
   batchOperations: [ComponentOperation!]!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -122,7 +122,7 @@ type Order {
   _id: String!
   name: String!
   customer: Customer!
-  orderComponents: [OrderComponent!]!
+  orderComponents: [OrderComponent!]
   status: OrderStatus!
   cost: Float!
   createdAt: DateTime!
@@ -227,7 +227,7 @@ type Mutation {
 input CreateOrderInput {
   name: String!
   customerId: String!
-  componentsId: [String!]
+  orderComponentsId: [String!]
   statusId: String!
   cost: Float
 }
@@ -235,7 +235,7 @@ input CreateOrderInput {
 input UpdateOrderInput {
   name: String
   customerId: String
-  componentsId: [String!]
+  orderComponentsId: [String!]
   statusId: String
   cost: Float
   id: String!
@@ -264,13 +264,13 @@ input UpdateCustomerInput {
 
 input CreateOrderComponentInput {
   count: Int!
-  componentsId: [String!]!
+  componentId: String!
   batchOperationsId: [String!]!
 }
 
 input UpdateOrderComponentInput {
   count: Int
-  componentsId: [String!]
+  componentId: String
   batchOperationsId: [String!]
   id: String!
 }

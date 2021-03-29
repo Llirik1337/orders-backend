@@ -1,4 +1,4 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, Float, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 import {
@@ -35,8 +35,8 @@ export class Component {
   @Field(() => [ComponentOperation], { defaultValue: [] })
   operations: ComponentOperationDocument[];
 
-  @Prop({ type: MongooseSchema.Types.String, required: false })
-  @Field(() => Number, { nullable: false })
+  @Prop({ type: MongooseSchema.Types.Number, default: 0 })
+  @Field(() => Float, { nullable: false })
   cost: number;
 
   @Field(() => Date)

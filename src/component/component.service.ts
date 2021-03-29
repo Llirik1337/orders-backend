@@ -20,13 +20,15 @@ export class ComponentService {
     createdComponent.name = createComponentInput.name;
     createdComponent.notes = createComponentInput.notes;
 
-    const promiseOperations = [];
-    for (const id of createComponentInput.operationsId) {
-      promiseOperations.push(this.componentOperationService.findOne(id));
-    }
-    const operations = (await Promise.all(promiseOperations)) || [];
+    const promiseOperations = createComponentInput.operationsId.map((id) =>
+      this.componentOperationService.findOne(id),
+    );
 
-    createdComponent.operations = operations;
+    const operations = await Promise.all(promiseOperations);
+
+    const filteredOperations = operations.filter((item) => !!item);
+
+    createdComponent.operations = filteredOperations;
 
     await createdComponent.save();
     await this.updateCost(createdComponent);
@@ -49,13 +51,15 @@ export class ComponentService {
     updatedComponent.name = updateComponentInput.name;
     updatedComponent.notes = updateComponentInput.notes;
 
-    const promiseOperations = [];
-    for (const id of updateComponentInput.operationsId) {
-      promiseOperations.push(this.componentOperationService.findOne(id));
-    }
-    const operations = (await Promise.all(promiseOperations)) || [];
+    const promiseOperations = updateComponentInput.operationsId.map((id) =>
+      this.componentOperationService.findOne(id),
+    );
 
-    updatedComponent.operations = operations;
+    const operations = await Promise.all(promiseOperations);
+
+    const filteredOperations = operations.filter((item) => !!item);
+
+    updatedComponent.operations = filteredOperations;
     await updatedComponent.save();
     await this.updateCost(updatedComponent);
     return await updatedComponent.save();

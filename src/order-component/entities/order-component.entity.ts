@@ -22,7 +22,7 @@ export class OrderComponent {
   @Field(() => Int)
   count: number;
 
-  @Prop({ type: MongooseSchema.Types.Number })
+  @Prop({ type: MongooseSchema.Types.Number, default: 0 })
   @Field(() => Float)
   cost: number;
 

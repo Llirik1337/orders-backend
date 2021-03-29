@@ -20,7 +20,7 @@ export class Material {
   @Field(() => Float)
   width: number;
 
-  @Prop({ type: MongooseSchema.Types.Number })
+  @Prop({ type: MongooseSchema.Types.Number, default: 0 })
   @Field(() => Float)
   cost: number;
 
