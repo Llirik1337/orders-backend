@@ -26,7 +26,7 @@ export class EmployeeService {
   }
 
   async findAll() {
-    return await this.employeeModel.find().exec();
+    return await this.employeeModel.find().lean({ autopopulate: true });
   }
 
   async findById(id: string): Promise<EmployeeDocument> {

@@ -57,7 +57,7 @@ export class OrderComponentService {
   }
 
   async findAll() {
-    return await this.orderComponentModel.find().exec();
+    return await this.orderComponentModel.find().lean({ autopopulate: true });
   }
 
   async findOne(id: string) {

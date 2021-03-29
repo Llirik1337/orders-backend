@@ -29,7 +29,9 @@ export class BlankMaterialService {
     return createdBlankMaterial;
   }
   async findAll() {
-    const res = await this.blankMaterialModel.find().exec();
+    const res = await this.blankMaterialModel
+      .find()
+      .lean({ autopopulate: true });
     return res;
   }
 

@@ -26,7 +26,7 @@ export class OperationService {
   }
 
   async findAll() {
-    return await this.operationModel.find().exec();
+    return await this.operationModel.find().lean({ autopopulate: true });
   }
 
   async findOne(id: string): Promise<OperationDocument> {

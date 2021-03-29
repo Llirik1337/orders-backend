@@ -56,7 +56,9 @@ export class ComponentOperationService {
   }
 
   async findAll() {
-    return await this.componentOperationModel.find().exec();
+    return await this.componentOperationModel
+      .find()
+      .lean({ autopopulate: true });
   }
 
   async updateCost(componentOperation: ComponentOperationDocument) {

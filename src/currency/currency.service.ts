@@ -23,7 +23,7 @@ export class CurrencyService {
   }
 
   async findAll() {
-    return await this.currencyModel.find().exec();
+    return await this.currencyModel.find().lean({ autopopulate: true });
   }
 
   async findById(id: string): Promise<CurrencyDocument> {

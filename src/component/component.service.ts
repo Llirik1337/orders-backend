@@ -36,7 +36,7 @@ export class ComponentService {
   }
 
   async findAll() {
-    return await this.componentModel.find().exec();
+    return await this.componentModel.find().lean({ autopopulate: true });
   }
 
   async findOne(id: string): Promise<ComponentDocument> {

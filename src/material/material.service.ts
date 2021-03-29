@@ -23,7 +23,7 @@ export class MaterialService {
   }
 
   async findAll() {
-    return await this.materialModel.find().exec();
+    return await this.materialModel.find().lean({ autopopulate: true });
   }
 
   async findById(id: string): Promise<MaterialDocument> {
@@ -34,12 +34,10 @@ export class MaterialService {
     id: string,
     updateMaterialInput: UpdateMaterialInput,
   ): Promise<MaterialDocument> {
-    return await this.materialModel
-      .findByIdAndUpdate(id, updateMaterialInput)
-      .exec();
+    return await this.materialModel.findByIdAndUpdate(id, updateMaterialInput);
   }
 
   async remove(id: string) {
-    return await this.materialModel.findByIdAndRemove(id).exec();
+    return await this.materialModel.findByIdAndRemove(id);
   }
 }

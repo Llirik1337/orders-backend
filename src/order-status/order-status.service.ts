@@ -25,7 +25,7 @@ export class OrderStatusService {
   }
 
   async findAll() {
-    return await this.orderStatusModel.find().exec();
+    return await this.orderStatusModel.find().lean({ autopopulate: true });
   }
 
   async findById(id: string): Promise<OrderStatusDocument> {

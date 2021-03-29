@@ -17,11 +17,13 @@ export class UserService {
   }
 
   async findAll() {
-    return this.userModel.find({}, { id: 1, login: 1 }).exec();
+    return this.userModel
+      .find({}, { id: 1, login: 1 })
+      .lean({ autopopulate: true });
   }
 
   async findById(id: string): Promise<UserDocument> {
-    return await this.userModel.findById(id).exec();
+    return await this.userModel.findById(id);
   }
 
   async update(
@@ -32,6 +34,6 @@ export class UserService {
   }
 
   async remove(id: string): Promise<UserDocument> {
-    return await this.userModel.findByIdAndDelete(id).exec();
+    return await this.userModel.findByIdAndDelete(id);
   }
 }

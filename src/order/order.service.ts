@@ -48,11 +48,11 @@ export class OrderService {
   }
 
   async findAll() {
-    return await this.orderModel.find().exec();
+    return await this.orderModel.find().lean({ autopopulate: true });
   }
 
   async findOne(id: string): Promise<OrderDocument> {
-    return await this.orderModel.findById(id).exec();
+    return await this.orderModel.findById(id);
   }
 
   async updateCost(order: OrderDocument) {

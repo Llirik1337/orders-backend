@@ -26,7 +26,7 @@ export class CustomerService {
   }
 
   async findAll() {
-    return await this.customerModel.find().exec();
+    return await this.customerModel.find().lean({ autopopulate: true });
   }
 
   async findById(id: string): Promise<CustomerDocument> {

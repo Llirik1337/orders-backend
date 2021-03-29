@@ -22,7 +22,7 @@ export class EquipmentService {
   }
 
   async findAll() {
-    return await this.equipmentModel.find().exec();
+    return await this.equipmentModel.find().lean({ autopopulate: true });
   }
 
   async findById(id: string): Promise<EquipmentDocument> {
