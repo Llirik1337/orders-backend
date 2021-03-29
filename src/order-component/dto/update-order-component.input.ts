@@ -1,5 +1,5 @@
+import { Field, InputType, PartialType } from '@nestjs/graphql';
 import { CreateOrderComponentInput } from './create-order-component.input';
-import { InputType, Field, Int, PartialType } from '@nestjs/graphql';
 
 @InputType()
 export class UpdateOrderComponentInput extends PartialType(

@@ -41,11 +41,11 @@ export class ComponentOperationService {
         );
       }
 
-      const materials = await Promise.all<BlankMaterialDocument>(
+      const material = await Promise.all<BlankMaterialDocument>(
         promiseBlankMaterials,
       );
 
-      createdComponentOperation.blankMaterials = materials;
+      createdComponentOperation.blankMaterials = material;
     }
 
     const operation = await this.operationService.findOne(
@@ -102,9 +102,9 @@ export class ComponentOperationService {
         );
       }
 
-      const materials = await Promise.all<BlankMaterialDocument>(
-        promiseBlankMaterials,
-      );
+      const materials = (
+        await Promise.all<BlankMaterialDocument>(promiseBlankMaterials)
+      ).filter((item) => !!item);
 
       updatedComponentOperation.blankMaterials = materials;
     }

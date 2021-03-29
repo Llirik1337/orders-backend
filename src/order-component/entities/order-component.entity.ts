@@ -30,7 +30,7 @@ export class OrderComponent {
     type: MongooseSchema.Types.ObjectId,
     ref: 'Component',
   })
-  @Field(() => [Component])
+  @Field(() => Component)
   component: ComponentDocument;
 
   @Prop({
