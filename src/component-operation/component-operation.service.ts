@@ -33,19 +33,17 @@ export class ComponentOperationService {
     }
 
     if (createComponentOperationInput.blankMaterialsId) {
-      const promiseBlankMaterials = [];
-
-      for (const materialId of createComponentOperationInput.blankMaterialsId) {
-        promiseBlankMaterials.push(
-          this.blankMaterialService.findOne(materialId),
-        );
-      }
+      const promiseBlankMaterials = createComponentOperationInput.blankMaterialsId.map(
+        (id) => this.blankMaterialService.findOne(id),
+      );
 
       const material = await Promise.all<BlankMaterialDocument>(
         promiseBlankMaterials,
       );
 
-      createdComponentOperation.blankMaterials = material;
+      const filteredMaterial = material.filter((item) => !!item);
+
+      createdComponentOperation.blankMaterials = filteredMaterial;
     }
 
     const operation = await this.operationService.findOne(
@@ -94,19 +92,17 @@ export class ComponentOperationService {
     updatedComponentOperation.time = updateComponentOperationInput.time;
 
     if (updateComponentOperationInput.blankMaterialsId) {
-      const promiseBlankMaterials = [];
+      const promiseBlankMaterials = updateComponentOperationInput.blankMaterialsId.map(
+        (id) => this.blankMaterialService.findOne(id),
+      );
 
-      for (const materialId of updateComponentOperationInput.blankMaterialsId) {
-        promiseBlankMaterials.push(
-          this.blankMaterialService.findOne(materialId),
-        );
-      }
+      const material = await Promise.all<BlankMaterialDocument>(
+        promiseBlankMaterials,
+      );
 
-      const materials = (
-        await Promise.all<BlankMaterialDocument>(promiseBlankMaterials)
-      ).filter((item) => !!item);
+      const filteredMaterial = material.filter((item) => !!item);
 
-      updatedComponentOperation.blankMaterials = materials;
+      updatedComponentOperation.blankMaterials = filteredMaterial;
     }
 
     if (updateComponentOperationInput.operationId) {

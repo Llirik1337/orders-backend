@@ -28,7 +28,7 @@ export class ComponentService {
 
     const filteredOperations = operations.filter((item) => !!item);
 
-    createdComponent.operations = filteredOperations;
+    createdComponent.componentOperations = filteredOperations;
 
     await createdComponent.save();
     await this.updateCost(createdComponent);
@@ -36,7 +36,10 @@ export class ComponentService {
   }
 
   async findAll(): Promise<LeanDocument<ComponentDocument>> {
-    return await this.componentModel.find().populate('operations').lean();
+    return await this.componentModel
+      .find()
+      .populate('componentOperations')
+      .lean();
   }
 
   async findOne(id: string): Promise<ComponentDocument> {
@@ -59,17 +62,17 @@ export class ComponentService {
 
     const filteredOperations = operations.filter((item) => !!item);
 
-    updatedComponent.operations = filteredOperations;
+    updatedComponent.componentOperations = filteredOperations;
     await updatedComponent.save();
     await this.updateCost(updatedComponent);
     return await updatedComponent.save();
   }
 
   async updateCost(component: ComponentDocument) {
-    await component.populate('operations').execPopulate();
+    await component.populate('componentOperations').execPopulate();
     let cost = 0;
 
-    for (const operation of component.operations) {
+    for (const operation of component.componentOperations) {
       await operation
         .populate('blankMaterials')
         .populate('operations')

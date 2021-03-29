@@ -26,8 +26,12 @@ export class ComponentOperation {
   @Field(() => Float)
   cost: number;
 
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Material' })
-  @Field(() => Operation)
+  @Prop({
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'Operation',
+    required: false,
+  })
+  @Field(() => Operation, { nullable: true })
   operation: OperationDocument;
 
   @Prop({
@@ -43,9 +47,10 @@ export class ComponentOperation {
       {
         type: MongooseSchema.Types.ObjectId,
         ref: 'BlankMaterial',
+        required: true,
       },
     ],
-    required: false,
+    default: [],
   })
   @Field(() => [BlankMaterial], { nullable: true })
   blankMaterials: BlankMaterialDocument[];

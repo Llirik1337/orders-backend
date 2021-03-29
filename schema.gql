@@ -55,7 +55,7 @@ type ComponentOperation {
   _id: String!
   time: Float!
   cost: Float!
-  operation: Operation!
+  operation: Operation
   equipment: Equipment
   blankMaterials: [BlankMaterial!]
   createdAt: DateTime!
@@ -68,7 +68,7 @@ type Component {
   """notes"""
   name: String!
   notes: String
-  operations: [ComponentOperation!]!
+  componentOperations: [ComponentOperation!]!
   cost: Float!
   createdAt: DateTime!
   updatedAt: DateTime!

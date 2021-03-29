@@ -33,7 +33,7 @@ export class Component {
     default: [],
   })
   @Field(() => [ComponentOperation], { defaultValue: [] })
-  operations: ComponentOperationDocument[];
+  componentOperations: ComponentOperationDocument[];
 
   @Prop({ type: MongooseSchema.Types.Number, default: 0 })
   @Field(() => Float, { nullable: false })
