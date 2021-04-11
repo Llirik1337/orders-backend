@@ -14,6 +14,7 @@ import { CurrencyModule } from './currency/currency.module';
 import { PositionsModule } from './positions/positions.module';
 import { BlankMaterialModule } from './blank-material/blank-material.module';
 import { OrderComponentModule } from './order-component/order-component.module';
+import { ExecutorModule } from './executor/executor.module';
 
 import * as mongooseAutopopulate from 'mongoose-autopopulate';
 
@@ -54,6 +55,7 @@ import * as mongooseAutopopulate from 'mongoose-autopopulate';
     PositionsModule,
     BlankMaterialModule,
     OrderComponentModule,
+    ExecutorModule,
   ],
   controllers: [],
 })

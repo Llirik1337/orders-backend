@@ -20,14 +20,6 @@ export class Component {
   @Field(() => String, { nullable: true })
   notes: string;
 
-  //TODO Добавить потом
-  // @Prop({
-  //   type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Order' }],
-  //   default: [],
-  // })
-  // @Field(() => Order, { defaultValue: [] })
-  // orders: Order[];
-
   @Prop({
     type: [
       {
