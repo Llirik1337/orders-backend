@@ -1,17 +1,20 @@
 import { InputType, Int, Field, Float } from '@nestjs/graphql';
-import { Operation } from 'src/operation/entities/operation.entity';
-
+import { IsArray, IsMongoId, IsNumber, IsString } from 'class-validator';
 @InputType()
 export class CreateComponentOperationInput {
+  @IsNumber()
   @Field(() => Float)
   time: number;
 
+  @IsMongoId()
   @Field(() => String)
   operationId: string;
 
+  @IsString()
   @Field(() => String, { nullable: true })
   equipmentId: string;
 
+  @IsArray({ each: true })
   @Field(() => [String], { nullable: true })
   blankMaterialsId: string[];
 }

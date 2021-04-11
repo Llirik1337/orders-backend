@@ -51,11 +51,19 @@ type Operation {
   updatedAt: DateTime!
 }
 
+type Executor {
+  _id: String!
+  name: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type ComponentOperation {
   _id: String!
   time: Float!
   cost: Float!
   operation: Operation
+  executor: Executor
   equipment: Equipment
   blankMaterials: [BlankMaterial!]
   createdAt: DateTime!
@@ -178,6 +186,7 @@ type Query {
   user(id: String!): User!
   currencies: [Currency!]!
   currency(id: String!): Currency!
+  executor(id: String!): Executor!
 }
 
 type Mutation {
@@ -223,6 +232,9 @@ type Mutation {
   createCurrency(createCurrencyInput: CreateCurrencyInput!): Currency!
   updateCurrency(updateCurrencyInput: UpdateCurrencyInput!): Currency!
   removeCurrency(id: String!): Currency!
+  createExecutor(createExecutorInput: CreateExecutorInput!): Executor!
+  updateExecutor(updateExecutorInput: UpdateExecutorInput!): Executor!
+  removeExecutor(id: String!): Executor!
 }
 
 input CreateOrderInput {
@@ -248,7 +260,7 @@ input CreateCustomerInput {
   email: String!
   phone: String!
   address: String!
-  notes: String!
+  notes: String
 }
 
 input UpdateCustomerInput {
@@ -313,7 +325,7 @@ input CreateOperationInput {
 }
 
 input UpdateOperationInput {
-  name: String!
+  name: String
   price: Float
   notes: String
   id: String!
@@ -434,5 +446,14 @@ input UpdateCurrencyInput {
   Nominal: Int
   Name: String
   Value: Float
+  id: String!
+}
+
+input CreateExecutorInput {
+  name: String!
+}
+
+input UpdateExecutorInput {
+  name: String
   id: String!
 }

@@ -7,6 +7,10 @@ import {
 } from 'src/blank-material/entities/blank-material.entity';
 import { Equipment } from 'src/equipment/entities/equipment.entity';
 import {
+  Executor,
+  ExecutorDocument,
+} from 'src/executor/entities/executor.entity';
+import {
   Operation,
   OperationDocument,
 } from 'src/operation/entities/operation.entity';
@@ -34,6 +38,15 @@ export class ComponentOperation {
   })
   @Field(() => Operation, { nullable: true })
   operation: OperationDocument;
+
+  @Prop({
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'Executor',
+    autopopulate: true,
+    required: false,
+  })
+  @Field(() => Executor, { nullable: true })
+  executor: ExecutorDocument;
 
   @Prop({
     type: MongooseSchema.Types.ObjectId,

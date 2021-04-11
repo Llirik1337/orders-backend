@@ -1,15 +1,17 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
-import { Equipment } from 'src/equipment/entities/equipment.entity';
-import { Material } from 'src/material/entities/material.entity';
+import { IsNumber, IsString } from 'class-validator';
 
 @InputType()
 export class CreateOperationInput {
+  @IsString()
   @Field(() => String, { nullable: false })
   name: string;
 
+  @IsNumber()
   @Field(() => Number, { nullable: false })
   price: number;
 
+  @IsString()
   @Field(() => String, { nullable: true })
-  notes: string;
+  notes?: string;
 }
