@@ -19,6 +19,10 @@ export class CreateOrderInput {
   @Field(() => String, { nullable: false })
   statusId: string;
 
+  @IsMongoId()
+  @Field(() => String, { nullable: true })
+  executorId: string;
+
   @IsNumber()
   @Field(() => Number, { nullable: true })
   cost: number;

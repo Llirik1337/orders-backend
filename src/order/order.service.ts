@@ -1,3 +1,4 @@
+import { ExecutorService } from './../executor/executor.service';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -14,6 +15,7 @@ export class OrderService {
   constructor(
     @InjectModel(Order.name) private readonly orderModel: Model<OrderDocument>,
     private readonly customerService: CustomerService,
+    private readonly executorService: ExecutorService,
     private readonly orderComponentService: OrderComponentService,
     private readonly orderStatusService: OrderStatusService,
   ) {}
@@ -40,8 +42,14 @@ export class OrderService {
       createOrderInput.customerId,
     );
 
+    const executor = await this.executorService.findOne(
+      createOrderInput.executorId,
+    );
+
     createdOrder.customer = customer;
     createdOrder.status = status;
+    if (executor != null) createdOrder.executor = executor;
+
     await createdOrder.save();
     await this.updateCost(createdOrder);
     return await createdOrder.save();
@@ -95,8 +103,13 @@ export class OrderService {
       const customer = await this.customerService.findById(
         updateOrderInput.customerId,
       );
-
       updatedOrder.customer = customer;
+    }
+    if (updateOrderInput?.executorId) {
+      const executor = await this.executorService.findOne(
+        updateOrderInput.executorId,
+      );
+      updatedOrder.executor = executor;
     }
 
     await updatedOrder.save();

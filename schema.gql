@@ -132,6 +132,7 @@ type Order {
   customer: Customer!
   orderComponents: [OrderComponent!]
   status: OrderStatus!
+  executor: Executor
   cost: Float!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -178,6 +179,8 @@ type Query {
   material(id: Int!): Material!
   ordersStatus: [OrderStatus!]!
   orderStatus(id: String!): OrderStatus!
+  executors: [Executor!]!
+  executor(id: String!): Executor!
   employees: [Employee!]!
   employee(id: String!): Employee!
   positions: [Position!]!
@@ -186,7 +189,6 @@ type Query {
   user(id: String!): User!
   currencies: [Currency!]!
   currency(id: String!): Currency!
-  executor(id: String!): Executor!
 }
 
 type Mutation {
@@ -220,6 +222,9 @@ type Mutation {
   createOrderStatus(createOrderStatusInput: CreateOrderStatusInput!): OrderStatus!
   updateOrderStatus(updateOrderStatusInput: UpdateOrderStatusInput!): OrderStatus!
   removeOrderStatus(id: String!): OrderStatus!
+  createExecutor(createExecutorInput: CreateExecutorInput!): Executor!
+  updateExecutor(updateExecutorInput: UpdateExecutorInput!): Executor!
+  removeExecutor(id: String!): Executor!
   createEmployee(createEmployeeInput: CreateEmployeeInput!): Employee!
   updateEmployee(updateEmployeeInput: UpdateEmployeeInput!): Employee!
   removeEmployee(id: String!): Employee!
@@ -232,9 +237,6 @@ type Mutation {
   createCurrency(createCurrencyInput: CreateCurrencyInput!): Currency!
   updateCurrency(updateCurrencyInput: UpdateCurrencyInput!): Currency!
   removeCurrency(id: String!): Currency!
-  createExecutor(createExecutorInput: CreateExecutorInput!): Executor!
-  updateExecutor(updateExecutorInput: UpdateExecutorInput!): Executor!
-  removeExecutor(id: String!): Executor!
 }
 
 input CreateOrderInput {
@@ -242,6 +244,7 @@ input CreateOrderInput {
   customerId: String!
   orderComponentsId: [String!]
   statusId: String!
+  executorId: String
   cost: Float
 }
 
@@ -250,6 +253,7 @@ input UpdateOrderInput {
   customerId: String
   orderComponentsId: [String!]
   statusId: String
+  executorId: String
   cost: Float
   id: String!
 }
@@ -393,6 +397,15 @@ input UpdateOrderStatusInput {
   id: String!
 }
 
+input CreateExecutorInput {
+  name: String!
+}
+
+input UpdateExecutorInput {
+  name: String
+  id: String!
+}
+
 input CreateEmployeeInput {
   """Full Name of employee"""
   fullName: String!
@@ -446,14 +459,5 @@ input UpdateCurrencyInput {
   Nominal: Int
   Name: String
   Value: Float
-  id: String!
-}
-
-input CreateExecutorInput {
-  name: String!
-}
-
-input UpdateExecutorInput {
-  name: String
   id: String!
 }

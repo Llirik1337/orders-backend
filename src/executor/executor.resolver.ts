@@ -15,7 +15,7 @@ export class ExecutorResolver {
     return this.executorService.create(createExecutorInput);
   }
 
-  @Query(() => [Executor], { name: 'executor' })
+  @Query(() => [Executor], { name: 'executors' })
   findAll() {
     return this.executorService.findAll();
   }
