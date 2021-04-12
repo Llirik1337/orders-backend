@@ -15,6 +15,10 @@ export class CreateOrderInput {
   @Field(() => [String], { nullable: true })
   orderComponentsId: string[];
 
+  @IsString()
+  @Field(() => String, { nullable: true })
+  notes?: string;
+
   @IsMongoId()
   @Field(() => String, { nullable: false })
   statusId: string;
@@ -25,5 +29,5 @@ export class CreateOrderInput {
 
   @IsNumber()
   @Field(() => Number, { nullable: true })
-  cost: number;
+  cost?: number;
 }
