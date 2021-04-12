@@ -26,8 +26,4 @@ export class CreateOrderInput {
   @IsMongoId()
   @Field(() => String, { nullable: true })
   executorId: string;
-
-  @IsNumber()
-  @Field(() => Number, { nullable: true })
-  cost?: number;
 }
