@@ -21,6 +21,10 @@ export class Order {
   @Field(() => String, { nullable: false })
   name: string;
 
+  @Prop({ required: false, type: MongooseSchema.Types.String })
+  @Field(() => String, { nullable: true })
+  notes?: string;
+
   @Prop({
     required: true,
     type: MongooseSchema.Types.ObjectId,

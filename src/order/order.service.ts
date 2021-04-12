@@ -22,7 +22,6 @@ export class OrderService {
   async create(createOrderInput: CreateOrderInput): Promise<OrderDocument> {
     const createdOrder = new this.orderModel();
     createdOrder.name = createOrderInput.name;
-    createdOrder.cost = createOrderInput.cost;
 
     const promiseComponents = [];
     for (const id of createOrderInput.orderComponentsId) {
@@ -80,7 +79,6 @@ export class OrderService {
   ): Promise<OrderDocument> {
     const updatedOrder = await this.orderModel.findById(id);
     if (updateOrderInput.name) updatedOrder.name = updateOrderInput.name;
-    if (updateOrderInput.cost) updatedOrder.cost = updateOrderInput.cost;
 
     if (updateOrderInput?.orderComponentsId?.length) {
       const promiseComponents = [];
