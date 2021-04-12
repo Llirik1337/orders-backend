@@ -15,6 +15,7 @@ import { PositionsModule } from './positions/positions.module';
 import { BlankMaterialModule } from './blank-material/blank-material.module';
 import { OrderComponentModule } from './order-component/order-component.module';
 import { ExecutorModule } from './executor/executor.module';
+import { DocumentsModule } from './documents/documents.module';
 
 import * as mongooseAutopopulate from 'mongoose-autopopulate';
 
@@ -56,6 +57,7 @@ import * as mongooseAutopopulate from 'mongoose-autopopulate';
     BlankMaterialModule,
     OrderComponentModule,
     ExecutorModule,
+    DocumentsModule,
   ],
   controllers: [],
 })

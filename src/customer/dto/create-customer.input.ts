@@ -12,16 +12,16 @@ export class CreateCustomerInput {
   company: string;
 
   @IsString()
-  @Field(() => String, { nullable: false })
-  email: string;
+  @Field(() => String, { nullable: true })
+  email?: string;
 
   @IsString()
-  @Field(() => String, { nullable: false })
-  phone: string;
+  @Field(() => String, { nullable: true })
+  phone?: string;
 
   @IsString()
-  @Field(() => String, { nullable: false })
-  address: string;
+  @Field(() => String, { nullable: true })
+  address?: string;
 
   @IsString()
   @Field(() => String, { nullable: true })
