@@ -1,3 +1,4 @@
+import { Position } from './../positions/entities/position.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { LeanDocument, LeanDocumentOrArray, Model } from 'mongoose';
@@ -37,7 +38,17 @@ export class EmployeeService {
     id: string,
     updateEmployeeInput: UpdateEmployeeInput,
   ): Promise<EmployeeDocument> {
-    return await this.employeeModel.findByIdAndUpdate(id, updateEmployeeInput);
+    const updatedEmployee = await this.employeeModel.findById(id);
+
+    if (updateEmployeeInput?.positionId) {
+      const position = await this.positionsService.findById(
+        updateEmployeeInput.positionId,
+      );
+
+      updatedEmployee.position = position;
+    }
+
+    return await updatedEmployee.save();
   }
 
   async remove(id: string): Promise<EmployeeDocument> {
