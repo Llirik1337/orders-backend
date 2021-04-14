@@ -21,7 +21,7 @@ export class MaterialResolver {
   }
 
   @Query(() => Material, { name: 'material' })
-  async findOne(@Args('id', { type: () => Int }) id: string) {
+  async findOne(@Args('id', { type: () => String }) id: string) {
     return await this.materialService.findById(id);
   }
 
