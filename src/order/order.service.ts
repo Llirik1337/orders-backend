@@ -21,7 +21,9 @@ export class OrderService {
   ) {}
   async create(createOrderInput: CreateOrderInput): Promise<OrderDocument> {
     const createdOrder = new this.orderModel();
-    createdOrder.name = createOrderInput.name;
+
+    createdOrder.name = createOrderInput?.name;
+    createdOrder.notes = createOrderInput?.notes;
 
     const promiseComponents = [];
     for (const id of createOrderInput.orderComponentsId) {
@@ -41,13 +43,16 @@ export class OrderService {
       createOrderInput.customerId,
     );
 
-    const executor = await this.executorService.findOne(
-      createOrderInput.executorId,
-    );
+    if (createOrderInput?.executorId) {
+      const executor = await this.executorService.findOne(
+        createOrderInput.executorId,
+      );
+
+      if (executor) createdOrder.executor = executor;
+    }
 
     createdOrder.customer = customer;
     createdOrder.status = status;
-    if (executor != null) createdOrder.executor = executor;
 
     await createdOrder.save();
     await this.updateCost(createdOrder);
@@ -78,7 +83,10 @@ export class OrderService {
     updateOrderInput: UpdateOrderInput,
   ): Promise<OrderDocument> {
     const updatedOrder = await this.orderModel.findById(id);
-    if (updateOrderInput.name) updatedOrder.name = updateOrderInput.name;
+
+    if (updateOrderInput?.name) updatedOrder.name = updateOrderInput.name;
+
+    if (updateOrderInput?.notes) updatedOrder.notes = updateOrderInput?.notes;
 
     if (updateOrderInput?.orderComponentsId?.length) {
       const promiseComponents = [];
@@ -91,18 +99,21 @@ export class OrderService {
 
       updatedOrder.orderComponents = components;
     }
-    if (updateOrderInput.statusId) {
+
+    if (updateOrderInput?.statusId) {
       const status = await this.orderStatusService.findById(
         updateOrderInput.statusId,
       );
       updatedOrder.status = status;
     }
-    if (updateOrderInput.customerId) {
+
+    if (updateOrderInput?.customerId) {
       const customer = await this.customerService.findById(
         updateOrderInput.customerId,
       );
       updatedOrder.customer = customer;
     }
+
     if (updateOrderInput?.executorId) {
       const executor = await this.executorService.findOne(
         updateOrderInput.executorId,
@@ -112,6 +123,7 @@ export class OrderService {
 
     await updatedOrder.save();
     await this.updateCost(updatedOrder);
+
     return await updatedOrder.save();
   }
 
