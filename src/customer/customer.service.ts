@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { LeanDocument, Model } from 'mongoose';
 import { CreateCustomerInput } from './dto/create-customer.input';
@@ -29,18 +29,43 @@ export class CustomerService {
     return await this.customerModel.find().lean({ autopopulate: true });
   }
 
-  async findById(id: string): Promise<CustomerDocument> {
-    return await this.customerModel.findById(id);
+  async findOne(id: string): Promise<CustomerDocument> {
+    const found = await this.customerModel.findById(id);
+    if (!found)
+      throw new NotFoundException({
+        message: `Customer not found by id ${id}`,
+      });
+    return found;
   }
 
   async update(
     id: string,
     updateCustomerInput: UpdateCustomerInput,
   ): Promise<CustomerDocument> {
-    return await this.customerModel.findByIdAndUpdate(id, updateCustomerInput);
+    const found = await this.findOne(id);
+    if (updateCustomerInput.address)
+      found.address = updateCustomerInput.address;
+
+    if (updateCustomerInput.company)
+      found.company = updateCustomerInput.company;
+
+    if (updateCustomerInput.email) found.email = updateCustomerInput.email;
+
+    if (updateCustomerInput.fullName)
+      found.fullName = updateCustomerInput.fullName;
+
+    if (updateCustomerInput.notes) found.notes = updateCustomerInput.notes;
+
+    if (updateCustomerInput.phone) found.phone = updateCustomerInput.phone;
+
+    await found.save();
+
+    return await this.findOne(id);
   }
 
   async remove(id: string): Promise<CustomerDocument> {
-    return await this.customerModel.findByIdAndRemove(id);
+    const found = await this.findOne(id);
+    await found.delete();
+    return found;
   }
 }

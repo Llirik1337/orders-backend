@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { LeanDocument, Model } from 'mongoose';
 import { CreateOrderStatusInput } from './dto/create-order-status.input';
@@ -28,21 +28,31 @@ export class OrderStatusService {
     return await this.orderStatusModel.find().lean({ autopopulate: true });
   }
 
-  async findById(id: string): Promise<OrderStatusDocument> {
-    return await this.orderStatusModel.findById(id);
+  async findOne(id: string): Promise<OrderStatusDocument> {
+    const found = await this.orderStatusModel.findById(id);
+    if (!found)
+      throw new NotFoundException({
+        message: `OrderStatus not found by id ${id}`,
+      });
+    return found;
   }
 
   async update(
     id: string,
     updateOrderStatusInput: UpdateOrderStatusInput,
   ): Promise<OrderStatusDocument> {
-    return await this.orderStatusModel.findByIdAndUpdate(
-      id,
-      updateOrderStatusInput,
-    );
+    const found = await this.findOne(id);
+
+    if (updateOrderStatusInput.name) found.name = updateOrderStatusInput.name;
+
+    await found.save();
+
+    return await this.findOne(id);
   }
 
   async remove(id: string): Promise<OrderStatusDocument> {
-    return await this.orderStatusModel.findByIdAndRemove(id);
+    const found = await this.findOne(id);
+    await found.delete();
+    return found;
   }
 }

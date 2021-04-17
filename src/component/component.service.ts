@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { LeanDocument, Model } from 'mongoose';
 import { ComponentOperationService } from 'src/component-operation/component-operation.service';
@@ -40,14 +40,19 @@ export class ComponentService {
   }
 
   async findOne(id: string): Promise<ComponentDocument> {
-    return await this.componentModel.findById(id);
+    const found = await this.componentModel.findById(id);
+    if (!found)
+      throw new NotFoundException({
+        message: `Component not found by id ${id}`,
+      });
+    return found;
   }
 
   async update(
     id: string,
     updateComponentInput: UpdateComponentInput,
   ): Promise<ComponentDocument> {
-    const updatedComponent = await this.componentModel.findById(id);
+    const updatedComponent = await this.findOne(id);
     updatedComponent.name = updateComponentInput.name;
     updatedComponent.notes = updateComponentInput.notes;
 
@@ -84,26 +89,9 @@ export class ComponentService {
     component.cost = cost;
   }
 
-  // async addComponentOperations(
-  //   id: string,
-  //   operationsId: Array<string>,
-  // ): Promise<ComponentDocument> {
-  //   const foundComponent = await this.findOne(id);
-  //   const promiseFoundOperations = [];
-  //   for (const id of operationsId) {
-  //     promiseFoundOperations.push(this.componentOperationService.findOne(id));
-  //   }
-  //   const foundOperations = await Promise.all(promiseFoundOperations);
-
-  //   for (const operation of foundOperations) {
-  //     foundComponent.operations.push(operation);
-  //   }
-  //   return await foundComponent.save();
-  // }
-
-  // async getCost(componentDocument: ComponentDocument) {}
-
   async remove(id: string): Promise<ComponentDocument> {
-    return await this.componentModel.findByIdAndDelete(id);
+    const found = await this.findOne(id);
+    await found.delete();
+    return found;
   }
 }

@@ -15,7 +15,7 @@ export class EmployeeResolver {
 
   @Query(() => Employee, { name: 'employee' })
   async findOne(@Args('id', { type: () => String }) id: string) {
-    return await this.employeeService.findById(id);
+    return await this.employeeService.findOne(id);
   }
 
   @Mutation(() => Employee)

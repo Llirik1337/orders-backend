@@ -14,4 +14,8 @@ export class CreateOrderComponentInput {
   @IsArray({ each: true })
   @Field(() => [String])
   batchOperationsId: string[];
+
+  @IsArray({ each: true })
+  @Field(() => [String])
+  orderOperationsId: string[];
 }

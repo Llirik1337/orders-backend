@@ -22,7 +22,7 @@ export class MaterialResolver {
 
   @Query(() => Material, { name: 'material' })
   async findOne(@Args('id', { type: () => String }) id: string) {
-    return await this.materialService.findById(id);
+    return await this.materialService.findOne(id);
   }
 
   @Mutation(() => Material)

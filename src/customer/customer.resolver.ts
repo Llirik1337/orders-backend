@@ -22,7 +22,7 @@ export class CustomerResolver {
 
   @Query(() => Customer, { name: 'customer' })
   async findOne(@Args('id', { type: () => String }) id: string) {
-    return await this.customerService.findById(id);
+    return await this.customerService.findOne(id);
   }
 
   @Mutation(() => Customer)

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { LeanDocument, Model } from 'mongoose';
 import { CreateUserInput } from './dto/create-user.input';
@@ -22,18 +22,29 @@ export class UserService {
       .lean({ autopopulate: true });
   }
 
-  async findById(id: string): Promise<UserDocument> {
-    return await this.userModel.findById(id);
+  async findOne(id: string): Promise<UserDocument> {
+    const found = await this.userModel.findById(id);
+    if (!found)
+      throw new NotFoundException({
+        message: `User not found by id ${id}`,
+      });
+    return found;
   }
 
   async update(
     id: string,
     updateUserInput: UpdateUserInput,
   ): Promise<UserDocument> {
-    return await this.userModel.findByIdAndUpdate(id, updateUserInput);
+    const found = await this.findOne(id);
+    if (updateUserInput.login) found.login = updateUserInput.login;
+    if (updateUserInput.password) found.password = updateUserInput.password;
+    await found.save();
+    return await this.findOne(id);
   }
 
   async remove(id: string): Promise<UserDocument> {
-    return await this.userModel.findByIdAndDelete(id);
+    const found = await this.findOne(id);
+    await found.delete();
+    return found;
   }
 }

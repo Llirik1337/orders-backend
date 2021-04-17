@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { LeanDocument, Model } from 'mongoose';
 import { CreateEquipmentInput } from './dto/create-equipment.input';
@@ -25,21 +25,34 @@ export class EquipmentService {
     return await this.equipmentModel.find().lean({ autopopulate: true });
   }
 
-  async findById(id: string): Promise<EquipmentDocument> {
-    return await this.equipmentModel.findById(id);
+  async findOne(id: string): Promise<EquipmentDocument> {
+    const found = await this.equipmentModel.findById(id);
+    if (!found)
+      throw new NotFoundException({
+        message: `Equipment not found by id ${id}`,
+      });
+    return found;
   }
 
   async update(
     id: string,
     updateEquipmentInput: UpdateEquipmentInput,
   ): Promise<EquipmentDocument> {
-    return await this.equipmentModel.findByIdAndUpdate(
-      id,
-      updateEquipmentInput,
-    );
+    const found = await this.findOne(id);
+    if (updateEquipmentInput.count) found.count = updateEquipmentInput.count;
+
+    if (updateEquipmentInput.name) found.name = updateEquipmentInput.name;
+
+    if (updateEquipmentInput.notes) found.notes = updateEquipmentInput.notes;
+
+    await found.save();
+
+    return await this.findOne(id);
   }
 
   async remove(id: string): Promise<EquipmentDocument> {
-    return await this.equipmentModel.findByIdAndRemove(id);
+    const found = await this.findOne(id);
+    await found.delete();
+    return found;
   }
 }

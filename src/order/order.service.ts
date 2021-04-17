@@ -1,5 +1,5 @@
 import { ExecutorService } from './../executor/executor.service';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CustomerService } from 'src/customer/customer.service';
@@ -35,11 +35,11 @@ export class OrderService {
 
     createdOrder.orderComponents = components;
 
-    const status = await this.orderStatusService.findById(
+    const status = await this.orderStatusService.findOne(
       createOrderInput.statusId,
     );
 
-    const customer = await this.customerService.findById(
+    const customer = await this.customerService.findOne(
       createOrderInput.customerId,
     );
 
@@ -64,7 +64,12 @@ export class OrderService {
   }
 
   async findOne(id: string): Promise<OrderDocument> {
-    return await this.orderModel.findById(id);
+    const found = await this.orderModel.findById(id);
+    if (!found)
+      throw new NotFoundException({
+        message: `Order not found by id ${id}`,
+      });
+    return found;
   }
 
   async updateCost(order: OrderDocument) {
@@ -82,7 +87,7 @@ export class OrderService {
     id: string,
     updateOrderInput: UpdateOrderInput,
   ): Promise<OrderDocument> {
-    const updatedOrder = await this.orderModel.findById(id);
+    const updatedOrder = await this.findOne(id);
 
     if (updateOrderInput?.name) updatedOrder.name = updateOrderInput.name;
 
@@ -101,14 +106,14 @@ export class OrderService {
     }
 
     if (updateOrderInput?.statusId) {
-      const status = await this.orderStatusService.findById(
+      const status = await this.orderStatusService.findOne(
         updateOrderInput.statusId,
       );
       updatedOrder.status = status;
     }
 
     if (updateOrderInput?.customerId) {
-      const customer = await this.customerService.findById(
+      const customer = await this.customerService.findOne(
         updateOrderInput.customerId,
       );
       updatedOrder.customer = customer;
@@ -128,6 +133,8 @@ export class OrderService {
   }
 
   async remove(id: string): Promise<OrderDocument> {
-    return await this.orderModel.findByIdAndDelete(id);
+    const found = await this.findOne(id);
+    await found.delete();
+    return found;
   }
 }

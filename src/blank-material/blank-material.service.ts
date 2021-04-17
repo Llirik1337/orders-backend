@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { MaterialService } from 'src/material/material.service';
@@ -20,7 +20,7 @@ export class BlankMaterialService {
     const createdBlankMaterial = new this.blankMaterialModel();
     createdBlankMaterial.length = createBlankMaterialInput.length;
     createdBlankMaterial.width = createBlankMaterialInput.width;
-    const material = await this.materialService.findById(
+    const material = await this.materialService.findOne(
       createBlankMaterialInput.materialId,
     );
     createdBlankMaterial.material = material;
@@ -36,17 +36,23 @@ export class BlankMaterialService {
   }
 
   async findOne(id: string) {
-    return await this.blankMaterialModel.findById(id);
+    const foundBlankMaterial = await this.blankMaterialModel.findById(id);
+    if (!foundBlankMaterial)
+      throw new NotFoundException({
+        message: `BlankMaterial not found by ${id}`,
+      });
+    return foundBlankMaterial;
   }
 
   async update(id: string, updateBlankMaterialInput: UpdateBlankMaterialInput) {
-    const updatedBlankMaterial = await this.blankMaterialModel.findById(id);
+    const updatedBlankMaterial = await this.findOne(id);
+
     if (updateBlankMaterialInput.length)
       updatedBlankMaterial.length = updateBlankMaterialInput.length;
     if (updateBlankMaterialInput.width)
       updatedBlankMaterial.width = updateBlankMaterialInput.width;
     if (updateBlankMaterialInput.materialId) {
-      const material = await this.materialService.findById(
+      const material = await this.materialService.findOne(
         updateBlankMaterialInput.materialId,
       );
       updatedBlankMaterial.material = material;
@@ -75,6 +81,8 @@ export class BlankMaterialService {
   }
 
   async remove(id: string) {
-    return this.blankMaterialModel.findByIdAndRemove(id);
+    const found = await this.findOne(id);
+    await found.delete();
+    return found;
   }
 }

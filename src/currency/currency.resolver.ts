@@ -22,7 +22,7 @@ export class CurrencyResolver {
 
   @Query(() => Currency, { name: 'currency' })
   async findOne(@Args('id', { type: () => String }) id: string) {
-    return await this.currencyService.findById(id);
+    return await this.currencyService.findOne(id);
   }
 
   @Mutation(() => Currency)

@@ -8,11 +8,12 @@ import {
   OrderComponentSchema,
 } from './entities/order-component.entity';
 import { MongooseModule } from '@nestjs/mongoose';
+import { OrderComponentOperationModule } from 'src/order-component-operation/order-component-operation.module';
 
 @Module({
   imports: [
     ComponentModule,
-    ComponentOperationModule,
+    OrderComponentOperationModule,
     MongooseModule.forFeature([
       { name: OrderComponent.name, schema: OrderComponentSchema },
     ]),

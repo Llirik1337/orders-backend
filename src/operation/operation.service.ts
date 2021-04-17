@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateOperationInput } from './dto/create-operation.input';
@@ -30,20 +30,32 @@ export class OperationService {
   }
 
   async findOne(id: string): Promise<OperationDocument> {
-    return await this.operationModel.findById(id);
+    const found = await this.operationModel.findById(id);
+    if (!found)
+      throw new NotFoundException({
+        message: `Operation not found by id ${id}`,
+      });
+    return found;
   }
 
   async update(
     id: string,
     updateOperationInput: UpdateOperationInput,
   ): Promise<OperationDocument> {
-    return await this.operationModel.findByIdAndUpdate(
-      id,
-      updateOperationInput,
-    );
+    const found = await this.findOne(id);
+    if (updateOperationInput.name) found.name = updateOperationInput.name;
+
+    if (updateOperationInput.notes) found.notes = updateOperationInput.notes;
+
+    if (updateOperationInput.price) found.price = updateOperationInput.price;
+
+    await found.save();
+    return await this.findOne(id);
   }
 
   async remove(id: string): Promise<OperationDocument> {
-    return await this.operationModel.findByIdAndRemove(id);
+    const found = await this.findOne(id);
+    await found.delete();
+    return found;
   }
 }

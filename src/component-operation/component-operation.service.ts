@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { BlankMaterialService } from 'src/blank-material/blank-material.service';
@@ -26,7 +26,7 @@ export class ComponentOperationService {
     createdComponentOperation.time = createComponentOperationInput.time;
 
     if (createComponentOperationInput.equipmentId) {
-      const equipment = await this.equipmentService.findById(
+      const equipment = await this.equipmentService.findOne(
         createComponentOperationInput.equipmentId,
       );
       createdComponentOperation.equipment = equipment;
@@ -74,7 +74,12 @@ export class ComponentOperationService {
   }
 
   async findOne(id: string) {
-    return await this.componentOperationModel.findById(id);
+    const found = await this.componentOperationModel.findById(id);
+    if (!found)
+      throw new NotFoundException({
+        message: `ComponentOperation not found by id ${id}`,
+      });
+    return found;
   }
 
   async update(
@@ -111,6 +116,8 @@ export class ComponentOperationService {
   }
 
   async remove(id: string) {
-    return await this.componentOperationModel.findByIdAndDelete(id);
+    const found = await this.findOne(id);
+    await found.delete();
+    return found;
   }
 }

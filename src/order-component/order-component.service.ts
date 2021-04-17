@@ -1,9 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { ComponentOperationService } from 'src/component-operation/component-operation.service';
-import { ComponentOperationDocument } from 'src/component-operation/entities/component-operation.entity';
 import { ComponentService } from 'src/component/component.service';
+import { OrderComponentOperationService } from 'src/order-component-operation/order-component-operation.service';
 import { CreateOrderComponentInput } from './dto/create-order-component.input';
 import { UpdateOrderComponentInput } from './dto/update-order-component.input';
 import {
@@ -17,7 +16,7 @@ export class OrderComponentService {
     @InjectModel(OrderComponent.name)
     private readonly orderComponentModel: Model<OrderComponentDocument>,
     private readonly componentService: ComponentService,
-    private readonly componentOperationService: ComponentOperationService,
+    private readonly orderComponentOperationService: OrderComponentOperationService,
   ) {}
   async create(createOrderComponentInput: CreateOrderComponentInput) {
     const createdOrderComponent = new this.orderComponentModel();
@@ -29,16 +28,35 @@ export class OrderComponentService {
 
     createdOrderComponent.component = component;
 
-    const promiseBatchOperations = [];
-    for (const id of createOrderComponentInput.batchOperationsId) {
-      promiseBatchOperations.push(this.componentOperationService.findOne(id));
+    if (
+      createOrderComponentInput.batchOperationsId &&
+      typeof createOrderComponentInput.batchOperationsId === 'object' &&
+      createOrderComponentInput.batchOperationsId.length
+    ) {
+      const promiseBatchOperations = createOrderComponentInput.batchOperationsId.map(
+        (id) => this.orderComponentOperationService.findOne(id),
+      );
+
+      const batchOperations = await Promise.all(promiseBatchOperations);
+
+      createdOrderComponent.batchOperations = batchOperations;
     }
 
-    const batchOperations = await Promise.all<ComponentOperationDocument>(
-      promiseBatchOperations,
-    );
+    if (
+      createOrderComponentInput.orderOperationsId &&
+      typeof createOrderComponentInput.orderOperationsId === 'object' &&
+      createOrderComponentInput.orderOperationsId.length
+    ) {
+      const promiseBatchOperations = createOrderComponentInput.orderOperationsId.map(
+        (id) => this.orderComponentOperationService.findOne(id),
+      );
 
-    createdOrderComponent.batchOperations = batchOperations;
+      const orderComponentOperations = await Promise.all(
+        promiseBatchOperations,
+      );
+
+      createdOrderComponent.orderComponentOperations = orderComponentOperations;
+    }
 
     await createdOrderComponent.save();
     await this.updateCost(createdOrderComponent);
@@ -46,11 +64,6 @@ export class OrderComponentService {
   }
 
   async updateCost(orderComponent: OrderComponentDocument) {
-    await orderComponent
-      .populate('batchOperations')
-      .populate('components')
-      .execPopulate();
-
     const cost = orderComponent.component.cost * orderComponent.count;
     orderComponent.cost = cost;
     await orderComponent.save();
@@ -61,7 +74,12 @@ export class OrderComponentService {
   }
 
   async findOne(id: string) {
-    return await this.orderComponentModel.findById(id);
+    const found = await this.orderComponentModel.findById(id);
+    if (!found)
+      throw new NotFoundException({
+        message: `OrderComponent not found by id ${id}`,
+      });
+    return found;
   }
 
   async update(
@@ -75,23 +93,45 @@ export class OrderComponentService {
 
     createdOrderComponent.component = component;
 
-    const promiseBatchOperations = [];
-    for (const id of updateOrderComponentInput.batchOperationsId) {
-      promiseBatchOperations.push(this.componentOperationService.findOne(id));
+    if (
+      updateOrderComponentInput.batchOperationsId &&
+      typeof updateOrderComponentInput.batchOperationsId === 'object' &&
+      updateOrderComponentInput.batchOperationsId.length
+    ) {
+      const promiseBatchOperations = updateOrderComponentInput.batchOperationsId.map(
+        (id) => this.orderComponentOperationService.findOne(id),
+      );
+
+      const batchOperations = await Promise.all(promiseBatchOperations);
+
+      createdOrderComponent.batchOperations = batchOperations;
     }
 
-    const batchOperations = await Promise.all<ComponentOperationDocument>(
-      promiseBatchOperations,
-    );
+    if (
+      updateOrderComponentInput.orderOperationsId &&
+      typeof updateOrderComponentInput.orderOperationsId === 'object' &&
+      updateOrderComponentInput.orderOperationsId.length
+    ) {
+      const promiseBatchOperations = updateOrderComponentInput.orderOperationsId.map(
+        (id) => this.orderComponentOperationService.findOne(id),
+      );
 
-    createdOrderComponent.batchOperations = batchOperations;
+      const orderComponentOperations = await Promise.all(
+        promiseBatchOperations,
+      );
+
+      createdOrderComponent.orderComponentOperations = orderComponentOperations;
+    }
 
     await createdOrderComponent.save();
     await this.updateCost(createdOrderComponent);
-    return await createdOrderComponent.save();
+    await createdOrderComponent.save();
+    return await this.findOne(id);
   }
 
   async remove(id: string) {
-    return await this.orderComponentModel.findByIdAndRemove(id);
+    const found = await this.findOne(id);
+    await found.delete();
+    return found;
   }
 }

@@ -22,7 +22,7 @@ export class EquipmentResolver {
 
   @Query(() => Equipment, { name: 'equipment' })
   async findOne(@Args('id', { type: () => String }) id: string) {
-    return await this.equipmentService.findById(id);
+    return await this.equipmentService.findOne(id);
   }
 
   @Mutation(() => Equipment)

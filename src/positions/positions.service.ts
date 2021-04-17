@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { LeanDocument, Model } from 'mongoose';
 import { CreatePositionInput } from './dto/create-position.input';
@@ -22,18 +22,31 @@ export class PositionsService {
     return await this.positionModel.find().lean({ autopopulate: true });
   }
 
-  async findById(id: string): Promise<PositionDocument> {
-    return await this.positionModel.findById(id);
+  async findOne(id: string): Promise<PositionDocument> {
+    const found = await this.positionModel.findById(id);
+    if (!found)
+      throw new NotFoundException({
+        message: `Position not found by id ${id}`,
+      });
+    return found;
   }
 
   async update(
     id: string,
     updatePositionInput: UpdatePositionInput,
   ): Promise<PositionDocument> {
-    return await this.positionModel.findByIdAndUpdate(id, updatePositionInput);
+    const found = await this.findOne(id);
+
+    if (updatePositionInput.name) found.name = updatePositionInput.name;
+
+    await found.save();
+
+    return await this.findOne(id);
   }
 
   async remove(id: string): Promise<PositionDocument> {
-    return await this.positionModel.findByIdAndRemove(id);
+    const found = await this.findOne(id);
+    await found.delete();
+    return found;
   }
 }

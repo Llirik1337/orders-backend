@@ -22,7 +22,7 @@ export class PositionsResolver {
 
   @Query(() => Position, { name: 'position' })
   async findOne(@Args('id', { type: () => String }) id: string) {
-    return (await this.positionsService.findById(id)).toJSON();
+    return (await this.positionsService.findOne(id)).toJSON();
   }
 
   @Mutation(() => Position)

@@ -1,14 +1,15 @@
 import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
-import {
-  ComponentOperation,
-  ComponentOperationDocument,
-} from 'src/component-operation/entities/component-operation.entity';
+
 import {
   Component,
   ComponentDocument,
 } from 'src/component/entities/component.entity';
+import {
+  OrderComponentOperation,
+  OrderComponentOperationDocument,
+} from 'src/order-component-operation/entities/order-component-operation.entity';
 
 export type OrderComponentDocument = OrderComponent & Document;
 
@@ -38,14 +39,27 @@ export class OrderComponent {
     type: [
       {
         type: MongooseSchema.Types.ObjectId,
-        ref: 'ComponentOperation',
+        ref: 'OrderComponentOperation',
         autopopulate: true,
       },
     ],
     default: [],
   })
-  @Field(() => [ComponentOperation])
-  batchOperations: ComponentOperationDocument[];
+  @Field(() => [OrderComponentOperation])
+  batchOperations: OrderComponentOperationDocument[];
+
+  @Prop({
+    type: [
+      {
+        type: MongooseSchema.Types.ObjectId,
+        ref: 'OrderComponentOperation',
+        autopopulate: true,
+      },
+    ],
+    default: [],
+  })
+  @Field(() => [OrderComponentOperation])
+  orderComponentOperations: OrderComponentOperationDocument[];
 
   @Field(() => Date)
   createdAt: Date;

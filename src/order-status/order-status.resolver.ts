@@ -23,7 +23,7 @@ export class OrderStatusResolver {
 
   @Query(() => OrderStatus, { name: 'orderStatus' })
   async findOne(@Args('id', { type: () => String }) id: string) {
-    return await this.orderStatusService.findById(id);
+    return await this.orderStatusService.findOne(id);
   }
 
   @Mutation(() => OrderStatus)
