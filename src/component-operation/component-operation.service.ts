@@ -64,10 +64,10 @@ export class ComponentOperationService {
   async updateCost(componentOperation: ComponentOperationDocument) {
     let cost = 0;
     for (const blankMaterial of componentOperation.blankMaterials) {
-      if (blankMaterial?.cost) cost += blankMaterial.cost;
+      if (blankMaterial?.cost) cost += Number(blankMaterial.cost?.toFixed(2));
     }
     if (componentOperation.operation?.price)
-      cost += componentOperation.operation.price;
+      cost += Number(componentOperation.operation.price?.toFixed(2));
 
     componentOperation.cost = Number(cost.toFixed(2));
     await componentOperation.save();

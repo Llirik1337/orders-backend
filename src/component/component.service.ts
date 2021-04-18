@@ -83,9 +83,10 @@ export class ComponentService {
         .execPopulate();
       if (operation.blankMaterials)
         for (const material of operation.blankMaterials) {
-          if (material) cost += material.cost;
+          if (material) cost += Number(material.cost?.toFixed(2));
         }
-      if (operation.operation) cost += operation.operation.price;
+      if (operation.operation)
+        cost += Number(operation.operation.price?.toFixed(2));
     }
 
     component.cost = Number(cost.toFixed(2));

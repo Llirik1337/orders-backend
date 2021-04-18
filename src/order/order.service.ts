@@ -76,7 +76,7 @@ export class OrderService {
     await order.populate('orderComponents').execPopulate();
     let cost = 0;
     for (const component of order.orderComponents) {
-      if (component.cost) cost += component.cost;
+      if (component.cost) cost += Number(component.cost.toFixed(2));
     }
 
     order.cost = Number(Number(cost.toFixed(2)));
