@@ -71,7 +71,7 @@ export class BlankMaterialService {
       (populatedBlank.material.width * populatedBlank.material.length);
     const cost = diff * populatedBlank.material.cost;
 
-    populatedBlank.cost = cost;
+    populatedBlank.cost = Number(cost.toFixed());
     populatedBlank.diff = diff;
 
     console.log(cost, diff);
