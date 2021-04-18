@@ -112,7 +112,7 @@ export class ComponentOperationService {
     await updatedComponentOperation.save();
     await this.updateCost(updatedComponentOperation);
 
-    return updatedComponentOperation;
+    return await this.findOne(id);
   }
 
   async remove(id: string) {

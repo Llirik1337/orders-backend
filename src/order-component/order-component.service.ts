@@ -89,7 +89,9 @@ export class OrderComponentService {
     const createdOrderComponent = await this.findOne(id);
     createdOrderComponent.count = updateOrderComponentInput.count;
 
-    const component = await this.componentService.findOne(id);
+    const component = await this.componentService.findOne(
+      updateOrderComponentInput.componentId,
+    );
 
     createdOrderComponent.component = component;
 
