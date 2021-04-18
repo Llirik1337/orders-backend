@@ -88,7 +88,7 @@ export class ComponentService {
       if (operation.operation) cost += operation.operation.price;
     }
 
-    component.cost = cost;
+    component.cost = Number(cost.toFixed(2));
   }
 
   async remove(id: string): Promise<ComponentDocument> {

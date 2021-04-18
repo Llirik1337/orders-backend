@@ -69,7 +69,7 @@ export class ComponentOperationService {
     if (componentOperation.operation?.price)
       cost += componentOperation.operation.price;
 
-    componentOperation.cost = cost;
+    componentOperation.cost = Number(cost.toFixed(2));
     await componentOperation.save();
   }
 

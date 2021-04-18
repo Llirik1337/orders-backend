@@ -79,7 +79,7 @@ export class OrderService {
       if (component.cost) cost += component.cost;
     }
 
-    order.cost = cost;
+    order.cost = Number(Number(cost.toFixed(2)));
     await order.save();
   }
 

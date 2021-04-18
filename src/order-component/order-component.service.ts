@@ -65,7 +65,7 @@ export class OrderComponentService {
 
   async updateCost(orderComponent: OrderComponentDocument) {
     const cost = orderComponent.component.cost * orderComponent.count;
-    orderComponent.cost = cost;
+    orderComponent.cost = cost.toFixed(2);
     await orderComponent.save();
   }
 
