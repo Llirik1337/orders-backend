@@ -18,6 +18,9 @@ export class CreateEquipmentInput {
   })
   notes?: string;
 
+  @Field(() => Int, { defaultValue: 0, nullable: true })
+  releaseYear?: number;
+
   @IsNumber()
   @Field(() => Int, { defaultValue: 0, description: 'Count of Equipment' })
   count: number;

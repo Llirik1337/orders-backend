@@ -17,6 +17,10 @@ export class Equipment {
   notes: string;
 
   @Prop({ type: MongooseSchema.Types.Number })
+  @Field(() => Int, { defaultValue: 0, nullable: true })
+  releaseYear: number;
+
+  @Prop({ type: MongooseSchema.Types.Number })
   @Field(() => Int, { defaultValue: 0 })
   count: number;
 
@@ -26,6 +30,7 @@ export class Equipment {
   @Field(() => Date)
   updatedAt: Date;
 
+  //TODO Новая фича
   // @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Operation' }] })
   // @Field(() => Operation, {
   //   description: 'Count of Equipment',

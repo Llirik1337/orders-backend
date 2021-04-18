@@ -15,9 +15,16 @@ export class EquipmentService {
     createEquipmentInput: CreateEquipmentInput,
   ): Promise<EquipmentDocument> {
     const createdEquipment = new this.equipmentModel();
-    createdEquipment.count = createEquipmentInput.count;
-    createdEquipment.name = createEquipmentInput.name;
-    createdEquipment.notes = createEquipmentInput.notes;
+
+    if (createEquipmentInput.count)
+      createdEquipment.count = createEquipmentInput.count;
+    if (createEquipmentInput.name)
+      createdEquipment.name = createEquipmentInput.name;
+    if (createEquipmentInput.notes)
+      createdEquipment.notes = createEquipmentInput.notes;
+    if (createEquipmentInput.releaseYear)
+      createdEquipment.releaseYear = createEquipmentInput.releaseYear;
+
     return await createdEquipment.save();
   }
 
@@ -44,6 +51,9 @@ export class EquipmentService {
     if (updateEquipmentInput.name) found.name = updateEquipmentInput.name;
 
     if (updateEquipmentInput.notes) found.notes = updateEquipmentInput.notes;
+
+    if (updateEquipmentInput.releaseYear)
+      found.releaseYear = updateEquipmentInput.releaseYear;
 
     await found.save();
 

@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { LeanDocument, Model } from 'mongoose';
+import { Model } from 'mongoose';
 import { ComponentOperationService } from 'src/component-operation/component-operation.service';
 import { CreateComponentInput } from './dto/create-component.input';
 import { UpdateComponentInput } from './dto/update-component.input';
@@ -56,15 +56,17 @@ export class ComponentService {
     updatedComponent.name = updateComponentInput.name;
     updatedComponent.notes = updateComponentInput.notes;
 
-    const promiseOperations = updateComponentInput.operationsId.map((id) =>
-      this.componentOperationService.findOne(id),
-    );
+    if (updateComponentInput.operationsId) {
+      const promiseOperations = updateComponentInput.operationsId.map((id) =>
+        this.componentOperationService.findOne(id),
+      );
 
-    const operations = await Promise.all(promiseOperations);
+      const operations = await Promise.all(promiseOperations);
 
-    const filteredOperations = operations.filter((item) => !!item);
+      const filteredOperations = operations.filter((item) => !!item);
 
-    updatedComponent.componentOperations = filteredOperations;
+      updatedComponent.componentOperations = filteredOperations;
+    }
     await updatedComponent.save();
     await this.updateCost(updatedComponent);
     return await updatedComponent.save();
