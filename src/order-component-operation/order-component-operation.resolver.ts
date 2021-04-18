@@ -20,7 +20,7 @@ export class OrderComponentOperationResolver {
     );
   }
 
-  @Query(() => [OrderComponentOperation], { name: 'orderComponentOperation' })
+  @Query(() => [OrderComponentOperation], { name: 'orderComponentOperations' })
   findAll() {
     return this.orderComponentOperationService.findAll();
   }
