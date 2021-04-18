@@ -22,6 +22,10 @@ export class BlankMaterial {
   @Field(() => Material)
   material: MaterialDocument;
 
+  @Prop({ type: MongooseSchema.Types.String })
+  @Field(() => String)
+  name: string;
+
   @Prop({ type: MongooseSchema.Types.Number })
   @Field(() => Float)
   length: number;

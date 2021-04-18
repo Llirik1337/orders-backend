@@ -12,6 +12,10 @@ export class CreateBlankMaterialInput {
   length: number;
 
   @IsNumber()
+  @Field(() => String)
+  name: string;
+
+  @IsNumber()
   @Field(() => Float)
   width: number;
 }
