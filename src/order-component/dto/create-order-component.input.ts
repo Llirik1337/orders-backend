@@ -11,11 +11,11 @@ export class CreateOrderComponentInput {
   @Field(() => String)
   componentId: string;
 
-  @IsArray({ each: true })
+  @IsArray()
   @Field(() => [String])
   batchOperationsId: string[];
 
-  @IsArray({ each: true })
+  @IsArray()
   @Field(() => [String])
   orderOperationsId: string[];
 }

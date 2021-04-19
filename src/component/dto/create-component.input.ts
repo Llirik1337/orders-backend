@@ -20,7 +20,7 @@ export class CreateComponentInput {
   // @Field(() => Order, { defaultValue: [] })
   // orders: Order[];
 
-  @IsArray({ each: true })
+  @IsArray()
   @Field(() => [String], { nullable: false })
   operationsId: string[];
 }
