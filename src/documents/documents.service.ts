@@ -331,6 +331,10 @@ export class DocumentsService {
     const confirm = this.getConfirm(order);
     const contactInfo = this.getContactInfo(order);
     const document = new Document({
+      title: `${order.name}_${moment().format()}`,
+      creator: order.customer.company,
+      description: order.notes,
+      keywords: order.name,
       sections: [
         {
           children: [logo, header, customer, timestamp, table, notes, confirm],
@@ -427,7 +431,7 @@ export class DocumentsService {
       },
       children: [
         new TextRun({
-          text: `Коммерческое предложение № 1/21 от ${dateString}`,
+          text: `Коммерческое предложение "${order.name}" от ${dateString}`,
         }),
       ],
     });
