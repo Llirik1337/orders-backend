@@ -14,7 +14,7 @@ export class CreateComponentOperationInput {
   @Field(() => String, { nullable: true })
   equipmentId: string;
 
-  @IsArray({ each: true })
+  @IsArray()
   @Field(() => [String], { nullable: true })
   blankMaterialsId: string[];
 }
