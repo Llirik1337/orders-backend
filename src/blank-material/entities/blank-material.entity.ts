@@ -34,6 +34,9 @@ export class BlankMaterial {
   @Field(() => Float)
   cost: number;
 
+  @Field(() => String)
+  name: string;
+
   @Field(() => Float)
   @Prop({
     type: MongooseSchema.Types.Number,
@@ -52,4 +55,10 @@ export const BlankMaterialSchema = SchemaFactory.createForClass(BlankMaterial);
 const cost = BlankMaterialSchema.virtual('cost');
 cost.get(function (this: BlankMaterial) {
   return round(this.diff * this.material.cost, 2);
+});
+
+const name = BlankMaterialSchema.virtual('name');
+name.get(function (this: BlankMaterial) {
+  const size = `(${this.width}mm x ${this.length}mm)`;
+  return `${size} ${this.material.name}`;
 });
