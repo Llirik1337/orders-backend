@@ -1,6 +1,6 @@
 import { ObjectType, Field, Int, Float } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Schema as MongooseSchema, Document } from 'mongoose';
+import { Schema as MongooseSchema, Document, VirtualType } from 'mongoose';
 import {
   Material,
   MaterialDocument,
@@ -21,10 +21,6 @@ export class BlankMaterial {
   })
   @Field(() => Material)
   material: MaterialDocument;
-
-  @Prop({ type: MongooseSchema.Types.String })
-  @Field(() => String)
-  name: string;
 
   @Prop({ type: MongooseSchema.Types.Number })
   @Field(() => Float)
@@ -47,6 +43,7 @@ export class BlankMaterial {
     default: 0,
   })
   diff: number;
+
   @Field(() => Date)
   createdAt: Date;
 
