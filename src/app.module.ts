@@ -19,6 +19,7 @@ import { DocumentsModule } from './documents/documents.module';
 import { OrderComponentOperationModule } from './order-component-operation/order-component-operation.module';
 
 import * as mongooseAutopopulate from 'mongoose-autopopulate';
+import * as mongooseLeanVirtual from 'mongoose-lean-virtuals';
 
 @Module({
   imports: [
@@ -30,7 +31,7 @@ import * as mongooseAutopopulate from 'mongoose-autopopulate';
         useNewUrlParser: true,
         useUnifiedTopology: true,
         connectionFactory: (connection) => {
-          // eslint-disable-next-line @typescript-eslint/no-var-requires
+          connection.plugin(mongooseLeanVirtual);
           connection.plugin(mongooseAutopopulate);
           return connection;
         },

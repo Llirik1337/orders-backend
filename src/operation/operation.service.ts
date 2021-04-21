@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { leanOptions } from 'src/common';
 import { CreateOperationInput } from './dto/create-operation.input';
 import { UpdateOperationInput } from './dto/update-operation.input';
 import { Operation, OperationDocument } from './entities/operation.entity';
@@ -21,12 +22,11 @@ export class OperationService {
     createdOperation.price = createOperationInput.price;
 
     const result = await createdOperation.save();
-    console.log('result -> ', result);
     return result;
   }
 
   async findAll() {
-    return await this.operationModel.find().lean({ autopopulate: true });
+    return await this.operationModel.find().lean(leanOptions);
   }
 
   async findOne(id: string): Promise<OperationDocument> {

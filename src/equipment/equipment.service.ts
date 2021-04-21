@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { LeanDocument, Model } from 'mongoose';
+import { leanOptions } from 'src/common';
 import { CreateEquipmentInput } from './dto/create-equipment.input';
 import { UpdateEquipmentInput } from './dto/update-equipment.input';
 import { Equipment, EquipmentDocument } from './entities/equipment.entity';
@@ -29,7 +30,7 @@ export class EquipmentService {
   }
 
   async findAll() {
-    return await this.equipmentModel.find().lean({ autopopulate: true });
+    return await this.equipmentModel.find().lean(leanOptions);
   }
 
   async findOne(id: string): Promise<EquipmentDocument> {

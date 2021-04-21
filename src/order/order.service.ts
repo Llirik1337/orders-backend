@@ -9,6 +9,7 @@ import { OrderStatusService } from 'src/order-status/order-status.service';
 import { CreateOrderInput } from './dto/create-order.input';
 import { UpdateOrderInput } from './dto/update-order.input';
 import { Order, OrderDocument } from './entities/order.entity';
+import { leanOptions } from 'src/common';
 
 @Injectable()
 export class OrderService {
@@ -55,12 +56,11 @@ export class OrderService {
     createdOrder.status = status;
 
     await createdOrder.save();
-    await this.updateCost(createdOrder);
     return await createdOrder.save();
   }
 
   async findAll() {
-    return await this.orderModel.find().lean({ autopopulate: true });
+    return await this.orderModel.find().lean(leanOptions);
   }
 
   async findOne(id: string): Promise<OrderDocument> {
@@ -70,17 +70,6 @@ export class OrderService {
         message: `Order not found by id ${id}`,
       });
     return found;
-  }
-
-  async updateCost(order: OrderDocument) {
-    await order.populate('orderComponents').execPopulate();
-    let cost = 0;
-    for (const component of order.orderComponents) {
-      if (component.cost) cost += Number(component.cost.toFixed(2));
-    }
-
-    order.cost = Number(Number(cost.toFixed(2)));
-    await order.save();
   }
 
   async update(
@@ -127,7 +116,6 @@ export class OrderService {
     }
 
     await updatedOrder.save();
-    await this.updateCost(updatedOrder);
 
     return await updatedOrder.save();
   }

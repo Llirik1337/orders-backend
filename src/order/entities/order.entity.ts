@@ -1,6 +1,7 @@
 import { Field, Float, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
+import { round } from 'src/common';
 import { Executor } from 'src/executor/entities/executor.entity';
 import {
   OrderComponent,
@@ -67,7 +68,6 @@ export class Order {
   executor: Executor;
 
   @Field(() => Float, { nullable: false })
-  @Prop({ type: MongooseSchema.Types.Number, default: 0 })
   cost: number;
 
   @Field(() => Date)
@@ -78,3 +78,11 @@ export class Order {
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);
+const cost = OrderSchema.virtual('cost');
+cost.get(function (this: Order) {
+  let cost = 0;
+  for (const component of this.orderComponents) {
+    if (component.cost) cost += round(component.cost, 2);
+  }
+  return round(cost, 2);
+});

@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { leanOptions } from 'src/common';
 import { ComponentService } from 'src/component/component.service';
 import { OrderComponentOperationService } from 'src/order-component-operation/order-component-operation.service';
 import { CreateOrderComponentInput } from './dto/create-order-component.input';
@@ -59,18 +60,11 @@ export class OrderComponentService {
     }
 
     await createdOrderComponent.save();
-    await this.updateCost(createdOrderComponent);
-    return await createdOrderComponent.save();
-  }
-
-  async updateCost(orderComponent: OrderComponentDocument) {
-    const cost = orderComponent.component.cost * orderComponent.count;
-    orderComponent.cost = Number(cost.toFixed(2));
-    await orderComponent.save();
+    return createdOrderComponent;
   }
 
   async findAll() {
-    return await this.orderComponentModel.find().lean({ autopopulate: true });
+    return await this.orderComponentModel.find().lean(leanOptions);
   }
 
   async findOne(id: string) {
@@ -125,8 +119,6 @@ export class OrderComponentService {
       createdOrderComponent.orderComponentOperations = orderComponentOperations;
     }
 
-    await createdOrderComponent.save();
-    await this.updateCost(createdOrderComponent);
     await createdOrderComponent.save();
     return await this.findOne(id);
   }

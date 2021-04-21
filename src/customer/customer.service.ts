@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { LeanDocument, Model } from 'mongoose';
+import { leanOptions } from 'src/common';
 import { CreateCustomerInput } from './dto/create-customer.input';
 import { UpdateCustomerInput } from './dto/update-customer.input';
 import { Customer, CustomerDocument } from './entities/customer.entity';
@@ -26,7 +27,7 @@ export class CustomerService {
   }
 
   async findAll() {
-    return await this.customerModel.find().lean({ autopopulate: true });
+    return await this.customerModel.find().lean(leanOptions);
   }
 
   async findOne(id: string): Promise<CustomerDocument> {

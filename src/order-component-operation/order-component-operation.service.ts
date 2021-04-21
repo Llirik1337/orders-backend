@@ -9,6 +9,7 @@ import {
   OrderComponentOperation,
   OrderComponentOperationDocument,
 } from './entities/order-component-operation.entity';
+import { leanOptions } from 'src/common';
 
 @Injectable()
 export class OrderComponentOperationService {
@@ -50,9 +51,7 @@ export class OrderComponentOperationService {
   }
 
   async findAll() {
-    return this.orderComponentOperationModel
-      .find()
-      .lean({ autopopulate: true });
+    return this.orderComponentOperationModel.find().lean(leanOptions);
   }
 
   async findOne(id: string) {

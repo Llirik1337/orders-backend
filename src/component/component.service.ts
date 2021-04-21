@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { leanOptions } from 'src/common';
 import { ComponentOperationService } from 'src/component-operation/component-operation.service';
 import { CreateComponentInput } from './dto/create-component.input';
 import { UpdateComponentInput } from './dto/update-component.input';
@@ -31,12 +32,11 @@ export class ComponentService {
     createdComponent.componentOperations = filteredOperations;
 
     await createdComponent.save();
-    await this.updateCost(createdComponent);
     return await createdComponent.save();
   }
 
   async findAll() {
-    return await this.componentModel.find().lean({ autopopulate: true });
+    return await this.componentModel.find().lean(leanOptions);
   }
 
   async findOne(id: string): Promise<ComponentDocument> {
@@ -68,28 +68,7 @@ export class ComponentService {
       updatedComponent.componentOperations = filteredOperations;
     }
     await updatedComponent.save();
-    await this.updateCost(updatedComponent);
     return await updatedComponent.save();
-  }
-
-  async updateCost(component: ComponentDocument) {
-    await component.populate('componentOperations').execPopulate();
-    let cost = 0;
-
-    for (const operation of component.componentOperations) {
-      await operation
-        .populate('blankMaterials')
-        .populate('operations')
-        .execPopulate();
-      if (operation.blankMaterials)
-        for (const material of operation.blankMaterials) {
-          if (material) cost += Number(material.cost?.toFixed(2));
-        }
-      if (operation.operation)
-        cost += Number(operation.operation.price?.toFixed(2));
-    }
-
-    component.cost = Number(cost.toFixed(2));
   }
 
   async remove(id: string): Promise<ComponentDocument> {

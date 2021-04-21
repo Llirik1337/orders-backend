@@ -1,6 +1,7 @@
 import { Field, Float, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
+import { round } from 'src/common';
 import {
   ComponentOperation,
   ComponentOperationDocument,
@@ -33,7 +34,6 @@ export class Component {
   @Field(() => [ComponentOperation], { defaultValue: [] })
   componentOperations: ComponentOperationDocument[];
 
-  @Prop({ type: MongooseSchema.Types.Number, default: 0 })
   @Field(() => Float, { nullable: false })
   cost: number;
 
@@ -44,3 +44,18 @@ export class Component {
   updatedAt: Date;
 }
 export const ComponentSchema = SchemaFactory.createForClass(Component);
+
+const cost = ComponentSchema.virtual('cost');
+cost.get(function (this: Component) {
+  let cost = 0;
+
+  for (const operation of this.componentOperations) {
+    if (operation.blankMaterials)
+      for (const material of operation.blankMaterials) {
+        if (material) cost += round(material.cost, 2);
+      }
+    if (operation.operation) cost += round(operation.operation.price, 2);
+  }
+
+  return round(cost, 2);
+});

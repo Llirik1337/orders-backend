@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { leanOptions } from 'src/common';
 import { CreateMaterialInput } from './dto/create-material.input';
 import { UpdateMaterialInput } from './dto/update-material.input';
 import { Material, MaterialDocument } from './entities/material.entity';
@@ -23,7 +24,7 @@ export class MaterialService {
   }
 
   async findAll() {
-    return await this.materialModel.find().lean({ autopopulate: true });
+    return await this.materialModel.find().lean(leanOptions);
   }
 
   async findOne(id: string): Promise<MaterialDocument> {

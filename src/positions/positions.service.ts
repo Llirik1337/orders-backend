@@ -4,6 +4,7 @@ import { LeanDocument, Model } from 'mongoose';
 import { CreatePositionInput } from './dto/create-position.input';
 import { UpdatePositionInput } from './dto/update-position.input';
 import { Position, PositionDocument } from './entities/position.entity';
+import { leanOptions } from 'src/common';
 
 @Injectable()
 export class PositionsService {
@@ -19,7 +20,7 @@ export class PositionsService {
   }
 
   async findAll() {
-    return await this.positionModel.find().lean({ autopopulate: true });
+    return await this.positionModel.find().lean(leanOptions);
   }
 
   async findOne(id: string): Promise<PositionDocument> {

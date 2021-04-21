@@ -7,6 +7,7 @@ import { CreateEmployeeInput } from './dto/create-employee.input';
 import { UpdateEmployeeInput } from './dto/update-employee.input';
 import { Employee, EmployeeDocument } from './entities/employee.entity';
 import { GraphQLExtension } from 'apollo-server-express';
+import { leanOptions } from 'src/common';
 
 @Injectable()
 export class EmployeeService {
@@ -28,7 +29,7 @@ export class EmployeeService {
   }
 
   async findAll() {
-    return await this.employeeModel.find().lean({ autopopulate: true });
+    return await this.employeeModel.find().lean(leanOptions);
   }
 
   async findOne(id: string): Promise<EmployeeDocument | null> {

@@ -5,6 +5,7 @@ import {
   BlankMaterial,
   BlankMaterialDocument,
 } from 'src/blank-material/entities/blank-material.entity';
+import { round } from 'src/common';
 import { Equipment } from 'src/equipment/entities/equipment.entity';
 import {
   Executor,
@@ -26,7 +27,7 @@ export class ComponentOperation {
   @Field(() => Float)
   time: number;
 
-  @Prop({ type: MongooseSchema.Types.Number, default: 0 })
+  // @Prop({ type: MongooseSchema.Types.Number, default: 0 })
   @Field(() => Float)
   cost: number;
 
@@ -80,3 +81,14 @@ export class ComponentOperation {
 export const ComponentOperationSchema = SchemaFactory.createForClass(
   ComponentOperation,
 );
+
+const cost = ComponentOperationSchema.virtual('cost');
+cost.get(function (this: ComponentOperation) {
+  let cost = 0;
+  for (const blankMaterial of this.blankMaterials) {
+    if (blankMaterial?.cost) cost += round(blankMaterial.cost, 2);
+  }
+  if (this.operation?.price) cost += round(this.operation.price, 2);
+
+  return round(cost, 2);
+});

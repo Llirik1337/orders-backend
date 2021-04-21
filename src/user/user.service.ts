@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { LeanDocument, Model } from 'mongoose';
+import { leanOptions } from 'src/common';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { User, UserDocument } from './entities/user.entity';
@@ -17,9 +18,7 @@ export class UserService {
   }
 
   async findAll() {
-    return this.userModel
-      .find({}, { id: 1, login: 1 })
-      .lean({ autopopulate: true });
+    return this.userModel.find({}, { id: 1, login: 1 }).lean(leanOptions);
   }
 
   async findOne(id: string): Promise<UserDocument> {

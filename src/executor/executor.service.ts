@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { leanOptions } from 'src/common';
 import { CreateExecutorInput } from './dto/create-executor.input';
 import { UpdateExecutorInput } from './dto/update-executor.input';
 import { Executor, ExecutorDocument } from './entities/executor.entity';
@@ -24,7 +25,7 @@ export class ExecutorService {
   }
 
   async findAll() {
-    return this.executorModel.find().lean({ autopopulate: true });
+    return this.executorModel.find().lean(leanOptions);
   }
 
   async findOne(id: string) {

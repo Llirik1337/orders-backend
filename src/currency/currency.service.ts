@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { LeanDocument, Model } from 'mongoose';
+import { leanOptions } from 'src/common';
 import { CreateCurrencyInput } from './dto/create-currency.input';
 import { UpdateCurrencyInput } from './dto/update-currency.input';
 import { Currency, CurrencyDocument } from './entities/currency.entity';
@@ -23,7 +24,7 @@ export class CurrencyService {
   }
 
   async findAll() {
-    return await this.currencyModel.find().lean({ autopopulate: true });
+    return await this.currencyModel.find().lean(leanOptions);
   }
 
   async findOne(id: string): Promise<CurrencyDocument> {

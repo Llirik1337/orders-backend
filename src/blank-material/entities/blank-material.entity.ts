@@ -1,6 +1,7 @@
 import { ObjectType, Field, Int, Float } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Schema as MongooseSchema, Document, VirtualType } from 'mongoose';
+import { Schema as MongooseSchema, Document } from 'mongoose';
+import { round } from 'src/common';
 import {
   Material,
   MaterialDocument,
@@ -31,10 +32,6 @@ export class BlankMaterial {
   width: number;
 
   @Field(() => Float)
-  @Prop({
-    type: MongooseSchema.Types.Number,
-    default: 0,
-  })
   cost: number;
 
   @Field(() => Float)
@@ -51,3 +48,8 @@ export class BlankMaterial {
   updatedAt: Date;
 }
 export const BlankMaterialSchema = SchemaFactory.createForClass(BlankMaterial);
+
+const cost = BlankMaterialSchema.virtual('cost');
+cost.get(function (this: BlankMaterial) {
+  return round(this.diff * this.material.cost, 2);
+});

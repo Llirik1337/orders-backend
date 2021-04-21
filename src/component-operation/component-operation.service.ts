@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { BlankMaterialService } from 'src/blank-material/blank-material.service';
 import { BlankMaterialDocument } from 'src/blank-material/entities/blank-material.entity';
+import { leanOptions } from 'src/common';
 import { EquipmentService } from 'src/equipment/equipment.service';
 import { OperationService } from 'src/operation/operation.service';
 import { CreateComponentOperationInput } from './dto/create-component-operation.input';
@@ -51,26 +52,11 @@ export class ComponentOperationService {
     );
     createdComponentOperation.operation = operation;
     await createdComponentOperation.save();
-    await this.updateCost(createdComponentOperation);
     return createdComponentOperation;
   }
 
   async findAll() {
-    return await this.componentOperationModel
-      .find()
-      .lean({ autopopulate: true });
-  }
-
-  async updateCost(componentOperation: ComponentOperationDocument) {
-    let cost = 0;
-    for (const blankMaterial of componentOperation.blankMaterials) {
-      if (blankMaterial?.cost) cost += Number(blankMaterial.cost?.toFixed(2));
-    }
-    if (componentOperation.operation?.price)
-      cost += Number(componentOperation.operation.price?.toFixed(2));
-
-    componentOperation.cost = Number(cost.toFixed(2));
-    await componentOperation.save();
+    return await this.componentOperationModel.find().lean(leanOptions);
   }
 
   async findOne(id: string) {
@@ -110,7 +96,6 @@ export class ComponentOperationService {
       updatedComponentOperation.operation = operation;
     }
     await updatedComponentOperation.save();
-    await this.updateCost(updatedComponentOperation);
 
     return await this.findOne(id);
   }

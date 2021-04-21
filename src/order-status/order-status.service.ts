@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { LeanDocument, Model } from 'mongoose';
 import { CreateOrderStatusInput } from './dto/create-order-status.input';
 import { UpdateOrderStatusInput } from './dto/update-order-status.input';
+import { leanOptions } from 'src/common';
 
 import {
   OrderStatus,
@@ -25,7 +26,7 @@ export class OrderStatusService {
   }
 
   async findAll() {
-    return await this.orderStatusModel.find().lean({ autopopulate: true });
+    return await this.orderStatusModel.find().lean(leanOptions);
   }
 
   async findOne(id: string): Promise<OrderStatusDocument> {

@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { leanOptions } from 'src/common';
 import { MaterialService } from 'src/material/material.service';
 import { CreateBlankMaterialInput } from './dto/create-blank-material.input';
 import { UpdateBlankMaterialInput } from './dto/update-blank-material.input';
@@ -17,22 +18,22 @@ export class BlankMaterialService {
     private readonly materialService: MaterialService,
   ) {}
   async create(createBlankMaterialInput: CreateBlankMaterialInput) {
-    const createdBlankMaterial = new this.blankMaterialModel();
-    createdBlankMaterial.length = createBlankMaterialInput.length;
-    createdBlankMaterial.width = createBlankMaterialInput.width;
+    const blank = new this.blankMaterialModel();
+    blank.length = createBlankMaterialInput.length;
+    blank.width = createBlankMaterialInput.width;
 
     const material = await this.materialService.findOne(
       createBlankMaterialInput.materialId,
     );
-    createdBlankMaterial.material = material;
-    await createdBlankMaterial.save();
-    await this.updateBlankMaterialCost(createdBlankMaterial);
-    return createdBlankMaterial;
+    blank.material = material;
+    blank.diff =
+      (blank.width * blank.length) /
+      (blank.material.width * blank.material.length);
+    await blank.save();
+    return blank;
   }
   async findAll() {
-    const res = await this.blankMaterialModel
-      .find()
-      .lean({ autopopulate: true });
+    const res = await this.blankMaterialModel.find().lean(leanOptions);
     return res;
   }
 
@@ -46,41 +47,26 @@ export class BlankMaterialService {
   }
 
   async update(id: string, updateBlankMaterialInput: UpdateBlankMaterialInput) {
-    const updatedBlankMaterial = await this.findOne(id);
+    const blank = await this.findOne(id);
 
     if (updateBlankMaterialInput.length)
-      updatedBlankMaterial.length = updateBlankMaterialInput.length;
+      blank.length = updateBlankMaterialInput.length;
     if (updateBlankMaterialInput.width)
-      updatedBlankMaterial.width = updateBlankMaterialInput.width;
+      blank.width = updateBlankMaterialInput.width;
     if (updateBlankMaterialInput.materialId) {
       const material = await this.materialService.findOne(
         updateBlankMaterialInput.materialId,
       );
-      updatedBlankMaterial.material = material;
+      blank.material = material;
     }
-    await updatedBlankMaterial.save();
-    await this.updateBlankMaterialCost(updatedBlankMaterial);
-    return updatedBlankMaterial;
+
+    blank.diff =
+      (blank.width * blank.length) /
+      (blank.material.width * blank.material.length);
+
+    await blank.save();
+    return blank;
   }
-
-  async updateBlankMaterialCost(blank: BlankMaterialDocument) {
-    const populatedBlank = await blank.populate('material').execPopulate();
-    console.log(populatedBlank);
-
-    const diff =
-      (populatedBlank.width * populatedBlank.length) /
-      (populatedBlank.material.width * populatedBlank.material.length);
-    const cost = diff * populatedBlank.material.cost;
-
-    populatedBlank.cost = Number(cost.toFixed(2));
-    populatedBlank.diff = diff;
-
-    console.log(cost, diff);
-
-    await populatedBlank.save();
-    return populatedBlank;
-  }
-
   async remove(id: string) {
     const found = await this.findOne(id);
     await found.delete();
