@@ -20,7 +20,6 @@ export class BlankMaterialService {
     const createdBlankMaterial = new this.blankMaterialModel();
     createdBlankMaterial.length = createBlankMaterialInput.length;
     createdBlankMaterial.width = createBlankMaterialInput.width;
-    createdBlankMaterial.name = createBlankMaterialInput.name;
 
     const material = await this.materialService.findOne(
       createBlankMaterialInput.materialId,
@@ -53,8 +52,6 @@ export class BlankMaterialService {
       updatedBlankMaterial.length = updateBlankMaterialInput.length;
     if (updateBlankMaterialInput.width)
       updatedBlankMaterial.width = updateBlankMaterialInput.width;
-    if (updateBlankMaterialInput.name)
-      updatedBlankMaterial.name = updateBlankMaterialInput.name;
     if (updateBlankMaterialInput.materialId) {
       const material = await this.materialService.findOne(
         updateBlankMaterialInput.materialId,
