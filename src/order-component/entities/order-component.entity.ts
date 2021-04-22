@@ -27,6 +27,12 @@ export class OrderComponent {
   @Field(() => Float)
   cost: number;
 
+  @Field(() => Float)
+  costOne: number;
+
+  @Field(() => Float)
+  fot: number;
+
   @Prop({
     type: MongooseSchema.Types.ObjectId,
     ref: 'Component',
@@ -73,6 +79,41 @@ export const OrderComponentSchema = SchemaFactory.createForClass(
 
 const cost = OrderComponentSchema.virtual('cost');
 cost.get(function (this: OrderComponent) {
-  const cost = this.component.cost * this.count;
+  let cost = this.component.cost * this.count;
+
+  for (const operation of this.batchOperations) {
+    const operationCost = operation.componentOperation?.cost;
+    if (operationCost) cost += operationCost / this.count;
+  }
+
+  return round(cost, 2);
+});
+
+const costOne = OrderComponentSchema.virtual('costOne');
+costOne.get(function (this: OrderComponent) {
+  let cost = this.component.cost;
+
+  for (const operation of this.batchOperations) {
+    const operationCost = operation.componentOperation?.cost;
+    if (operationCost) cost += operationCost / this.count;
+  }
+
+  return round(cost, 2);
+});
+
+const fot = OrderComponentSchema.virtual('fot');
+fot.get(function (this: OrderComponent) {
+  let cost = 0;
+
+  for (const operation of this.batchOperations) {
+    const operationCost = operation.componentOperation?.cost;
+    if (operationCost) cost += operationCost / this.count;
+  }
+
+  for (const operation of this.orderComponentOperations) {
+    const operationCost = operation.componentOperation.cost;
+    if (operationCost) cost += operationCost;
+  }
+
   return round(cost, 2);
 });

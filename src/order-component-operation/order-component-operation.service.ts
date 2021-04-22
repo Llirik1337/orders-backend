@@ -36,14 +36,15 @@ export class OrderComponentOperationService {
     }
 
     if (
-      createOrderComponentOperationInput.componentId &&
-      typeof createOrderComponentOperationInput.componentId === 'string'
+      createOrderComponentOperationInput.componentOperationId &&
+      typeof createOrderComponentOperationInput.componentOperationId ===
+        'string'
     ) {
       const component = await this.componentOperationService.findOne(
-        createOrderComponentOperationInput.componentId,
+        createOrderComponentOperationInput.componentOperationId,
       );
 
-      orderComponentOperation.component = component;
+      orderComponentOperation.componentOperation = component;
     }
     const result = await orderComponentOperation.save();
     return result;
@@ -80,14 +81,15 @@ export class OrderComponentOperationService {
     }
 
     if (
-      updateOrderComponentOperationInput.componentId &&
-      typeof updateOrderComponentOperationInput.componentId === 'string'
+      updateOrderComponentOperationInput.componentOperationId &&
+      typeof updateOrderComponentOperationInput.componentOperationId ===
+        'string'
     ) {
       const component = await this.componentOperationService.findOne(
-        updateOrderComponentOperationInput.componentId,
+        updateOrderComponentOperationInput.componentOperationId,
       );
 
-      orderComponentOperation.component = component;
+      orderComponentOperation.componentOperation = component;
     }
     const result = await orderComponentOperation.save();
     return result;

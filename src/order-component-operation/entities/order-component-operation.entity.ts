@@ -25,7 +25,7 @@ export class OrderComponentOperation {
     autopopulate: true,
   })
   @Field(() => ComponentOperation)
-  component: ComponentOperationDocument;
+  componentOperation: ComponentOperationDocument;
 
   @Prop({
     type: MongooseSchema.Types.ObjectId,

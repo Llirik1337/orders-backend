@@ -37,6 +37,9 @@ export class Component {
   @Field(() => Float, { nullable: false })
   cost: number;
 
+  @Field(() => Float)
+  materialCost!: number;
+
   @Field(() => Date)
   createdAt: Date;
 
@@ -55,6 +58,19 @@ cost.get(function (this: Component) {
         if (material) cost += round(material.cost, 2);
       }
     if (operation.operation) cost += round(operation.operation.price, 2);
+  }
+
+  return round(cost, 2);
+});
+
+const materialCost = ComponentSchema.virtual('materialCost');
+materialCost.get(function (this: Component) {
+  let cost = 0;
+
+  for (const operation of this.componentOperations) {
+    for (const material of operation.blankMaterials) {
+      if (material) cost += round(material.cost, 2);
+    }
   }
 
   return round(cost, 2);
