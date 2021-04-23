@@ -1,10 +1,10 @@
-import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { ObjectType, Field, Float } from '@nestjs/graphql';
 import { ICost } from '../ICost';
 
 @ObjectType()
-export class Cost {
-  @Field(() => Int, { description: 'Example field (placeholder)' })
+export class Cost implements ICost {
+  @Field(() => Float, { description: 'Example field (placeholder)' })
   one: number;
-  @Field(() => Int, { description: 'Example field (placeholder)' })
+  @Field(() => Float, { description: 'Example field (placeholder)' })
   consignment: number;
 }

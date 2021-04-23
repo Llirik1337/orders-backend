@@ -18,6 +18,7 @@ import { OrderComponentDocument } from 'src/order-component/entities/order-compo
 import * as moment from 'moment';
 import * as fs from 'fs';
 import * as path from 'path';
+import { round } from 'src/common';
 
 @Injectable()
 export class DocumentsService {
@@ -143,22 +144,24 @@ export class DocumentsService {
       verticalAlign: VerticalAlign.CENTER,
     });
     const costOfOneWithOutNDC = new TableCell({
-      children: [new Paragraph(String(orderComponent.component.cost))],
+      children: [new Paragraph(String(round(orderComponent.costOne, 2)))],
       verticalAlign: VerticalAlign.CENTER,
     });
     const costWithOutNDC = new TableCell({
-      children: [new Paragraph(String(orderComponent.cost))],
+      children: [new Paragraph(String(round(orderComponent.cost, 2)))],
       verticalAlign: VerticalAlign.CENTER,
     });
 
-    const fullCost = orderComponent.cost * 1.2;
+    const fullCost = round(orderComponent.cost * 1.2, 2);
 
     const costWithNDC = new TableCell({
       children: [new Paragraph(String(fullCost))],
       verticalAlign: VerticalAlign.CENTER,
     });
     const costNDC = new TableCell({
-      children: [new Paragraph(String(fullCost - orderComponent.cost))],
+      children: [
+        new Paragraph(String(round(fullCost - orderComponent.cost, 2))),
+      ],
       verticalAlign: VerticalAlign.CENTER,
     });
     return [
@@ -185,12 +188,14 @@ export class DocumentsService {
     const costWithOutNDC = new TableCell({
       children: [
         new Paragraph({
-          children: [new TextRun({ text: String(order.cost), bold: true })],
+          children: [
+            new TextRun({ text: String(round(order.cost, 2)), bold: true }),
+          ],
         }),
       ],
     });
 
-    const fullCost = order.cost * 1.2;
+    const fullCost = round(order.cost * 1.2, 2);
 
     const costWithNDC = new TableCell({
       children: [
@@ -203,7 +208,10 @@ export class DocumentsService {
       children: [
         new Paragraph({
           children: [
-            new TextRun({ text: String(fullCost - order.cost), bold: true }),
+            new TextRun({
+              text: String(round(fullCost - order.cost, 2)),
+              bold: true,
+            }),
           ],
         }),
       ],
@@ -367,8 +375,12 @@ export class DocumentsService {
       });
     };
     const table = new Table({
-      columnWidths: [7000, 7000],
-      borders: disabledBorder,
+      columnWidths: [6000, 3000],
+      borders: {
+        ...disabledBorder,
+        insideHorizontal: this.disableBorderSide(),
+        insideVertical: this.disableBorderSide(),
+      },
       rows: [
         getLine(
           '190005, Санкт-Петербург, 1-я Красноармейская, 1/21 / лит А, пом. 10-Н',

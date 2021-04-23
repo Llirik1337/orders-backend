@@ -53,10 +53,13 @@ cost.get(function (this: Component) {
   let cost = 0;
 
   for (const operation of this.componentOperations) {
-    if (operation.blankMaterials)
+    if (operation.blankMaterials) {
+      console.log(operation.blankMaterials);
       for (const material of operation.blankMaterials) {
         if (material) cost += round(material.cost, 2);
       }
+    }
+    console.log(operation.operation);
     if (operation.operation) cost += round(operation.operation.price, 2);
   }
 

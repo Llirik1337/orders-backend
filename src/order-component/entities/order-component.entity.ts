@@ -33,6 +33,9 @@ export class OrderComponent {
   @Field(() => Float)
   fot: number;
 
+  @Field(() => Float)
+  materialCost: number;
+
   @Prop({
     type: MongooseSchema.Types.ObjectId,
     ref: 'Component',
@@ -77,13 +80,34 @@ export const OrderComponentSchema = SchemaFactory.createForClass(
   OrderComponent,
 );
 
-const cost = OrderComponentSchema.virtual('cost');
-cost.get(function (this: OrderComponent) {
-  let cost = this.component.cost * this.count;
+const fot = OrderComponentSchema.virtual('fot');
+fot.get(function (this: OrderComponent) {
+  let cost = 0;
+
+  for (const operation of this.orderComponentOperations) {
+    const componentOperation = operation.componentOperation;
+    const componentOperationCost = componentOperation?.cost;
+    if (!isNaN(componentOperationCost)) cost += componentOperationCost;
+  }
 
   for (const operation of this.batchOperations) {
-    const operationCost = operation.componentOperation?.cost;
-    if (operationCost) cost += operationCost / this.count;
+    const componentOperation = operation.componentOperation;
+    const operationCost = componentOperation?.cost;
+    if (!isNaN(operationCost)) cost += operationCost / this.count;
+  }
+
+  return round(cost, 2);
+});
+
+const materialCost = OrderComponentSchema.virtual('materialCost');
+materialCost.get(function (this: OrderComponent) {
+  let cost = 0;
+
+  for (const operation of this.orderComponentOperations) {
+    for (const material of operation.componentOperation.blankMaterials) {
+      const materialCost = round(material.cost, 2);
+      if (!isNaN(materialCost)) cost = round(cost + materialCost, 2);
+    }
   }
 
   return round(cost, 2);
@@ -91,29 +115,11 @@ cost.get(function (this: OrderComponent) {
 
 const costOne = OrderComponentSchema.virtual('costOne');
 costOne.get(function (this: OrderComponent) {
-  let cost = this.component.cost;
-
-  for (const operation of this.batchOperations) {
-    const operationCost = operation.componentOperation?.cost;
-    if (operationCost) cost += operationCost / this.count;
-  }
-
-  return round(cost, 2);
+  return round(this.fot + this.materialCost, 2);
 });
 
-const fot = OrderComponentSchema.virtual('fot');
-fot.get(function (this: OrderComponent) {
-  let cost = 0;
-
-  for (const operation of this.batchOperations) {
-    const operationCost = operation.componentOperation?.cost;
-    if (operationCost) cost += operationCost / this.count;
-  }
-
-  for (const operation of this.orderComponentOperations) {
-    const operationCost = operation.componentOperation.cost;
-    if (operationCost) cost += operationCost;
-  }
-
-  return round(cost, 2);
+const cost = OrderComponentSchema.virtual('cost');
+cost.get(function (this: OrderComponent) {
+  const cost = this.count * this.costOne;
+  if (!isNaN(cost)) return round(cost, 2);
 });

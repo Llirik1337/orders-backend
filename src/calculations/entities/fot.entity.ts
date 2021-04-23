@@ -1,9 +1,9 @@
-import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { ICost } from '../ICost';
+import { ObjectType, Field } from '@nestjs/graphql';
+import { IFot } from '../IFot';
 import { Cost } from './cost.entity';
 
 @ObjectType()
-export class FOT {
+export class FOT implements IFot {
   @Field(() => Cost, { description: 'Example field (placeholder)' })
   withTax: Cost;
   @Field(() => Cost, { description: 'Example field (placeholder)' })
