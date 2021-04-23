@@ -85,10 +85,15 @@ export const ComponentOperationSchema = SchemaFactory.createForClass(
 const cost = ComponentOperationSchema.virtual('cost');
 cost.get(function (this: ComponentOperation) {
   let cost = 0;
+
   for (const blankMaterial of this.blankMaterials) {
     if (blankMaterial?.cost) cost += round(blankMaterial.cost, 2);
   }
-  if (this.operation?.price) cost += round(this.operation.price, 2);
+
+  if (this.operation?.price && this.time) {
+    const resultOperationCost = this.operation?.price * this.time;
+    cost += round(resultOperationCost, 2);
+  }
 
   return round(cost, 2);
 });
