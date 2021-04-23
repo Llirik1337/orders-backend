@@ -89,12 +89,20 @@ export class ComponentOperationService {
       updatedComponentOperation.blankMaterials = filteredMaterial;
     }
 
+    if (updateComponentOperationInput.equipmentId) {
+      const equipment = await this.equipmentService.findOne(
+        updateComponentOperationInput.equipmentId,
+      );
+      updatedComponentOperation.equipment = equipment;
+    }
+
     if (updateComponentOperationInput.operationId) {
       const operation = await this.operationService.findOne(
         updateComponentOperationInput.operationId,
       );
       updatedComponentOperation.operation = operation;
     }
+
     await updatedComponentOperation.save();
 
     return await this.findOne(id);
