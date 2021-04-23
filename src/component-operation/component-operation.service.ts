@@ -24,7 +24,10 @@ export class ComponentOperationService {
   ) {}
   async create(createComponentOperationInput: CreateComponentOperationInput) {
     const createdComponentOperation = new this.componentOperationModel();
-    createdComponentOperation.time = createComponentOperationInput.time;
+
+    if (createComponentOperationInput.time) {
+      createdComponentOperation.time = createComponentOperationInput.time;
+    }
 
     if (createComponentOperationInput.equipmentId) {
       const equipment = await this.equipmentService.findOne(
@@ -47,10 +50,14 @@ export class ComponentOperationService {
       createdComponentOperation.blankMaterials = filteredMaterial;
     }
 
-    const operation = await this.operationService.findOne(
-      createComponentOperationInput.operationId,
-    );
-    createdComponentOperation.operation = operation;
+    if (createComponentOperationInput.operationId) {
+      const operation = await this.operationService.findOne(
+        createComponentOperationInput.operationId,
+      );
+
+      createdComponentOperation.operation = operation;
+    }
+
     await createdComponentOperation.save();
     return createdComponentOperation;
   }
@@ -73,7 +80,10 @@ export class ComponentOperationService {
     updateComponentOperationInput: UpdateComponentOperationInput,
   ) {
     const updatedComponentOperation = await this.findOne(id);
-    updatedComponentOperation.time = updateComponentOperationInput.time;
+
+    if (updateComponentOperationInput.time) {
+      updatedComponentOperation.time = updateComponentOperationInput.time;
+    }
 
     if (updateComponentOperationInput.blankMaterialsId) {
       const promiseBlankMaterials = updateComponentOperationInput.blankMaterialsId.map(

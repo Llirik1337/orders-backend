@@ -24,7 +24,7 @@ export class ComponentOperation {
   _id: string;
 
   @Prop({ type: MongooseSchema.Types.Number })
-  @Field(() => Float)
+  @Field(() => Float, { nullable: true })
   time: number;
 
   // @Prop({ type: MongooseSchema.Types.Number, default: 0 })
@@ -34,8 +34,8 @@ export class ComponentOperation {
   @Prop({
     type: MongooseSchema.Types.ObjectId,
     ref: 'Operation',
-    required: false,
     autopopulate: true,
+    required: false,
   })
   @Field(() => Operation, { nullable: true })
   operation: OperationDocument;
@@ -90,8 +90,9 @@ cost.get(function (this: ComponentOperation) {
     if (blankMaterial?.cost) cost += round(blankMaterial.cost, 2);
   }
 
-  if (this.operation?.price && this.time) {
-    const resultOperationCost = this.operation?.price * this.time;
+  if (this.operation?.price) {
+    const time = this.time ? this.time : 1;
+    const resultOperationCost = this.operation?.price * time;
     cost += round(resultOperationCost, 2);
   }
 

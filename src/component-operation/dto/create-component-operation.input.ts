@@ -3,11 +3,11 @@ import { IsArray, IsMongoId, IsNumber, IsString } from 'class-validator';
 @InputType()
 export class CreateComponentOperationInput {
   @IsNumber()
-  @Field(() => Float)
+  @Field(() => Float, { nullable: true })
   time: number;
 
-  @IsMongoId()
-  @Field(() => String)
+  @IsString()
+  @Field(() => String, { nullable: true })
   operationId: string;
 
   @IsString()
