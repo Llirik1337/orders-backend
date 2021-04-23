@@ -47,11 +47,15 @@ export class EmployeeService {
   ): Promise<EmployeeDocument> {
     const updatedEmployee = await this.findOne(id);
 
+    if (updateEmployeeInput?.fullName) {
+      const fullName = updateEmployeeInput?.fullName;
+      updatedEmployee.fullName = fullName;
+    }
+
     if (updateEmployeeInput?.positionId) {
       const position = await this.positionsService.findOne(
         updateEmployeeInput.positionId,
       );
-
       updatedEmployee.position = position;
     }
 
