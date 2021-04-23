@@ -59,6 +59,6 @@ cost.get(function (this: BlankMaterial) {
 
 const name = BlankMaterialSchema.virtual('name');
 name.get(function (this: BlankMaterial) {
-  const size = `(${this.width}mm x ${this.length}mm)`;
+  const size = `(${this.length}x${this.width})`;
   return `${size} ${this.material.name}`;
 });
