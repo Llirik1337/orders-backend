@@ -24,6 +24,7 @@ export class OrderComponentOperationService {
     createOrderComponentOperationInput: CreateOrderComponentOperationInput,
   ) {
     const orderComponentOperation = new this.orderComponentOperationModel();
+
     if (
       createOrderComponentOperationInput.employeeId &&
       typeof createOrderComponentOperationInput.employeeId === 'string'
@@ -46,9 +47,9 @@ export class OrderComponentOperationService {
 
       orderComponentOperation.componentOperation = component;
     }
+
     const result = await orderComponentOperation.save();
     return result;
-    // return this.findOne()
   }
 
   async findAll() {
@@ -57,10 +58,12 @@ export class OrderComponentOperationService {
 
   async findOne(id: string) {
     const found = await this.orderComponentOperationModel.findById(id);
+
     if (!found)
       throw new NotFoundException({
         message: `OrderComponentOperation not found by id ${id}`,
       });
+
     return found;
   }
 
@@ -69,6 +72,7 @@ export class OrderComponentOperationService {
     updateOrderComponentOperationInput: UpdateOrderComponentOperationInput,
   ) {
     const orderComponentOperation = await this.findOne(id);
+
     if (
       updateOrderComponentOperationInput.employeeId &&
       typeof updateOrderComponentOperationInput.employeeId === 'string'
@@ -91,6 +95,7 @@ export class OrderComponentOperationService {
 
       orderComponentOperation.componentOperation = component;
     }
+
     const result = await orderComponentOperation.save();
     return result;
   }

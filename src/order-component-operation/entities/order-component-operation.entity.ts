@@ -31,8 +31,9 @@ export class OrderComponentOperation {
     type: MongooseSchema.Types.ObjectId,
     ref: 'Employee',
     autopopulate: true,
+    required: false,
   })
-  @Field(() => Employee)
+  @Field(() => Employee, { nullable: true })
   employee: EmployeeDocument;
 
   @Field(() => Date)
