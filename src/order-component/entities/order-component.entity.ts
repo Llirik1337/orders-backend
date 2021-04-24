@@ -86,14 +86,15 @@ fot.get(function (this: OrderComponent) {
 
   for (const operation of this.orderComponentOperations) {
     const componentOperation = operation.componentOperation;
-    const componentOperationCost = componentOperation?.cost;
-    if (!isNaN(componentOperationCost)) cost += componentOperationCost;
+    const componentOperationFot = componentOperation?.fot;
+    if (!isNaN(componentOperationFot)) cost += componentOperationFot;
   }
 
   for (const operation of this.batchOperations) {
     const componentOperation = operation.componentOperation;
-    const operationCost = componentOperation?.cost;
-    if (!isNaN(operationCost)) cost += operationCost / this.count;
+    const componentOperationFot = componentOperation?.fot;
+    if (!isNaN(componentOperationFot))
+      cost += componentOperationFot / this.count;
   }
 
   return round(cost, 2);
@@ -104,10 +105,9 @@ materialCost.get(function (this: OrderComponent) {
   let cost = 0;
 
   for (const operation of this.orderComponentOperations) {
-    for (const material of operation.componentOperation.blankMaterials) {
-      const materialCost = round(material.cost, 2);
-      if (!isNaN(materialCost)) cost = round(cost + materialCost, 2);
-    }
+    const componentOperation = operation.componentOperation;
+    const blankMaterialsCost = componentOperation?.materialCost;
+    if (!isNaN(blankMaterialsCost)) cost += blankMaterialsCost;
   }
 
   return round(cost, 2);

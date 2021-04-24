@@ -27,9 +27,14 @@ export class ComponentOperation {
   @Field(() => Float, { nullable: true })
   time: number;
 
-  // @Prop({ type: MongooseSchema.Types.Number, default: 0 })
   @Field(() => Float)
   cost: number;
+
+  @Field(() => Float)
+  fot: number;
+
+  @Field(() => Float)
+  materialCost: number;
 
   @Prop({
     type: MongooseSchema.Types.ObjectId,
@@ -86,15 +91,32 @@ const cost = ComponentOperationSchema.virtual('cost');
 cost.get(function (this: ComponentOperation) {
   let cost = 0;
 
-  for (const blankMaterial of this.blankMaterials) {
-    if (blankMaterial?.cost) cost += round(blankMaterial.cost, 2);
-  }
+  cost += this.materialCost;
+  cost += this.fot;
+
+  return round(cost, 2);
+});
+
+const fot = ComponentOperationSchema.virtual('fot');
+fot.get(function (this: ComponentOperation) {
+  let fot = 0;
 
   if (this.operation?.price) {
     const time = this.time ? this.time : 1;
     const resultOperationCost = this.operation?.price * time;
-    cost += round(resultOperationCost, 2);
+    fot += round(resultOperationCost, 2);
   }
 
-  return round(cost, 2);
+  return round(fot, 2);
+});
+
+const materialCost = ComponentOperationSchema.virtual('materialCost');
+materialCost.get(function (this: ComponentOperation) {
+  let materialCost = 0;
+
+  for (const blankMaterial of this.blankMaterials) {
+    if (blankMaterial?.cost) materialCost += round(blankMaterial.cost, 2);
+  }
+
+  return round(materialCost, 2);
 });

@@ -32,5 +32,8 @@ export class Calculation implements ICalculationItem {
   withoutNDC: Cost;
 
   @Field(() => Cost, { description: 'Example field (placeholder)' })
+  NDC: Cost;
+
+  @Field(() => Cost, { description: 'Example field (placeholder)' })
   withNDC: Cost;
 }

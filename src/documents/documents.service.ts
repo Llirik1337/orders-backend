@@ -19,17 +19,14 @@ import * as moment from 'moment';
 import * as fs from 'fs';
 import * as path from 'path';
 import { round } from 'src/common';
+// import { CalculationsService } from 'src/calculations/calculations.service';
 
 @Injectable()
 export class DocumentsService {
-  constructor(private readonly orderService: OrderService) {}
-  // create(createDocumentInput: CreateDocumentInput) {
-  //   return 'This action adds a new document';
-  // }
-
-  // findAll() {
-  //   return `This action returns all documents`;
-  // }
+  constructor(
+    private readonly orderService: OrderService,
+    // private readonly calculationService: CalculationsService,
+  ) {}
 
   async getByOrder(id: string) {
     try {
@@ -476,11 +473,4 @@ export class DocumentsService {
     });
     return table;
   }
-  // update(id: number, updateDocumentInput: UpdateDocumentInput) {
-  //   return `This action updates a #${id} document`;
-  // }
-
-  // remove(id: number) {
-  //   return `This action removes a #${id} document`;
-  // }
 }
