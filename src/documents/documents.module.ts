@@ -5,7 +5,7 @@ import { OrderModule } from 'src/order/order.module';
 import { CalculationsModule } from 'src/calculations/calculations.module';
 
 @Module({
-  imports: [OrderModule],
+  imports: [OrderModule, CalculationsModule],
   providers: [DocumentsResolver, DocumentsService],
   exports: [DocumentsService],
 })

@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Calculation } from './../calculations/entities/calculation.entity';
 import { OrderDocument } from 'src/order/entities/order.entity';
 import { OrderService } from 'src/order/order.service';
 import {
@@ -19,19 +20,34 @@ import * as moment from 'moment';
 import * as fs from 'fs';
 import * as path from 'path';
 import { round } from 'src/common';
-// import { CalculationsService } from 'src/calculations/calculations.service';
+import { CalculationsService } from 'src/calculations/calculations.service';
 
 @Injectable()
 export class DocumentsService {
   constructor(
     private readonly orderService: OrderService,
-    // private readonly calculationService: CalculationsService,
+    private readonly calculationService: CalculationsService,
   ) {}
+
+  calculation!: Calculation[];
+
+  getCalculation(id: string, array: Calculation[]) {
+    const finded = array?.find((x: Calculation) => {
+      //! id and x?._id is object, js is a trash
+      const findId = `${id}`;
+      const xId = `${x?._id}`;
+      return xId === findId;
+    });
+
+    return finded;
+  }
 
   async getByOrder(id: string) {
     try {
       const order = await this.orderService.findOne(id);
       if (!order) return undefined;
+
+      this.calculation = await this.calculationService.getByOrder(id);
 
       return await Packer.toBase64String(this.getDocument(order));
     } catch (error: unknown) {
@@ -126,6 +142,11 @@ export class DocumentsService {
   }
 
   getComponentRow(orderComponent: OrderComponentDocument) {
+    const calculation = this.getCalculation(
+      orderComponent?.component?._id,
+      this.calculation,
+    );
+
     const componentName = new TableCell({
       children: [new Paragraph(orderComponent.component.name)],
       verticalAlign: VerticalAlign.CENTER,
@@ -140,27 +161,27 @@ export class DocumentsService {
       ],
       verticalAlign: VerticalAlign.CENTER,
     });
+
     const costOfOneWithOutNDC = new TableCell({
-      children: [new Paragraph(String(round(orderComponent.costOne, 2)))],
-      verticalAlign: VerticalAlign.CENTER,
-    });
-    const costWithOutNDC = new TableCell({
-      children: [new Paragraph(String(round(orderComponent.cost, 2)))],
+      children: [new Paragraph(String(calculation?.withoutNDC?.one))],
       verticalAlign: VerticalAlign.CENTER,
     });
 
-    const fullCost = round(orderComponent.cost * 1.2, 2);
+    const costWithOutNDC = new TableCell({
+      children: [new Paragraph(String(calculation?.withoutNDC?.consignment))],
+      verticalAlign: VerticalAlign.CENTER,
+    });
+
+    const costNDC = new TableCell({
+      children: [new Paragraph(String(calculation?.NDC?.consignment))],
+      verticalAlign: VerticalAlign.CENTER,
+    });
 
     const costWithNDC = new TableCell({
-      children: [new Paragraph(String(fullCost))],
+      children: [new Paragraph(String(calculation?.withNDC?.consignment))],
       verticalAlign: VerticalAlign.CENTER,
     });
-    const costNDC = new TableCell({
-      children: [
-        new Paragraph(String(round(fullCost - orderComponent.cost, 2))),
-      ],
-      verticalAlign: VerticalAlign.CENTER,
-    });
+
     return [
       componentName,
       count,
@@ -471,6 +492,7 @@ export class DocumentsService {
       columnWidths: [500, 3000, 500, 1500, 1500, 1500, 1500],
       rows: [tableHeader, ...rows, resultRow],
     });
+
     return table;
   }
 }
