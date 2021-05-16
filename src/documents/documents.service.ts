@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { Calculation } from './../calculations/entities/calculation.entity';
 import { OrderDocument } from 'src/order/entities/order.entity';
 import { OrderService } from 'src/order/order.service';
 import {
@@ -15,12 +14,11 @@ import {
   TextRun,
   VerticalAlign,
 } from 'docx';
-import { OrderComponentDocument } from 'src/order-component/entities/order-component.entity';
 import * as moment from 'moment';
 import * as fs from 'fs';
 import * as path from 'path';
-import { round } from 'src/common';
-import { CalculationsService } from 'src/calculations/calculations.service';
+import { Calculation } from '../calculations/entities/calculation.entity';
+import { CalculationsService } from '../calculations/calculations.service';
 
 @Injectable()
 export class DocumentsService {
@@ -29,27 +27,16 @@ export class DocumentsService {
     private readonly calculationService: CalculationsService,
   ) {}
 
-  calculation!: Calculation[];
-
-  getCalculation(id: string, array: Calculation[]) {
-    const finded = array?.find((x: Calculation) => {
-      //! id and x?._id is object, js is a trash
-      const findId = `${id}`;
-      const xId = `${x?._id}`;
-      return xId === findId;
-    });
-
-    return finded;
-  }
-
+  /**
+   * Get document to order by id
+   * @param id Order id
+   */
   async getByOrder(id: string) {
     try {
       const order = await this.orderService.findOne(id);
       if (!order) return undefined;
 
-      this.calculation = await this.calculationService.getByOrder(id);
-
-      return await Packer.toBase64String(this.getDocument(order));
+      return await Packer.toBase64String(await this.getDocument(order));
     } catch (error: unknown) {
       if (error instanceof Error) console.error('Error -> ', error);
     }
@@ -141,14 +128,9 @@ export class DocumentsService {
     return header;
   }
 
-  getComponentRow(orderComponent: OrderComponentDocument) {
-    const calculation = this.getCalculation(
-      orderComponent?.component?._id,
-      this.calculation,
-    );
-
+  getComponentRow(calculation: Calculation) {
     const componentName = new TableCell({
-      children: [new Paragraph(orderComponent.component.name)],
+      children: [new Paragraph(calculation.name)],
       verticalAlign: VerticalAlign.CENTER,
     });
 
@@ -156,29 +138,49 @@ export class DocumentsService {
       children: [
         new Paragraph({
           alignment: AlignmentType.CENTER,
-          text: String(orderComponent.count),
+          text: String(calculation.count),
+        }),
+      ],
+      verticalAlign: VerticalAlign.CENTER,
+    });
+    const oneWithoutNDC = calculation.withoutNDC.one;
+    const costOfOneWithOutNDC = new TableCell({
+      children: [
+        new Paragraph({
+          text: String(oneWithoutNDC.toFixed(2)),
+          alignment: AlignmentType.RIGHT,
+        }),
+      ],
+      verticalAlign: VerticalAlign.CENTER,
+    });
+    const allWithoutNDC = calculation.withoutNDC.consignment;
+    const costWithOutNDC = new TableCell({
+      children: [
+        new Paragraph({
+          text: String(allWithoutNDC.toFixed(2)),
+          alignment: AlignmentType.RIGHT,
         }),
       ],
       verticalAlign: VerticalAlign.CENTER,
     });
 
-    const costOfOneWithOutNDC = new TableCell({
-      children: [new Paragraph(String(calculation?.withoutNDC?.one))],
-      verticalAlign: VerticalAlign.CENTER,
-    });
-
-    const costWithOutNDC = new TableCell({
-      children: [new Paragraph(String(calculation?.withoutNDC?.consignment))],
+    const costWithNDC = new TableCell({
+      children: [
+        new Paragraph({
+          text: String(calculation.withNDC.consignment.toFixed(2)),
+          alignment: AlignmentType.RIGHT,
+        }),
+      ],
       verticalAlign: VerticalAlign.CENTER,
     });
 
     const costNDC = new TableCell({
-      children: [new Paragraph(String(calculation?.NDC?.consignment))],
-      verticalAlign: VerticalAlign.CENTER,
-    });
-
-    const costWithNDC = new TableCell({
-      children: [new Paragraph(String(calculation?.withNDC?.consignment))],
+      children: [
+        new Paragraph({
+          text: String(calculation.NDC.consignment.toFixed(2)),
+          alignment: AlignmentType.RIGHT,
+        }),
+      ],
       verticalAlign: VerticalAlign.CENTER,
     });
 
@@ -192,7 +194,7 @@ export class DocumentsService {
     ];
   }
 
-  getResultRow(order: OrderDocument) {
+  getResultRow(calculations: Calculation[]) {
     const result = new TableCell({
       children: [
         new Paragraph({
@@ -203,31 +205,49 @@ export class DocumentsService {
       columnSpan: 4,
     });
 
+    let withOutNDC = 0;
+    let withNDC = 0;
+    let NDC = 0;
+
+    for (const calculation of calculations) {
+      withOutNDC += calculation.withoutNDC.consignment;
+      withNDC += calculation.withNDC.consignment;
+      NDC += calculation.NDC.consignment;
+    }
+
     const costWithOutNDC = new TableCell({
       children: [
         new Paragraph({
+          alignment: AlignmentType.RIGHT,
           children: [
-            new TextRun({ text: String(round(order.cost, 2)), bold: true }),
+            new TextRun({
+              text: String(withOutNDC.toFixed(2)),
+              bold: true,
+            }),
           ],
         }),
       ],
     });
 
-    const fullCost = round(order.cost * 1.2, 2);
-
     const costWithNDC = new TableCell({
       children: [
         new Paragraph({
-          children: [new TextRun({ text: String(fullCost), bold: true })],
+          alignment: AlignmentType.RIGHT,
+
+          children: [
+            new TextRun({ text: String(withNDC.toFixed(2)), bold: true }),
+          ],
         }),
       ],
     });
     const costNDC = new TableCell({
       children: [
         new Paragraph({
+          alignment: AlignmentType.RIGHT,
+
           children: [
             new TextRun({
-              text: String(round(fullCost - order.cost, 2)),
+              text: String(NDC.toFixed(2)),
               bold: true,
             }),
           ],
@@ -347,12 +367,12 @@ export class DocumentsService {
     });
   }
 
-  getDocument(order: OrderDocument) {
+  async getDocument(order: OrderDocument) {
     const logo = this.getLogo(order);
     const header = this.getHeader(order);
     const customer = this.getCostumer(order);
     const timestamp = this.getTimestamp(order);
-    const table = this.getTable(order);
+    const table = await this.getTable(order);
     const notes = this.getNotes(order);
     const confirm = this.getConfirm(order);
     const contactInfo = this.getContactInfo(order);
@@ -361,6 +381,15 @@ export class DocumentsService {
       creator: order.customer.company,
       description: order.notes,
       keywords: order.name,
+      styles: {
+        default: {
+          document: {
+            run: {
+              font: 'Arial Narrow',
+            },
+          },
+        },
+      },
       sections: [
         {
           children: [logo, header, customer, timestamp, table, notes, confirm],
@@ -468,9 +497,11 @@ export class DocumentsService {
     return text;
   }
 
-  private getTable(order: OrderDocument) {
-    const rows = order.orderComponents.map(
-      (orderComponent, index) =>
+  private async getTable(order: OrderDocument) {
+    const calculations = await this.calculationService.getByOrder(order._id);
+
+    const rows = calculations.map(
+      (calculation, index) =>
         new TableRow({
           children: [
             new TableCell({
@@ -481,12 +512,14 @@ export class DocumentsService {
                 }),
               ],
             }),
-            ...this.getComponentRow(orderComponent),
+            ...this.getComponentRow(calculation),
           ],
         }),
     );
 
-    const resultRow = new TableRow({ children: this.getResultRow(order) });
+    const resultRow = new TableRow({
+      children: this.getResultRow(calculations),
+    });
     const tableHeader = this.getDocumentTableHeader();
     const table = new Table({
       columnWidths: [500, 3000, 500, 1500, 1500, 1500, 1500],

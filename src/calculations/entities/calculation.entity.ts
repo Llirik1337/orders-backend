@@ -1,6 +1,5 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { ICalculationItem } from '../ICalculationItem';
-import { ICost } from '../ICost';
 import { Cost } from './cost.entity';
 import { FOT } from './fot.entity';
 
