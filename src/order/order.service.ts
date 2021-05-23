@@ -23,26 +23,37 @@ export class OrderService {
   async create(createOrderInput: CreateOrderInput): Promise<OrderDocument> {
     const createdOrder = new this.orderModel();
 
-    createdOrder.name = createOrderInput?.name;
-    createdOrder.notes = createOrderInput?.notes;
+    if (createOrderInput?.name) createdOrder.name = createOrderInput?.name;
 
-    const promiseComponents = [];
-    for (const id of createOrderInput.orderComponentsId) {
-      promiseComponents.push(this.orderComponentService.findOne(id));
+    if (createOrderInput?.notes) createdOrder.notes = createOrderInput?.notes;
+
+    if (createOrderInput?.orderComponentsId) {
+      const promiseComponents = [];
+      for (const id of createOrderInput.orderComponentsId) {
+        promiseComponents.push(this.orderComponentService.findOne(id));
+      }
+
+      const components =
+        (await Promise.all<OrderComponentDocument>(promiseComponents)) || [];
+
+      createdOrder.orderComponents = components;
     }
 
-    const components =
-      (await Promise.all<OrderComponentDocument>(promiseComponents)) || [];
+    if (createOrderInput?.statusId) {
+      const status = await this.orderStatusService.findOne(
+        createOrderInput.statusId,
+      );
 
-    createdOrder.orderComponents = components;
+      if (status) createdOrder.status = status;
+    }
 
-    const status = await this.orderStatusService.findOne(
-      createOrderInput.statusId,
-    );
+    if (createOrderInput?.customerId) {
+      const customer = await this.customerService.findOne(
+        createOrderInput.customerId,
+      );
 
-    const customer = await this.customerService.findOne(
-      createOrderInput.customerId,
-    );
+      if (customer) createdOrder.customer = customer;
+    }
 
     if (createOrderInput?.executorId) {
       const executor = await this.executorService.findOne(
@@ -51,9 +62,6 @@ export class OrderService {
 
       if (executor) createdOrder.executor = executor;
     }
-
-    createdOrder.customer = customer;
-    createdOrder.status = status;
 
     await createdOrder.save();
     return await createdOrder.save();
