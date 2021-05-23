@@ -81,13 +81,18 @@ export class OrderComponentService {
     updateOrderComponentInput: UpdateOrderComponentInput,
   ) {
     const createdOrderComponent = await this.findOne(id);
-    createdOrderComponent.count = updateOrderComponentInput.count;
 
-    const component = await this.componentService.findOne(
-      updateOrderComponentInput.componentId,
-    );
+    if (updateOrderComponentInput.count) {
+      createdOrderComponent.count = updateOrderComponentInput.count;
+    }
 
-    createdOrderComponent.component = component;
+    if (updateOrderComponentInput.componentId){
+      const component = await this.componentService.findOne(
+        updateOrderComponentInput.componentId,
+      );
+
+      if (component) createdOrderComponent.component = component;
+    }
 
     if (
       updateOrderComponentInput.batchOperationsId &&

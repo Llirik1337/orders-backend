@@ -102,7 +102,7 @@ fot.get(function (this: ComponentOperation) {
   let fot = 0;
 
   if (this.operation?.price) {
-    const time = this.time ? this.time : 1;
+    const time = this?.time ?? 1;
     const resultOperationCost = this.operation?.price * time;
     fot += round(resultOperationCost, 2);
   }
