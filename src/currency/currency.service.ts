@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { LeanDocument, Model } from 'mongoose';
+import { Model } from 'mongoose';
 import { leanOptions } from 'src/common';
 import { CreateCurrencyInput } from './dto/create-currency.input';
 import { UpdateCurrencyInput } from './dto/update-currency.input';
@@ -20,7 +20,7 @@ export class CurrencyService {
     createdCurrency.Nominal = createCurrencyInput.Nominal;
     createdCurrency.NumCode = createCurrencyInput.NumCode;
     createdCurrency.Value = createCurrencyInput.Value;
-    return await createdCurrency.save();
+    return createdCurrency.save();
   }
 
   async findAll() {
