@@ -16,6 +16,14 @@ export class CreateEquipmentInput {
     defaultValue: '',
     description: 'Notes of Equipment',
   })
+  specifications?: string;
+
+  @IsString()
+  @Field(() => String, {
+    nullable: true,
+    defaultValue: '',
+    description: 'Notes of Equipment',
+  })
   notes?: string;
 
   @Field(() => Int, { defaultValue: 0, nullable: true })

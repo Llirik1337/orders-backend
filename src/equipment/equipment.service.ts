@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { LeanDocument, Model } from 'mongoose';
+import { Model } from 'mongoose';
 import { leanOptions } from 'src/common';
 import { CreateEquipmentInput } from './dto/create-equipment.input';
 import { UpdateEquipmentInput } from './dto/update-equipment.input';
@@ -21,10 +21,12 @@ export class EquipmentService {
       createdEquipment.count = createEquipmentInput.count;
     if (createEquipmentInput.name)
       createdEquipment.name = createEquipmentInput.name;
-    if (createEquipmentInput.notes)
-      createdEquipment.notes = createEquipmentInput.notes;
+    if (createEquipmentInput.specifications)
+      createdEquipment.specifications = createEquipmentInput.specifications;
     if (createEquipmentInput.releaseYear)
       createdEquipment.releaseYear = createEquipmentInput.releaseYear;
+    if (createEquipmentInput.notes)
+      createdEquipment.notes = createEquipmentInput.notes;
 
     return await createdEquipment.save();
   }
@@ -52,6 +54,9 @@ export class EquipmentService {
     if (updateEquipmentInput.name) found.name = updateEquipmentInput.name;
 
     if (updateEquipmentInput.notes) found.notes = updateEquipmentInput.notes;
+
+    if (updateEquipmentInput.specifications)
+      found.specifications = updateEquipmentInput.specifications;
 
     if (updateEquipmentInput.releaseYear)
       found.releaseYear = updateEquipmentInput.releaseYear;

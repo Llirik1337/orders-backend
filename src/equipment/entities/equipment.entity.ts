@@ -13,8 +13,12 @@ export class Equipment {
   name: string;
 
   @Prop({ type: MongooseSchema.Types.String })
-  @Field(() => String, { defaultValue: '' })
+  @Field(() => String, { defaultValue: '', nullable: true })
   notes: string;
+
+  @Prop({ type: MongooseSchema.Types.String })
+  @Field(() => String, { defaultValue: '', nullable: true })
+  specifications: string;
 
   @Prop({ type: MongooseSchema.Types.Number })
   @Field(() => Int, { defaultValue: 0, nullable: true })
