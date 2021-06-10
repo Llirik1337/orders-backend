@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { MaterialService } from './material.service';
 import { Material } from './entities/material.entity';
 import { CreateMaterialInput } from './dto/create-material.input';
@@ -16,8 +16,11 @@ export class MaterialResolver {
   }
 
   @Query(() => [Material], { name: 'materials' })
-  async findAll() {
-    return await this.materialService.findAll();
+  async findAll(
+    @Args('deleted', { type: () => Boolean, defaultValue: false })
+    deleted: boolean,
+  ) {
+    return await this.materialService.findAll(deleted);
   }
 
   @Query(() => Material, { name: 'material' })
@@ -33,6 +36,23 @@ export class MaterialResolver {
       updateMaterialInput.id,
       updateMaterialInput,
     );
+  }
+
+  @Mutation(() => Material)
+  async recoveryMaterial(@Args('id', { type: () => String }) id: string) {
+    return await this.materialService.recovery(id);
+  }
+
+  @Mutation(() => [Material])
+  async recoveryMaterials(
+    @Args('ids', { type: () => [String] }) ids: string[],
+  ) {
+    return await this.materialService.recoveryList(ids);
+  }
+
+  @Mutation(() => Material)
+  async forceRemoveMaterial(@Args('id', { type: () => String }) id: string) {
+    return await this.materialService.forceRemove(id);
   }
 
   @Mutation(() => Material)

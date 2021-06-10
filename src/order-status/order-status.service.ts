@@ -1,21 +1,23 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { LeanDocument, Model } from 'mongoose';
+import { Model } from 'mongoose';
 import { CreateOrderStatusInput } from './dto/create-order-status.input';
 import { UpdateOrderStatusInput } from './dto/update-order-status.input';
-import { leanOptions } from 'src/common';
 
 import {
   OrderStatus,
   OrderStatusDocument,
 } from './entities/order-status.entity';
+import { AbstractService } from '../_core';
 
 @Injectable()
-export class OrderStatusService {
+export class OrderStatusService extends AbstractService<OrderStatusDocument> {
   constructor(
     @InjectModel(OrderStatus.name)
     private orderStatusModel: Model<OrderStatusDocument>,
-  ) {}
+  ) {
+    super(orderStatusModel);
+  }
 
   async create(
     createOrderStatusInput: CreateOrderStatusInput,
@@ -23,19 +25,6 @@ export class OrderStatusService {
     const createdOrderStatus = new this.orderStatusModel();
     createdOrderStatus.name = createOrderStatusInput.name;
     return await createdOrderStatus.save();
-  }
-
-  async findAll() {
-    return await this.orderStatusModel.find().lean(leanOptions);
-  }
-
-  async findOne(id: string): Promise<OrderStatusDocument> {
-    const found = await this.orderStatusModel.findById(id);
-    if (!found)
-      throw new NotFoundException({
-        message: `OrderStatus not found by id ${id}`,
-      });
-    return found;
   }
 
   async update(
@@ -49,11 +38,5 @@ export class OrderStatusService {
     await found.save();
 
     return await this.findOne(id);
-  }
-
-  async remove(id: string): Promise<OrderStatusDocument> {
-    const found = await this.findOne(id);
-    await found.delete();
-    return found;
   }
 }

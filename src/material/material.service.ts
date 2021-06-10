@@ -1,16 +1,19 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { leanOptions } from 'src/common';
 import { CreateMaterialInput } from './dto/create-material.input';
 import { UpdateMaterialInput } from './dto/update-material.input';
 import { Material, MaterialDocument } from './entities/material.entity';
+import { AbstractService } from '../_core';
 
 @Injectable()
-export class MaterialService {
+export class MaterialService extends AbstractService<MaterialDocument> {
   constructor(
     @InjectModel(Material.name) private materialModel: Model<MaterialDocument>,
-  ) {}
+  ) {
+    super(materialModel);
+  }
+
   async create(
     createMaterialInput: CreateMaterialInput,
   ): Promise<MaterialDocument> {
@@ -21,19 +24,6 @@ export class MaterialService {
     createdMaterial.length = createMaterialInput.length;
     createdMaterial.width = createMaterialInput.width;
     return await createdMaterial.save();
-  }
-
-  async findAll() {
-    return await this.materialModel.find().lean(leanOptions);
-  }
-
-  async findOne(id: string): Promise<MaterialDocument> {
-    const found = await this.materialModel.findById(id);
-    if (!found)
-      throw new NotFoundException({
-        message: `Material not found by id ${id}`,
-      });
-    return found;
   }
 
   async update(
@@ -54,11 +44,5 @@ export class MaterialService {
     await found.save();
 
     return await this.findOne(id);
-  }
-
-  async remove(id: string) {
-    const found = await this.findOne(id);
-    await found.delete();
-    return found;
   }
 }

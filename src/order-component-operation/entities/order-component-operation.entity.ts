@@ -1,4 +1,4 @@
-import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 import {
@@ -9,16 +9,14 @@ import {
   Employee,
   EmployeeDocument,
 } from 'src/employee/entities/employee.entity';
+import { BaseModel } from '../../_core';
 
 export type OrderComponentOperationDocument = OrderComponentOperation &
   Document;
 
 @Schema({ timestamps: true })
 @ObjectType()
-export class OrderComponentOperation {
-  @Field(() => String)
-  _id: string;
-
+export class OrderComponentOperation extends BaseModel {
   @Prop({
     type: MongooseSchema.Types.ObjectId,
     ref: 'ComponentOperation',
@@ -35,12 +33,6 @@ export class OrderComponentOperation {
   })
   @Field(() => Employee, { nullable: true })
   employee: EmployeeDocument;
-
-  @Field(() => Date)
-  createdAt: Date;
-
-  @Field(() => Date)
-  updatedAt: Date;
 }
 
 export const OrderComponentOperationSchema = SchemaFactory.createForClass(

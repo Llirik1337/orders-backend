@@ -1,14 +1,13 @@
 import { Field, Float, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
+import { BaseModel } from '../../_core';
+
 export type OperationDocument = Operation & Document;
 
 @ObjectType()
 @Schema({ timestamps: true, id: true })
-export class Operation {
-  @Field(() => String)
-  _id: string;
-
+export class Operation extends BaseModel {
   @Prop({ type: MongooseSchema.Types.String, unique: true })
   @Field(() => String, { nullable: false })
   name: string;
@@ -23,12 +22,6 @@ export class Operation {
     description: 'notes',
   })
   notes: string;
-
-  @Field(() => Date)
-  createdAt: Date;
-
-  @Field(() => Date)
-  updatedAt: Date;
 }
 
 export const OperationSchema = SchemaFactory.createForClass(Operation);

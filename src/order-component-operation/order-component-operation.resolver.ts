@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { OrderComponentOperationService } from './order-component-operation.service';
 import { OrderComponentOperation } from './entities/order-component-operation.entity';
 import { CreateOrderComponentOperationInput } from './dto/create-order-component-operation.input';
@@ -21,8 +21,11 @@ export class OrderComponentOperationResolver {
   }
 
   @Query(() => [OrderComponentOperation], { name: 'orderComponentOperations' })
-  findAll() {
-    return this.orderComponentOperationService.findAll();
+  findAll(
+    @Args('deleted', { type: () => Boolean, defaultValue: false })
+    deleted: boolean,
+  ) {
+    return this.orderComponentOperationService.findAll(deleted);
   }
 
   @Query(() => OrderComponentOperation, { name: 'orderComponentOperation' })
@@ -39,6 +42,27 @@ export class OrderComponentOperationResolver {
       updateOrderComponentOperationInput.id,
       updateOrderComponentOperationInput,
     );
+  }
+
+  @Mutation(() => OrderComponentOperation)
+  async recoveryOrderComponentOperation(
+    @Args('id', { type: () => String }) id: string,
+  ) {
+    return await this.orderComponentOperationService.recovery(id);
+  }
+
+  @Mutation(() => [OrderComponentOperation])
+  async recoveryOrderComponentOperations(
+    @Args('ids', { type: () => [String] }) ids: string[],
+  ) {
+    return await this.orderComponentOperationService.recoveryList(ids);
+  }
+
+  @Mutation(() => OrderComponentOperation)
+  async forceRemoveOrderComponentOperation(
+    @Args('id', { type: () => String }) id: string,
+  ) {
+    return await this.orderComponentOperationService.forceRemove(id);
   }
 
   @Mutation(() => OrderComponentOperation)

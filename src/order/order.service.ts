@@ -1,5 +1,5 @@
-import { ExecutorService } from './../executor/executor.service';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ExecutorService } from '../executor/executor.service';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CustomerService } from 'src/customer/customer.service';
@@ -9,17 +9,20 @@ import { OrderStatusService } from 'src/order-status/order-status.service';
 import { CreateOrderInput } from './dto/create-order.input';
 import { UpdateOrderInput } from './dto/update-order.input';
 import { Order, OrderDocument } from './entities/order.entity';
-import { leanOptions } from 'src/common';
+import { AbstractService } from '../_core';
 
 @Injectable()
-export class OrderService {
+export class OrderService extends AbstractService<OrderDocument> {
   constructor(
     @InjectModel(Order.name) private readonly orderModel: Model<OrderDocument>,
     private readonly customerService: CustomerService,
     private readonly executorService: ExecutorService,
     private readonly orderComponentService: OrderComponentService,
     private readonly orderStatusService: OrderStatusService,
-  ) {}
+  ) {
+    super(orderModel);
+  }
+
   async create(createOrderInput: CreateOrderInput): Promise<OrderDocument> {
     const createdOrder = new this.orderModel();
 
@@ -31,10 +34,8 @@ export class OrderService {
       promiseComponents.push(this.orderComponentService.findOne(id));
     }
 
-    const components =
+    createdOrder.orderComponents =
       (await Promise.all<OrderComponentDocument>(promiseComponents)) || [];
-
-    createdOrder.orderComponents = components;
 
     const status = await this.orderStatusService.findOne(
       createOrderInput.statusId,
@@ -59,19 +60,6 @@ export class OrderService {
     return await createdOrder.save();
   }
 
-  async findAll() {
-    return await this.orderModel.find().lean(leanOptions);
-  }
-
-  async findOne(id: string): Promise<OrderDocument> {
-    const found = await this.orderModel.findById(id);
-    if (!found)
-      throw new NotFoundException({
-        message: `Order not found by id ${id}`,
-      });
-    return found;
-  }
-
   async update(
     id: string,
     updateOrderInput: UpdateOrderInput,
@@ -88,41 +76,30 @@ export class OrderService {
         promiseComponents.push(this.orderComponentService.findOne(id));
       }
 
-      const components =
+      updatedOrder.orderComponents =
         (await Promise.all<OrderComponentDocument>(promiseComponents)) || [];
-
-      updatedOrder.orderComponents = components;
     }
 
     if (updateOrderInput?.statusId) {
-      const status = await this.orderStatusService.findOne(
+      updatedOrder.status = await this.orderStatusService.findOne(
         updateOrderInput.statusId,
       );
-      updatedOrder.status = status;
     }
 
     if (updateOrderInput?.customerId) {
-      const customer = await this.customerService.findOne(
+      updatedOrder.customer = await this.customerService.findOne(
         updateOrderInput.customerId,
       );
-      updatedOrder.customer = customer;
     }
 
     if (updateOrderInput?.executorId) {
-      const executor = await this.executorService.findOne(
+      updatedOrder.executor = await this.executorService.findOne(
         updateOrderInput.executorId,
       );
-      updatedOrder.executor = executor;
     }
 
     await updatedOrder.save();
 
     return await updatedOrder.save();
-  }
-
-  async remove(id: string): Promise<OrderDocument> {
-    const found = await this.findOne(id);
-    await found.delete();
-    return found;
   }
 }

@@ -1,16 +1,18 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { LeanDocument, Model } from 'mongoose';
-import { leanOptions } from 'src/common';
+import { Model } from 'mongoose';
 import { CreateCustomerInput } from './dto/create-customer.input';
 import { UpdateCustomerInput } from './dto/update-customer.input';
 import { Customer, CustomerDocument } from './entities/customer.entity';
+import { AbstractService } from '../_core';
 
 @Injectable()
-export class CustomerService {
+export class CustomerService extends AbstractService<CustomerDocument> {
   constructor(
     @InjectModel(Customer.name) private customerModel: Model<CustomerDocument>,
-  ) {}
+  ) {
+    super(customerModel);
+  }
 
   async create(
     createCustomerInput: CreateCustomerInput,
@@ -24,19 +26,6 @@ export class CustomerService {
     createdCustomer.phone = createCustomerInput.phone;
 
     return await createdCustomer.save();
-  }
-
-  async findAll() {
-    return await this.customerModel.find().lean(leanOptions);
-  }
-
-  async findOne(id: string): Promise<CustomerDocument> {
-    const found = await this.customerModel.findById(id);
-    if (!found)
-      throw new NotFoundException({
-        message: `Customer not found by id ${id}`,
-      });
-    return found;
   }
 
   async update(
@@ -62,11 +51,5 @@ export class CustomerService {
     await found.save();
 
     return await this.findOne(id);
-  }
-
-  async remove(id: string): Promise<CustomerDocument> {
-    const found = await this.findOne(id);
-    await found.delete();
-    return found;
   }
 }

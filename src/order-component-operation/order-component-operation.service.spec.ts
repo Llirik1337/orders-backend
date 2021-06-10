@@ -9,7 +9,9 @@ describe('OrderComponentOperationService', () => {
       providers: [OrderComponentOperationService],
     }).compile();
 
-    service = module.get<OrderComponentOperationService>(OrderComponentOperationService);
+    service = module.get<OrderComponentOperationService>(
+      OrderComponentOperationService,
+    );
   });
 
   it('should be defined', () => {

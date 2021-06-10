@@ -1,9 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { BlankMaterialService } from 'src/blank-material/blank-material.service';
 import { BlankMaterialDocument } from 'src/blank-material/entities/blank-material.entity';
-import { leanOptions } from 'src/common';
 import { EquipmentService } from 'src/equipment/equipment.service';
 import { OperationService } from 'src/operation/operation.service';
 import { CreateComponentOperationInput } from './dto/create-component-operation.input';
@@ -12,16 +11,20 @@ import {
   ComponentOperation,
   ComponentOperationDocument,
 } from './entities/component-operation.entity';
+import { AbstractService } from '../_core';
 
 @Injectable()
-export class ComponentOperationService {
+export class ComponentOperationService extends AbstractService<ComponentOperationDocument> {
   constructor(
     @InjectModel(ComponentOperation.name)
     private readonly componentOperationModel: Model<ComponentOperationDocument>,
     private readonly operationService: OperationService,
     private readonly blankMaterialService: BlankMaterialService,
     private readonly equipmentService: EquipmentService,
-  ) {}
+  ) {
+    super(componentOperationModel);
+  }
+
   async create(createComponentOperationInput: CreateComponentOperationInput) {
     const createdComponentOperation = new this.componentOperationModel();
 
@@ -30,10 +33,9 @@ export class ComponentOperationService {
     }
 
     if (createComponentOperationInput.equipmentId) {
-      const equipment = await this.equipmentService.findOne(
+      createdComponentOperation.equipment = await this.equipmentService.findOne(
         createComponentOperationInput.equipmentId,
       );
-      createdComponentOperation.equipment = equipment;
     }
 
     if (createComponentOperationInput.blankMaterialsId) {
@@ -45,34 +47,19 @@ export class ComponentOperationService {
         promiseBlankMaterials,
       );
 
-      const filteredMaterial = material.filter((item) => !!item);
-
-      createdComponentOperation.blankMaterials = filteredMaterial;
+      createdComponentOperation.blankMaterials = material.filter(
+        (item) => !!item,
+      );
     }
 
     if (createComponentOperationInput.operationId) {
-      const operation = await this.operationService.findOne(
+      createdComponentOperation.operation = await this.operationService.findOne(
         createComponentOperationInput.operationId,
       );
-
-      createdComponentOperation.operation = operation;
     }
 
     await createdComponentOperation.save();
     return createdComponentOperation;
-  }
-
-  async findAll() {
-    return await this.componentOperationModel.find().lean(leanOptions);
-  }
-
-  async findOne(id: string) {
-    const found = await this.componentOperationModel.findById(id);
-    if (!found)
-      throw new NotFoundException({
-        message: `ComponentOperation not found by id ${id}`,
-      });
-    return found;
   }
 
   async update(
@@ -94,33 +81,25 @@ export class ComponentOperationService {
         promiseBlankMaterials,
       );
 
-      const filteredMaterial = material.filter((item) => !!item);
-
-      updatedComponentOperation.blankMaterials = filteredMaterial;
+      updatedComponentOperation.blankMaterials = material.filter(
+        (item) => !!item,
+      );
     }
 
     if (updateComponentOperationInput.equipmentId) {
-      const equipment = await this.equipmentService.findOne(
+      updatedComponentOperation.equipment = await this.equipmentService.findOne(
         updateComponentOperationInput.equipmentId,
       );
-      updatedComponentOperation.equipment = equipment;
     }
 
     if (updateComponentOperationInput.operationId) {
-      const operation = await this.operationService.findOne(
+      updatedComponentOperation.operation = await this.operationService.findOne(
         updateComponentOperationInput.operationId,
       );
-      updatedComponentOperation.operation = operation;
     }
 
     await updatedComponentOperation.save();
 
     return await this.findOne(id);
-  }
-
-  async remove(id: string) {
-    const found = await this.findOne(id);
-    await found.delete();
-    return found;
   }
 }

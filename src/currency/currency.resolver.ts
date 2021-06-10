@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CurrencyService } from './currency.service';
 import { Currency } from './entities/currency.entity';
 import { CreateCurrencyInput } from './dto/create-currency.input';
@@ -16,8 +16,11 @@ export class CurrencyResolver {
   }
 
   @Query(() => [Currency], { name: 'currencies' })
-  async findAll() {
-    return await this.currencyService.findAll();
+  async findAll(
+    @Args('deleted', { type: () => Boolean, defaultValue: false })
+    deleted: boolean,
+  ) {
+    return await this.currencyService.findAll(deleted);
   }
 
   @Query(() => Currency, { name: 'currency' })
@@ -33,6 +36,23 @@ export class CurrencyResolver {
       updateCurrencyInput.id,
       updateCurrencyInput,
     );
+  }
+
+  @Mutation(() => Currency)
+  async recoveryCurrency(@Args('id', { type: () => String }) id: string) {
+    return await this.currencyService.recovery(id);
+  }
+
+  @Mutation(() => [Currency])
+  async recoveryCurrencies(
+    @Args('ids', { type: () => [String] }) ids: string[],
+  ) {
+    return await this.currencyService.recoveryList(ids);
+  }
+
+  @Mutation(() => Currency)
+  async forceRemoveCurrency(@Args('id', { type: () => String }) id: string) {
+    return await this.currencyService.forceRemove(id);
   }
 
   @Mutation(() => Currency)

@@ -16,8 +16,11 @@ export class OrderResolver {
   }
 
   @Query(() => [Order], { name: 'orders' })
-  async findAll() {
-    return await this.orderService.findAll();
+  async findAll(
+    @Args('deleted', { type: () => Boolean, defaultValue: false })
+    deleted: boolean,
+  ) {
+    return await this.orderService.findAll(deleted);
   }
 
   @Query(() => Order, { name: 'order' })
@@ -33,6 +36,21 @@ export class OrderResolver {
       updateOrderInput.id,
       updateOrderInput,
     );
+  }
+
+  @Mutation(() => Order)
+  async recoveryOrder(@Args('id', { type: () => String }) id: string) {
+    return await this.orderService.recovery(id);
+  }
+
+  @Mutation(() => [Order])
+  async recoveryOrders(@Args('ids', { type: () => [String] }) ids: string[]) {
+    return await this.orderService.recoveryList(ids);
+  }
+
+  @Mutation(() => Order)
+  async forceRemoveOrder(@Args('id', { type: () => String }) id: string) {
+    return await this.orderService.forceRemove(id);
   }
 
   @Mutation(() => Order)

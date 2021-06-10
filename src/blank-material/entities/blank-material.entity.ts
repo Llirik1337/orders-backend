@@ -1,20 +1,18 @@
-import { ObjectType, Field, Int, Float } from '@nestjs/graphql';
+import { Field, Float, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Schema as MongooseSchema, Document } from 'mongoose';
-import { round } from 'src/common';
+import { Document, Schema as MongooseSchema } from 'mongoose';
+import { round } from 'src/_core/common';
 import {
   Material,
   MaterialDocument,
 } from 'src/material/entities/material.entity';
+import { BaseModel } from '../../_core';
 
 export type BlankMaterialDocument = BlankMaterial & Document;
 
 @ObjectType()
 @Schema({ timestamps: true })
-export class BlankMaterial {
-  @Field(() => String)
-  _id: string;
-
+export class BlankMaterial extends BaseModel {
   @Prop({
     type: MongooseSchema.Types.ObjectId,
     ref: 'Material',
@@ -43,13 +41,8 @@ export class BlankMaterial {
     default: 0,
   })
   diff: number;
-
-  @Field(() => Date)
-  createdAt: Date;
-
-  @Field(() => Date)
-  updatedAt: Date;
 }
+
 export const BlankMaterialSchema = SchemaFactory.createForClass(BlankMaterial);
 
 const cost = BlankMaterialSchema.virtual('cost');

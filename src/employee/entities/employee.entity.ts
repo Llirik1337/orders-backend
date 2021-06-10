@@ -5,14 +5,13 @@ import {
   Position,
   PositionDocument,
 } from 'src/positions/entities/position.entity';
+import { BaseModel } from '../../_core';
+
 export type EmployeeDocument = Employee & Document;
 
 @Schema({ timestamps: true, id: true })
 @ObjectType()
-export class Employee {
-  @Field(() => String)
-  _id: string;
-
+export class Employee extends BaseModel {
   @Prop({
     type: MongooseSchema.Types.String,
     required: true,
@@ -29,11 +28,6 @@ export class Employee {
   })
   @Field(() => Position)
   position: PositionDocument;
-
-  @Field(() => Date)
-  createdAt: Date;
-
-  @Field(() => Date)
-  updatedAt: Date;
 }
+
 export const EmployeeSchema = SchemaFactory.createForClass(Employee);

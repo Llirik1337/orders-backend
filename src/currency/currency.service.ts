@@ -1,16 +1,19 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { LeanDocument, Model } from 'mongoose';
-import { leanOptions } from 'src/common';
+import { Model } from 'mongoose';
 import { CreateCurrencyInput } from './dto/create-currency.input';
 import { UpdateCurrencyInput } from './dto/update-currency.input';
 import { Currency, CurrencyDocument } from './entities/currency.entity';
+import { AbstractService } from '../_core';
 
 @Injectable()
-export class CurrencyService {
+export class CurrencyService extends AbstractService<CurrencyDocument> {
   constructor(
     @InjectModel(Currency.name) private currencyModel: Model<CurrencyDocument>,
-  ) {}
+  ) {
+    super(currencyModel);
+  }
+
   async create(
     createCurrencyInput: CreateCurrencyInput,
   ): Promise<CurrencyDocument> {
@@ -21,19 +24,6 @@ export class CurrencyService {
     createdCurrency.NumCode = createCurrencyInput.NumCode;
     createdCurrency.Value = createCurrencyInput.Value;
     return await createdCurrency.save();
-  }
-
-  async findAll() {
-    return await this.currencyModel.find().lean(leanOptions);
-  }
-
-  async findOne(id: string): Promise<CurrencyDocument> {
-    const found = await this.currencyModel.findById(id);
-    if (!found)
-      throw new NotFoundException({
-        message: `Currency not found by id ${id}`,
-      });
-    return found;
   }
 
   async update(
@@ -56,11 +46,5 @@ export class CurrencyService {
 
     await found.save();
     return await this.findOne(id);
-  }
-
-  async remove(id: string): Promise<CurrencyDocument> {
-    const found = await this.findOne(id);
-    await found.delete();
-    return found;
   }
 }

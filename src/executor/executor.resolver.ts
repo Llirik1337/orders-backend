@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { ExecutorService } from './executor.service';
 import { Executor } from './entities/executor.entity';
 import { CreateExecutorInput } from './dto/create-executor.input';
@@ -16,8 +16,11 @@ export class ExecutorResolver {
   }
 
   @Query(() => [Executor], { name: 'executors' })
-  findAll() {
-    return this.executorService.findAll();
+  findAll(
+    @Args('deleted', { type: () => Boolean, defaultValue: false })
+    deleted: boolean,
+  ) {
+    return this.executorService.findAll(deleted);
   }
 
   @Query(() => Executor, { name: 'executor' })
@@ -33,6 +36,23 @@ export class ExecutorResolver {
       updateExecutorInput.id,
       updateExecutorInput,
     );
+  }
+
+  @Mutation(() => Executor)
+  async recoveryExecutor(@Args('id', { type: () => String }) id: string) {
+    return await this.executorService.recovery(id);
+  }
+
+  @Mutation(() => [Executor])
+  async recoveryExecutors(
+    @Args('ids', { type: () => [String] }) ids: string[],
+  ) {
+    return await this.executorService.recoveryList(ids);
+  }
+
+  @Mutation(() => Executor)
+  async forceRemoveExecutor(@Args('id', { type: () => String }) id: string) {
+    return await this.executorService.forceRemove(id);
   }
 
   @Mutation(() => Executor)

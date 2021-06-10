@@ -1,5 +1,5 @@
-import { ObjectType, Field, Float } from '@nestjs/graphql';
-import { ICost } from '../ICost';
+import { Field, Float, ObjectType } from '@nestjs/graphql';
+import { ICost } from '../interfaces/ICost';
 
 @ObjectType()
 export class Cost implements ICost {

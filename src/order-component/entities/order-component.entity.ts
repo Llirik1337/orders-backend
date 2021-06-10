@@ -1,7 +1,7 @@
 import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
-import { round } from 'src/common';
+import { round } from 'src/_core/common';
 
 import {
   Component,
@@ -11,15 +11,13 @@ import {
   OrderComponentOperation,
   OrderComponentOperationDocument,
 } from 'src/order-component-operation/entities/order-component-operation.entity';
+import { BaseModel } from '../../_core';
 
 export type OrderComponentDocument = OrderComponent & Document;
 
 @Schema({ timestamps: true })
 @ObjectType()
-export class OrderComponent {
-  @Field(() => String)
-  _id: string;
-
+export class OrderComponent extends BaseModel {
   @Prop({ type: MongooseSchema.Types.Number })
   @Field(() => Int)
   count: number;
@@ -69,13 +67,8 @@ export class OrderComponent {
   })
   @Field(() => [OrderComponentOperation])
   orderComponentOperations: OrderComponentOperationDocument[];
-
-  @Field(() => Date)
-  createdAt: Date;
-
-  @Field(() => Date)
-  updatedAt: Date;
 }
+
 export const OrderComponentSchema = SchemaFactory.createForClass(
   OrderComponent,
 );

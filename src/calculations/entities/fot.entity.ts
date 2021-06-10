@@ -1,5 +1,5 @@
-import { ObjectType, Field } from '@nestjs/graphql';
-import { IFot } from '../IFot';
+import { Field, ObjectType } from '@nestjs/graphql';
+import { IFot } from '../interfaces/IFot';
 import { Cost } from './cost.entity';
 
 @ObjectType()

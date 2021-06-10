@@ -17,13 +17,35 @@ export class BlankMaterialResolver {
   }
 
   @Query(() => [BlankMaterial], { name: 'blankMaterials' })
-  async findAll() {
-    return await this.blankMaterialService.findAll();
+  async findAll(
+    @Args('deleted', { type: () => Boolean, defaultValue: false })
+    deleted: boolean,
+  ) {
+    return await this.blankMaterialService.findAll(deleted);
   }
 
   @Query(() => BlankMaterial, { name: 'blankMaterial' })
   async findOne(@Args('id', { type: () => String }) id: string) {
     return await this.blankMaterialService.findOne(id);
+  }
+
+  @Mutation(() => BlankMaterial)
+  async recoveryBlankMaterial(@Args('id', { type: () => String }) id: string) {
+    return await this.blankMaterialService.recovery(id);
+  }
+
+  @Mutation(() => [BlankMaterial])
+  async recoveryBlankMaterials(
+    @Args('ids', { type: () => [String] }) ids: string[],
+  ) {
+    return await this.blankMaterialService.recoveryList(ids);
+  }
+
+  @Mutation(() => BlankMaterial)
+  async forceRemoveBlankMaterial(
+    @Args('id', { type: () => String }) id: string,
+  ) {
+    return await this.blankMaterialService.forceRemove(id);
   }
 
   @Mutation(() => BlankMaterial)

@@ -1,44 +1,30 @@
-import { Position } from './../positions/entities/position.entity';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { LeanDocument, LeanDocumentOrArray, Model } from 'mongoose';
+import { Model } from 'mongoose';
 import { PositionsService } from 'src/positions/positions.service';
 import { CreateEmployeeInput } from './dto/create-employee.input';
 import { UpdateEmployeeInput } from './dto/update-employee.input';
 import { Employee, EmployeeDocument } from './entities/employee.entity';
-import { GraphQLExtension } from 'apollo-server-express';
-import { leanOptions } from 'src/common';
+import { AbstractService } from '../_core';
 
 @Injectable()
-export class EmployeeService {
+export class EmployeeService extends AbstractService<EmployeeDocument> {
   constructor(
     @InjectModel(Employee.name) private employeeModel: Model<EmployeeDocument>,
     private readonly positionsService: PositionsService,
-  ) {}
+  ) {
+    super(employeeModel);
+  }
 
   async create(
     createEmployeeInput: CreateEmployeeInput,
   ): Promise<EmployeeDocument> {
     const createdEmployee = new this.employeeModel();
     createdEmployee.fullName = createEmployeeInput.fullName;
-    const position = await this.positionsService.findOne(
+    createdEmployee.position = await this.positionsService.findOne(
       createEmployeeInput.positionId,
     );
-    createdEmployee.position = position;
     return await createdEmployee.save();
-  }
-
-  async findAll() {
-    return await this.employeeModel.find().lean(leanOptions);
-  }
-
-  async findOne(id: string): Promise<EmployeeDocument | null> {
-    const foundEmployee = await this.employeeModel.findById(id);
-    if (!foundEmployee)
-      throw new NotFoundException({
-        message: `Employee not found by id ${id}`,
-      });
-    return foundEmployee;
   }
 
   async update(
@@ -48,23 +34,15 @@ export class EmployeeService {
     const updatedEmployee = await this.findOne(id);
 
     if (updateEmployeeInput?.fullName) {
-      const fullName = updateEmployeeInput?.fullName;
-      updatedEmployee.fullName = fullName;
+      updatedEmployee.fullName = updateEmployeeInput?.fullName;
     }
 
     if (updateEmployeeInput?.positionId) {
-      const position = await this.positionsService.findOne(
+      updatedEmployee.position = await this.positionsService.findOne(
         updateEmployeeInput.positionId,
       );
-      updatedEmployee.position = position;
     }
 
     return await updatedEmployee.save();
-  }
-
-  async remove(id: string): Promise<EmployeeDocument> {
-    const found = await this.findOne(id);
-    await found.delete();
-    return found;
   }
 }

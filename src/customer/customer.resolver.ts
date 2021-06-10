@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CustomerService } from './customer.service';
 import { Customer } from './entities/customer.entity';
 import { CreateCustomerInput } from './dto/create-customer.input';
@@ -16,8 +16,11 @@ export class CustomerResolver {
   }
 
   @Query(() => [Customer], { name: 'customers' })
-  async findAll() {
-    return await this.customerService.findAll();
+  async findAll(
+    @Args('deleted', { type: () => Boolean, defaultValue: false })
+    deleted: boolean,
+  ) {
+    return await this.customerService.findAll(deleted);
   }
 
   @Query(() => Customer, { name: 'customer' })
@@ -33,6 +36,23 @@ export class CustomerResolver {
       updateCustomerInput.id,
       updateCustomerInput,
     );
+  }
+
+  @Mutation(() => Customer)
+  async recoveryCustomer(@Args('id', { type: () => String }) id: string) {
+    return await this.customerService.recovery(id);
+  }
+
+  @Mutation(() => [Customer])
+  async recoveryCustomers(
+    @Args('ids', { type: () => [String] }) ids: string[],
+  ) {
+    return await this.customerService.recoveryList(ids);
+  }
+
+  @Mutation(() => Customer)
+  async forceRemoveCustomer(@Args('id', { type: () => String }) id: string) {
+    return await this.customerService.forceRemove(id);
   }
 
   @Mutation(() => Customer)

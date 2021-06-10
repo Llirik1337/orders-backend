@@ -5,7 +5,7 @@ import {
   BlankMaterial,
   BlankMaterialDocument,
 } from 'src/blank-material/entities/blank-material.entity';
-import { round } from 'src/common';
+import { round } from 'src/_core/common';
 import { Equipment } from 'src/equipment/entities/equipment.entity';
 import {
   Executor,
@@ -15,14 +15,13 @@ import {
   Operation,
   OperationDocument,
 } from 'src/operation/entities/operation.entity';
+import { BaseModel } from '../../_core';
+
 export type ComponentOperationDocument = ComponentOperation & Document;
 
-@Schema({ timestamps: true })
+@Schema()
 @ObjectType()
-export class ComponentOperation {
-  @Field(() => String)
-  _id: string;
-
+export class ComponentOperation extends BaseModel {
   @Prop({ type: MongooseSchema.Types.Number })
   @Field(() => Float, { nullable: true })
   time: number;
@@ -76,13 +75,8 @@ export class ComponentOperation {
   })
   @Field(() => [BlankMaterial], { nullable: true })
   blankMaterials: BlankMaterialDocument[];
-
-  @Field(() => Date)
-  createdAt: Date;
-
-  @Field(() => Date)
-  updatedAt: Date;
 }
+
 export const ComponentOperationSchema = SchemaFactory.createForClass(
   ComponentOperation,
 );

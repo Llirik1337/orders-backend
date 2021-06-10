@@ -1,6 +1,6 @@
 import { OrderComponentService } from 'src/order-component/order-component.service';
 import { Injectable } from '@nestjs/common';
-import { round } from 'src/common';
+import { round } from 'src/_core/common';
 import { OrderService } from 'src/order/order.service';
 import { Calculation } from './entities/calculation.entity';
 import { Cost } from './entities/cost.entity';
@@ -33,7 +33,7 @@ export class CalculationsService {
     const name = component.name;
     const fotWithTax = round(orderComponent.fot * 1.3028, 2);
     const materialCostOne = orderComponent.materialCost;
-    const manufacturingСostOne = round(fotWithTax + materialCostOne, 2);
+    const manufacturingCostOne = round(fotWithTax + materialCostOne, 2);
 
     // Materials
     const matCost = new Cost();
@@ -56,8 +56,8 @@ export class CalculationsService {
 
     // Party
     const party = new Cost();
-    party.one = manufacturingСostOne;
-    party.consignment = round(manufacturingСostOne * count, 2);
+    party.one = manufacturingCostOne;
+    party.consignment = round(manufacturingCostOne * count, 2);
 
     // Waybills
     const waybills = new Cost();
