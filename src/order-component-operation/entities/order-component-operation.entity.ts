@@ -31,7 +31,7 @@ export class OrderComponentOperation extends BaseModel {
     required: false,
   })
   @Field(() => Employee, { nullable: true })
-  employee: EmployeeDocument;
+  employee?: EmployeeDocument;
 }
 
 export const OrderComponentOperationSchema = SchemaFactory.createForClass(

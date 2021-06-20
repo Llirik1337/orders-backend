@@ -28,17 +28,17 @@ export class ComponentOperationService extends AbstractService<ComponentOperatio
   async create(createComponentOperationInput: CreateComponentOperationInput) {
     const createdComponentOperation = new this.componentOperationModel();
 
-    if (createComponentOperationInput.time) {
+    if (this.validateProperty(createComponentOperationInput?.time)) {
       createdComponentOperation.time = createComponentOperationInput.time;
     }
 
-    if (createComponentOperationInput.equipmentId) {
+    if (this.validateProperty(createComponentOperationInput.equipmentId)) {
       createdComponentOperation.equipment = await this.equipmentService.findOne(
         createComponentOperationInput.equipmentId,
       );
     }
 
-    if (createComponentOperationInput.blankMaterialsId) {
+    if (this.validateProperty(createComponentOperationInput?.blankMaterialsId)) {
       const promiseBlankMaterials = createComponentOperationInput.blankMaterialsId.map(
         (id) => this.blankMaterialService.findOne(id),
       );
@@ -52,14 +52,13 @@ export class ComponentOperationService extends AbstractService<ComponentOperatio
       );
     }
 
-    if (createComponentOperationInput.operationId) {
+    if (this.validateProperty(createComponentOperationInput.operationId)) {
       createdComponentOperation.operation = await this.operationService.findOne(
         createComponentOperationInput.operationId,
       );
     }
 
-    await createdComponentOperation.save();
-    return createdComponentOperation;
+    return await createdComponentOperation.save();
   }
 
   async update(
@@ -68,11 +67,11 @@ export class ComponentOperationService extends AbstractService<ComponentOperatio
   ) {
     const updatedComponentOperation = await this.findOne(id);
 
-    if (updateComponentOperationInput.time) {
+    if (this.validateProperty(updateComponentOperationInput?.time)) {
       updatedComponentOperation.time = updateComponentOperationInput.time;
     }
 
-    if (updateComponentOperationInput.blankMaterialsId) {
+    if (this.validateProperty(updateComponentOperationInput?.blankMaterialsId)) {
       const promiseBlankMaterials = updateComponentOperationInput.blankMaterialsId.map(
         (id) => this.blankMaterialService.findOne(id),
       );
@@ -86,19 +85,18 @@ export class ComponentOperationService extends AbstractService<ComponentOperatio
       );
     }
 
-    if (updateComponentOperationInput.equipmentId) {
+    if (this.validateProperty(updateComponentOperationInput?.equipmentId)) {
       updatedComponentOperation.equipment = await this.equipmentService.findOne(
         updateComponentOperationInput.equipmentId,
       );
     }
 
-    if (updateComponentOperationInput.operationId) {
+    if (this.validateProperty(updateComponentOperationInput?.operationId)) {
       updatedComponentOperation.operation = await this.operationService.findOne(
         updateComponentOperationInput.operationId,
       );
     }
 
-    await updatedComponentOperation.save();
-    return await this.findOne(id);
+    return await updatedComponentOperation.save();
   }
 }

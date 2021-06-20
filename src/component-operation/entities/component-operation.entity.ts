@@ -24,7 +24,7 @@ export type ComponentOperationDocument = ComponentOperation & Document;
 export class ComponentOperation extends BaseModel {
   @Prop({ type: MongooseSchema.Types.Number })
   @Field(() => Float, { nullable: true })
-  time: number;
+  time?: number;
 
   @Field(() => Float)
   cost: number;
@@ -42,7 +42,7 @@ export class ComponentOperation extends BaseModel {
     required: false,
   })
   @Field(() => Operation, { nullable: true })
-  operation: OperationDocument;
+  operation?: OperationDocument;
 
   @Prop({
     type: MongooseSchema.Types.ObjectId,
@@ -51,7 +51,7 @@ export class ComponentOperation extends BaseModel {
     required: false,
   })
   @Field(() => Executor, { nullable: true })
-  executor: ExecutorDocument;
+  executor?: ExecutorDocument;
 
   @Prop({
     type: MongooseSchema.Types.ObjectId,
@@ -60,7 +60,7 @@ export class ComponentOperation extends BaseModel {
     required: false,
   })
   @Field(() => Equipment, { nullable: true })
-  equipment: Equipment;
+  equipment?: Equipment;
 
   @Prop({
     type: [
@@ -74,7 +74,7 @@ export class ComponentOperation extends BaseModel {
     default: [],
   })
   @Field(() => [BlankMaterial], { nullable: true })
-  blankMaterials: BlankMaterialDocument[];
+  blankMaterials?: BlankMaterialDocument[];
 }
 
 export const ComponentOperationSchema = SchemaFactory.createForClass(

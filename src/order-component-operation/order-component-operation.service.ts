@@ -27,20 +27,14 @@ export class OrderComponentOperationService extends AbstractService<OrderCompone
   ) {
     const orderComponentOperation = new this.orderComponentOperationModel();
 
-    if (
-      createOrderComponentOperationInput.employeeId &&
-      typeof createOrderComponentOperationInput.employeeId === 'string'
-    ) {
+    if (this.validateProperty(createOrderComponentOperationInput?.employeeId)) {
       orderComponentOperation.employee = await this.employeeService.findOne(
         createOrderComponentOperationInput.employeeId,
       );
     }
 
     if (
-      createOrderComponentOperationInput.componentOperationId &&
-      typeof createOrderComponentOperationInput.componentOperationId ===
-        'string'
-    ) {
+      this.validateProperty(createOrderComponentOperationInput?.componentOperationId)) {
       orderComponentOperation.componentOperation = await this.componentOperationService.findOne(
         createOrderComponentOperationInput.componentOperationId,
       );
@@ -55,20 +49,13 @@ export class OrderComponentOperationService extends AbstractService<OrderCompone
   ) {
     const orderComponentOperation = await this.findOne(id);
 
-    if (
-      updateOrderComponentOperationInput.employeeId &&
-      typeof updateOrderComponentOperationInput.employeeId === 'string'
-    ) {
+    if (this.validateProperty(updateOrderComponentOperationInput?.employeeId)) {
       orderComponentOperation.employee = await this.employeeService.findOne(
         updateOrderComponentOperationInput.employeeId,
       );
     }
 
-    if (
-      updateOrderComponentOperationInput.componentOperationId &&
-      typeof updateOrderComponentOperationInput.componentOperationId ===
-        'string'
-    ) {
+    if (this.validateProperty(updateOrderComponentOperationInput?.componentOperationId)) {
       orderComponentOperation.componentOperation = await this.componentOperationService.findOne(
         updateOrderComponentOperationInput.componentOperationId,
       );

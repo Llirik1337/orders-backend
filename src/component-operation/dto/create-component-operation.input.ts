@@ -1,5 +1,5 @@
 import { Field, Float, InputType } from '@nestjs/graphql';
-import { IsArray, IsNumber, IsString } from 'class-validator';
+import { IsArray, IsNumber, IsString, IsMongoId } from 'class-validator';
 
 @InputType()
 export class CreateComponentOperationInput {
@@ -7,11 +7,11 @@ export class CreateComponentOperationInput {
   @Field(() => Float, { nullable: true })
   time: number;
 
-  @IsString()
+  @IsMongoId()
   @Field(() => String, { nullable: true })
   operationId: string;
 
-  @IsString()
+  @IsMongoId()
   @Field(() => String, { nullable: true })
   equipmentId: string;
 
