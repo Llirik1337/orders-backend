@@ -378,13 +378,10 @@ export class DocumentsService {
   }
 
   private getConfirm(order: OrderDocument) {
-    const imagePath = path.resolve(__dirname, '../../images/confirm.png');
-    console.log(imagePath);
-
-    const imageBuffer = fs.readFileSync(imagePath).toString('base64');
+    // const imagePath = path.resolve(__dirname, '../../images/confirm.png');
+    // const imageBuffer = fs.readFileSync(imagePath).toString('base64');
 
     const disableSide = DocumentsService.disableBorderSide();
-    // console.log('image -> ', imageBuffer);
 
     return new Table({
       columnWidths: [3000, 4000, 3000],
@@ -409,34 +406,34 @@ export class DocumentsService {
               ],
             }),
 
-            new TableCell({
-              verticalAlign: VerticalAlign.CENTER,
+            // new TableCell({
+            //   verticalAlign: VerticalAlign.CENTER,
 
-              children: [
-                new Paragraph({
-                  alignment: AlignmentType.CENTER,
-                  children: [
-                    new ImageRun({
-                      data: imageBuffer,
-                      transformation: {
-                        width: 200,
-                        height: 150,
-                      },
-                    }),
-                  ],
-                }),
-              ],
-            }),
+            //   children: [
+            //     new Paragraph({
+            //       alignment: AlignmentType.CENTER,
+            //       children: [
+            //         new ImageRun({
+            //           data: imageBuffer,
+            //           transformation: {
+            //             width: 200,
+            //             height: 150,
+            //           },
+            //         }),
+            //       ],
+            //     }),
+            //   ],
+            // }),
 
-            new TableCell({
-              verticalAlign: VerticalAlign.CENTER,
-              children: [
-                new Paragraph({
-                  alignment: AlignmentType.CENTER,
-                  text: 'Горбунов А.В.',
-                }),
-              ],
-            }),
+            // new TableCell({
+            //   verticalAlign: VerticalAlign.CENTER,
+            //   children: [
+            //     new Paragraph({
+            //       alignment: AlignmentType.CENTER,
+            //       text: 'Горбунов А.В.',
+            //     }),
+            //   ],
+            // }),
           ],
         }),
       ],
