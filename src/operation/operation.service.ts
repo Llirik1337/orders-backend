@@ -20,9 +20,17 @@ export class OperationService extends AbstractService<OperationDocument> {
   ): Promise<OperationDocument> {
     const createdOperation = new this.operationModel();
 
-    createdOperation.name = createOperationInput.name;
-    createdOperation.notes = createOperationInput.notes;
-    createdOperation.price = createOperationInput.price;
+    if (this.validateProperty(createOperationInput?.name)) {
+      createdOperation.name = createOperationInput.name;
+    }
+
+    if (this.validateProperty(createOperationInput?.price)) {
+      createdOperation.price = createOperationInput.price;
+    }
+
+    if (this.validateProperty(createOperationInput?.notes)) {
+      createdOperation.notes = createOperationInput.notes;
+    }
 
     return await createdOperation.save();
   }
@@ -33,13 +41,18 @@ export class OperationService extends AbstractService<OperationDocument> {
   ): Promise<OperationDocument> {
     const found = await this.findOne(id);
 
-    if (updateOperationInput.name) found.name = updateOperationInput.name;
+    if (this.validateProperty(updateOperationInput?.name)) {
+      found.name = updateOperationInput.name;
+    }
 
-    if (updateOperationInput.notes) found.notes = updateOperationInput.notes;
+    if (this.validateProperty(updateOperationInput?.price)) {
+      found.price = updateOperationInput.price;
+    }
 
-    if (updateOperationInput.price) found.price = updateOperationInput.price;
+    if (this.validateProperty(updateOperationInput?.notes)) {
+      found.notes = updateOperationInput.notes;
+    }
 
-    await found.save();
-    return await this.findOne(id);
+    return await found.save();
   }
 }

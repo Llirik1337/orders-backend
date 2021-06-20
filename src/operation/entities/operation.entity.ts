@@ -21,7 +21,7 @@ export class Operation extends BaseModel {
     nullable: true,
     description: 'notes',
   })
-  notes: string;
+  notes?: string;
 }
 
 export const OperationSchema = SchemaFactory.createForClass(Operation);
