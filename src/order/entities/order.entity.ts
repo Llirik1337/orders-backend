@@ -45,7 +45,7 @@ export class Order extends BaseModel {
     ],
     default: [],
   })
-  orderComponents: OrderComponentDocument[];
+  orderComponents?: OrderComponentDocument[];
 
   @Prop({
     required: true,

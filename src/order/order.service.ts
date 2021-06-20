@@ -26,36 +26,41 @@ export class OrderService extends AbstractService<OrderDocument> {
   async create(createOrderInput: CreateOrderInput): Promise<OrderDocument> {
     const createdOrder = new this.orderModel();
 
-    createdOrder.name = createOrderInput?.name;
-
-    createdOrder.notes = createOrderInput?.notes;
-
-    const promiseComponents = [];
-    for (const id of createOrderInput.orderComponentsId) {
-      promiseComponents.push(this.orderComponentService.findOne(id));
+    if (this.validateProperty(createOrderInput?.name)) {
+      createdOrder.name = createOrderInput?.name;
     }
 
-    createdOrder.orderComponents =
-      (await Promise.all<OrderComponentDocument>(promiseComponents)) || [];
+    if (this.validateProperty(createOrderInput?.notes)) {
+      createdOrder.notes = createOrderInput?.notes;
+    }
 
-    const status = await this.orderStatusService.findOne(
-      createOrderInput.statusId,
-    );
+    if (this.validateProperty(createOrderInput?.orderComponentsId?.length)) {
+      const promiseComponents = [];
+      for (const id of createOrderInput.orderComponentsId) {
+        promiseComponents.push(this.orderComponentService.findOne(id));
+      }
 
-    const customer = await this.customerService.findOne(
-      createOrderInput.customerId,
-    );
+      createdOrder.orderComponents =
+        (await Promise.all<OrderComponentDocument>(promiseComponents)) || [];
+    }
 
-    if (createOrderInput?.executorId) {
-      const executor = await this.executorService.findOne(
+    if (this.validateProperty(createOrderInput?.statusId)) {
+      createdOrder.status = await this.orderStatusService.findOne(
+        createOrderInput.statusId,
+      );
+    }
+
+    if (this.validateProperty(createOrderInput?.customerId)) {
+      createdOrder.customer = await this.customerService.findOne(
+        createOrderInput.customerId,
+      );
+    }
+
+    if (this.validateProperty(createOrderInput?.executorId)) {
+      createdOrder.executor = await this.executorService.findOne(
         createOrderInput.executorId,
       );
-
-      if (executor) createdOrder.executor = executor;
     }
-
-    createdOrder.customer = customer;
-    createdOrder.status = status;
 
     return await createdOrder.save();
   }
@@ -66,11 +71,15 @@ export class OrderService extends AbstractService<OrderDocument> {
   ): Promise<OrderDocument> {
     const updatedOrder = await this.findOne(id);
 
-    if (updateOrderInput?.name) updatedOrder.name = updateOrderInput.name;
+    if (this.validateProperty(updateOrderInput?.name)) {
+      updatedOrder.name = updateOrderInput.name;
+    }
 
-    if (updateOrderInput?.notes) updatedOrder.notes = updateOrderInput?.notes;
+    if (this.validateProperty(updateOrderInput?.notes)) {
+      updatedOrder.notes = updateOrderInput?.notes;
+    }
 
-    if (updateOrderInput?.orderComponentsId?.length) {
+    if (this.validateProperty(updateOrderInput?.orderComponentsId?.length)) {
       const promiseComponents = [];
       for (const id of updateOrderInput.orderComponentsId) {
         promiseComponents.push(this.orderComponentService.findOne(id));
@@ -80,25 +89,24 @@ export class OrderService extends AbstractService<OrderDocument> {
         (await Promise.all<OrderComponentDocument>(promiseComponents)) || [];
     }
 
-    if (updateOrderInput?.statusId) {
+    if (this.validateProperty(updateOrderInput?.statusId)) {
       updatedOrder.status = await this.orderStatusService.findOne(
         updateOrderInput.statusId,
       );
     }
 
-    if (updateOrderInput?.customerId) {
+    if (this.validateProperty(updateOrderInput?.customerId)) {
       updatedOrder.customer = await this.customerService.findOne(
         updateOrderInput.customerId,
       );
     }
 
-    if (updateOrderInput?.executorId) {
+    if (this.validateProperty(updateOrderInput?.executorId)) {
       updatedOrder.executor = await this.executorService.findOne(
         updateOrderInput.executorId,
       );
     }
 
-    await updatedOrder.save();
-    return await this.findOne(id);
+    return await updatedOrder.save();
   }
 }

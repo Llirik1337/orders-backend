@@ -1,5 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsArray, IsMongoId, IsString } from 'class-validator';
+import { IsArray, IsMongoId, IsOptional, IsString } from 'class-validator';
 
 @InputType()
 export class CreateOrderInput {
@@ -13,8 +13,9 @@ export class CreateOrderInput {
 
   @IsArray()
   @Field(() => [String], { nullable: true })
-  orderComponentsId: string[];
+  orderComponentsId?: string[];
 
+  @IsOptional()
   @IsString()
   @Field(() => String, { nullable: true })
   notes?: string;
