@@ -4,18 +4,18 @@ import { IsArray, IsMongoId, IsNumber } from 'class-validator';
 @InputType()
 export class CreateOrderComponentInput {
   @IsNumber()
-  @Field(() => Int)
+  @Field(() => Int, { nullable: false })
   count: number;
 
   @IsMongoId()
-  @Field(() => String)
+  @Field(() => String, { nullable: false })
   componentId: string;
 
   @IsArray()
-  @Field(() => [String])
+  @Field(() => [String], { nullable: false })
   batchOperationsId: string[];
 
   @IsArray()
-  @Field(() => [String])
+  @Field(() => [String], { nullable: false })
   orderOperationsId: string[];
 }

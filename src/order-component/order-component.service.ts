@@ -25,16 +25,20 @@ export class OrderComponentService extends AbstractService<OrderComponentDocumen
   async create(createOrderComponentInput: CreateOrderComponentInput) {
     const createdOrderComponent = new this.orderComponentModel();
 
-    createdOrderComponent.count = createOrderComponentInput.count;
+    if (this.validateProperty(createOrderComponentInput?.count)) {
+      createdOrderComponent.count = createOrderComponentInput.count;
+    }
 
-    createdOrderComponent.component = await this.componentService.findOne(
-      createOrderComponentInput.componentId,
-    );
+    if (this.validateProperty(createOrderComponentInput?.componentId)) {
+      createdOrderComponent.component = await this.componentService.findOne(
+        createOrderComponentInput.componentId,
+      );
+    }
 
     if (
-      createOrderComponentInput.batchOperationsId &&
-      typeof createOrderComponentInput.batchOperationsId === 'object' &&
-      createOrderComponentInput.batchOperationsId.length
+      this.validateProperty(createOrderComponentInput?.batchOperationsId) &&
+      typeof createOrderComponentInput?.batchOperationsId === 'object' &&
+      createOrderComponentInput?.batchOperationsId?.length > 0
     ) {
       const promiseBatchOperations = createOrderComponentInput.batchOperationsId.map(
         (id) => this.orderComponentOperationService.findOne(id),
@@ -46,9 +50,9 @@ export class OrderComponentService extends AbstractService<OrderComponentDocumen
     }
 
     if (
-      createOrderComponentInput.orderOperationsId &&
-      typeof createOrderComponentInput.orderOperationsId === 'object' &&
-      createOrderComponentInput.orderOperationsId.length
+      this.validateProperty(createOrderComponentInput?.orderOperationsId) &&
+      typeof createOrderComponentInput?.orderOperationsId === 'object' &&
+      createOrderComponentInput?.orderOperationsId?.length > 0
     ) {
       const promiseBatchOperations = createOrderComponentInput.orderOperationsId.map(
         (id) => this.orderComponentOperationService.findOne(id),
@@ -59,8 +63,7 @@ export class OrderComponentService extends AbstractService<OrderComponentDocumen
       );
     }
 
-    await createdOrderComponent.save();
-    return createdOrderComponent;
+    return await createdOrderComponent.save();
   }
 
   async update(
@@ -69,17 +72,17 @@ export class OrderComponentService extends AbstractService<OrderComponentDocumen
   ) {
     const createdOrderComponent = await this.findOne(id);
 
-    createdOrderComponent.count = updateOrderComponentInput.count;
+    if (this.validateProperty(updateOrderComponentInput?.count)) {
+      createdOrderComponent.count = updateOrderComponentInput.count;
+    }
 
-    createdOrderComponent.component = await this.componentService.findOne(
-      updateOrderComponentInput.componentId,
-    );
+    if (this.validateProperty(updateOrderComponentInput?.componentId)) {
+      createdOrderComponent.component = await this.componentService.findOne(
+        updateOrderComponentInput.componentId,
+      );
+    }
 
-    if (
-      updateOrderComponentInput.batchOperationsId &&
-      typeof updateOrderComponentInput.batchOperationsId === 'object' &&
-      updateOrderComponentInput.batchOperationsId.length
-    ) {
+    if (this.validateProperty(updateOrderComponentInput?.batchOperationsId)) {
       const promiseBatchOperations = updateOrderComponentInput.batchOperationsId.map(
         (id) => this.orderComponentOperationService.findOne(id),
       );
@@ -89,11 +92,7 @@ export class OrderComponentService extends AbstractService<OrderComponentDocumen
       );
     }
 
-    if (
-      updateOrderComponentInput.orderOperationsId &&
-      typeof updateOrderComponentInput.orderOperationsId === 'object' &&
-      updateOrderComponentInput.orderOperationsId.length
-    ) {
+    if (this.validateProperty(updateOrderComponentInput?.orderOperationsId)) {
       const promiseBatchOperations = updateOrderComponentInput.orderOperationsId.map(
         (id) => this.orderComponentOperationService.findOne(id),
       );
@@ -103,7 +102,6 @@ export class OrderComponentService extends AbstractService<OrderComponentDocumen
       );
     }
 
-    await createdOrderComponent.save();
-    return await this.findOne(id);
+    return await createdOrderComponent.save();
   }
 }
