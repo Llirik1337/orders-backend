@@ -21,11 +21,15 @@ export class EmployeeService extends AbstractService<EmployeeDocument> {
   ): Promise<EmployeeDocument> {
     const createdEmployee = new this.employeeModel();
 
-    createdEmployee.fullName = createEmployeeInput.fullName;
+    if (this.validateProperty(createEmployeeInput?.fullName)) {
+      createdEmployee.fullName = createEmployeeInput.fullName;
+    }
 
-    createdEmployee.position = await this.positionsService.findOne(
-      createEmployeeInput.positionId,
-    );
+    if (this.validateProperty(createEmployeeInput?.positionId)) {
+      createdEmployee.position = await this.positionsService.findOne(
+        createEmployeeInput.positionId,
+      );
+    }
 
     return await createdEmployee.save();
   }
@@ -36,17 +40,16 @@ export class EmployeeService extends AbstractService<EmployeeDocument> {
   ): Promise<EmployeeDocument> {
     const updatedEmployee = await this.findOne(id);
 
-    if (updateEmployeeInput?.fullName) {
+    if (this.validateProperty(updateEmployeeInput?.fullName)) {
       updatedEmployee.fullName = updateEmployeeInput?.fullName;
     }
 
-    if (updateEmployeeInput?.positionId) {
+    if (this.validateProperty(updateEmployeeInput?.positionId)) {
       updatedEmployee.position = await this.positionsService.findOne(
         updateEmployeeInput.positionId,
       );
     }
 
-    await updatedEmployee.save();
-    return await this.findOne(id);
+    return await updatedEmployee.save();
   }
 }
