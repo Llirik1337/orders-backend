@@ -1,5 +1,5 @@
-import { Module } from '@nestjs/common';
-import { GraphQLModule } from '@nestjs/graphql';
+import { Logger, Module } from '@nestjs/common';
+import { GqlModuleOptions, GraphQLModule } from '@nestjs/graphql';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ComponentModule } from './component/component.module';
 import { CustomerModule } from './customer/customer.module';
@@ -21,29 +21,71 @@ import { CalculationsModule } from './calculations/calculations.module';
 
 import * as mongooseAutopopulate from 'mongoose-autopopulate';
 import * as mongooseLeanVirtual from 'mongoose-lean-virtuals';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import * as Joi from 'joi';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(
-      'mongodb+srv://Llirik1337:123@cluster0.vojcr.mongodb.net/orders?retryWrites=true&w=majority',
-      {
-        autoCreate: true,
-        autoIndex: true,
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        connectionFactory: (connection) => {
-          connection.plugin(mongooseLeanVirtual);
-          connection.plugin(mongooseAutopopulate);
-          return connection;
-        },
+    ConfigModule.forRoot({
+      isGlobal: true,
+      validationSchema: Joi.object({
+        NODE_ENV: Joi.string()
+          .valid('development', 'production')
+          .default('development'),
+        DATABASE_URL: Joi.string().required(),
+        PORT: Joi.number().default(3000),
+      }),
+    }),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => {
+        const uri = configService?.get<string>('DATABASE_URL');
+        console.log('db uri -> ', uri);
+        return {
+          uri,
+          autoCreate: true,
+          autoIndex: true,
+          useNewUrlParser: true,
+          useUnifiedTopology: true,
+          connectionFactory: (connection) => {
+            connection.plugin(mongooseLeanVirtual);
+            connection.plugin(mongooseAutopopulate);
+            return connection;
+          },
+        };
       },
-    ),
-    GraphQLModule.forRoot({
-      installSubscriptionHandlers: true,
-      autoSchemaFile: 'schema.gql',
-      cors: {
-        origin: true,
-        credentials: true,
+    }),
+    GraphQLModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => {
+        const env = configService?.get<'development' | 'production'>(
+          'NODE_ENV',
+        );
+
+        const commonOptions: GqlModuleOptions = {
+          installSubscriptionHandlers: true,
+          autoSchemaFile: 'schema.gql',
+          cors: {
+            origin: true,
+            credentials: true,
+          },
+        };
+
+        const productionOptions: GqlModuleOptions = {
+          ...commonOptions,
+          debug: false,
+          playground: false,
+        };
+
+        const developmentOptions: GqlModuleOptions = {
+          ...commonOptions,
+          playground: true,
+          debug: true,
+        };
+
+        return env === 'development' ? developmentOptions : productionOptions;
       },
     }),
     OrderModule,
