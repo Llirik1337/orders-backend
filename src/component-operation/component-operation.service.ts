@@ -99,7 +99,6 @@ export class ComponentOperationService extends AbstractService<ComponentOperatio
     }
 
     await updatedComponentOperation.save();
-
     return await this.findOne(id);
   }
 }

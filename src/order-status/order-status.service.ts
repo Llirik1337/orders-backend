@@ -23,7 +23,9 @@ export class OrderStatusService extends AbstractService<OrderStatusDocument> {
     createOrderStatusInput: CreateOrderStatusInput,
   ): Promise<OrderStatusDocument> {
     const createdOrderStatus = new this.orderStatusModel();
+
     createdOrderStatus.name = createOrderStatusInput.name;
+
     return await createdOrderStatus.save();
   }
 
@@ -36,7 +38,6 @@ export class OrderStatusService extends AbstractService<OrderStatusDocument> {
     if (updateOrderStatusInput.name) found.name = updateOrderStatusInput.name;
 
     await found.save();
-
     return await this.findOne(id);
   }
 }

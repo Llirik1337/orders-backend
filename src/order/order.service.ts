@@ -27,6 +27,7 @@ export class OrderService extends AbstractService<OrderDocument> {
     const createdOrder = new this.orderModel();
 
     createdOrder.name = createOrderInput?.name;
+
     createdOrder.notes = createOrderInput?.notes;
 
     const promiseComponents = [];
@@ -99,7 +100,6 @@ export class OrderService extends AbstractService<OrderDocument> {
     }
 
     await updatedOrder.save();
-
     return await updatedOrder.save();
   }
 }

@@ -32,6 +32,7 @@ export class OperationService extends AbstractService<OperationDocument> {
     updateOperationInput: UpdateOperationInput,
   ): Promise<OperationDocument> {
     const found = await this.findOne(id);
+
     if (updateOperationInput.name) found.name = updateOperationInput.name;
 
     if (updateOperationInput.notes) found.notes = updateOperationInput.notes;

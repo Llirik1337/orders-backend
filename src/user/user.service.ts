@@ -14,8 +14,10 @@ export class UserService extends AbstractService<UserDocument> {
 
   async create(createUserInput: CreateUserInput): Promise<UserDocument> {
     const createdUser = new this.userModel();
+
     createdUser.login = createUserInput.login;
     createdUser.password = createUserInput.password;
+
     return await createdUser.save();
   }
 
@@ -24,8 +26,10 @@ export class UserService extends AbstractService<UserDocument> {
     updateUserInput: UpdateUserInput,
   ): Promise<UserDocument> {
     const found = await this.findOne(id);
+
     if (updateUserInput.login) found.login = updateUserInput.login;
     if (updateUserInput.password) found.password = updateUserInput.password;
+
     await found.save();
     return await this.findOne(id);
   }

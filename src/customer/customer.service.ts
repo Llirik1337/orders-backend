@@ -18,6 +18,7 @@ export class CustomerService extends AbstractService<CustomerDocument> {
     createCustomerInput: CreateCustomerInput,
   ): Promise<CustomerDocument> {
     const createdCustomer = new this.customerModel();
+
     createdCustomer.address = createCustomerInput.address;
     createdCustomer.company = createCustomerInput.company;
     createdCustomer.email = createCustomerInput.email;
@@ -33,6 +34,7 @@ export class CustomerService extends AbstractService<CustomerDocument> {
     updateCustomerInput: UpdateCustomerInput,
   ): Promise<CustomerDocument> {
     const found = await this.findOne(id);
+
     if (updateCustomerInput.address)
       found.address = updateCustomerInput.address;
 
@@ -49,7 +51,6 @@ export class CustomerService extends AbstractService<CustomerDocument> {
     if (updateCustomerInput.phone) found.phone = updateCustomerInput.phone;
 
     await found.save();
-
     return await this.findOne(id);
   }
 }

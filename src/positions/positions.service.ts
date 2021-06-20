@@ -18,7 +18,9 @@ export class PositionsService extends AbstractService<PositionDocument> {
     createPositionInput: CreatePositionInput,
   ): Promise<PositionDocument> {
     const createdPosition = new this.positionModel();
+
     createdPosition.name = createPositionInput.name;
+
     return await createdPosition.save();
   }
 
@@ -31,7 +33,6 @@ export class PositionsService extends AbstractService<PositionDocument> {
     if (updatePositionInput.name) found.name = updatePositionInput.name;
 
     await found.save();
-
     return await this.findOne(id);
   }
 }

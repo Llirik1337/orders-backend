@@ -18,11 +18,13 @@ export class CurrencyService extends AbstractService<CurrencyDocument> {
     createCurrencyInput: CreateCurrencyInput,
   ): Promise<CurrencyDocument> {
     const createdCurrency = new this.currencyModel();
+
     createdCurrency.CharCode = createCurrencyInput.CharCode;
     createdCurrency.Name = createCurrencyInput.Name;
     createdCurrency.Nominal = createCurrencyInput.Nominal;
     createdCurrency.NumCode = createCurrencyInput.NumCode;
     createdCurrency.Value = createCurrencyInput.Value;
+
     return await createdCurrency.save();
   }
 
@@ -31,6 +33,7 @@ export class CurrencyService extends AbstractService<CurrencyDocument> {
     updateCurrencyInput: UpdateCurrencyInput,
   ): Promise<CurrencyDocument> {
     const found = await this.findOne(id);
+
     if (updateCurrencyInput.CharCode)
       found.CharCode = updateCurrencyInput.CharCode;
 

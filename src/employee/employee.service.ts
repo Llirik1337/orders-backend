@@ -20,10 +20,13 @@ export class EmployeeService extends AbstractService<EmployeeDocument> {
     createEmployeeInput: CreateEmployeeInput,
   ): Promise<EmployeeDocument> {
     const createdEmployee = new this.employeeModel();
+
     createdEmployee.fullName = createEmployeeInput.fullName;
+
     createdEmployee.position = await this.positionsService.findOne(
       createEmployeeInput.positionId,
     );
+
     return await createdEmployee.save();
   }
 

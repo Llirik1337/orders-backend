@@ -24,6 +24,7 @@ export class OrderComponentService extends AbstractService<OrderComponentDocumen
 
   async create(createOrderComponentInput: CreateOrderComponentInput) {
     const createdOrderComponent = new this.orderComponentModel();
+
     createdOrderComponent.count = createOrderComponentInput.count;
 
     createdOrderComponent.component = await this.componentService.findOne(
@@ -67,6 +68,7 @@ export class OrderComponentService extends AbstractService<OrderComponentDocumen
     updateOrderComponentInput: UpdateOrderComponentInput,
   ) {
     const createdOrderComponent = await this.findOne(id);
+
     createdOrderComponent.count = updateOrderComponentInput.count;
 
     createdOrderComponent.component = await this.componentService.findOne(

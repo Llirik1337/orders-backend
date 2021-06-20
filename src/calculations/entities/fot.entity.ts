@@ -6,6 +6,7 @@ import { Cost } from './cost.entity';
 export class FOT implements IFot {
   @Field(() => Cost, { description: 'Example field (placeholder)' })
   withTax: Cost;
+
   @Field(() => Cost, { description: 'Example field (placeholder)' })
   withoutTax: Cost;
 }

@@ -7,8 +7,10 @@ import { FOT } from './fot.entity';
 export class Calculation implements ICalculationItem {
   @Field(() => String)
   _id: string;
+
   @Field(() => String, { description: 'Example field (placeholder)' })
   name: string;
+
   @Field(() => Int, { description: 'Example field (placeholder)' })
   count: number;
 

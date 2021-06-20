@@ -63,7 +63,7 @@ export class Order extends BaseModel {
     autopopulate: true,
   })
   @Field(() => Executor, { nullable: true })
-  executor: Executor;
+  executor?: Executor;
 
   @Field(() => Float, { nullable: false })
   cost: number;

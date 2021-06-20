@@ -18,11 +18,13 @@ export class MaterialService extends AbstractService<MaterialDocument> {
     createMaterialInput: CreateMaterialInput,
   ): Promise<MaterialDocument> {
     const createdMaterial = new this.materialModel();
+
     createdMaterial.name = createMaterialInput.name;
     createdMaterial.cost = createMaterialInput.cost;
     createdMaterial.count = createMaterialInput.count;
     createdMaterial.length = createMaterialInput.length;
     createdMaterial.width = createMaterialInput.width;
+
     return await createdMaterial.save();
   }
 
@@ -31,6 +33,7 @@ export class MaterialService extends AbstractService<MaterialDocument> {
     updateMaterialInput: UpdateMaterialInput,
   ): Promise<MaterialDocument> {
     const found = await this.findOne(id);
+
     if (updateMaterialInput.cost) found.cost = updateMaterialInput.cost;
 
     if (updateMaterialInput.count) found.count = updateMaterialInput.count;
@@ -42,7 +45,6 @@ export class MaterialService extends AbstractService<MaterialDocument> {
     if (updateMaterialInput.width) found.width = updateMaterialInput.width;
 
     await found.save();
-
     return await this.findOne(id);
   }
 }

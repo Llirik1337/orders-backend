@@ -5,6 +5,7 @@ import { ICost } from '../interfaces/ICost';
 export class Cost implements ICost {
   @Field(() => Float, { description: 'Example field (placeholder)' })
   one: number;
+
   @Field(() => Float, { description: 'Example field (placeholder)' })
   consignment: number;
 }

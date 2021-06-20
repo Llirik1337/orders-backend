@@ -17,7 +17,9 @@ export class ExecutorService extends AbstractService<ExecutorDocument> {
   async create(createExecutorInput: CreateExecutorInput) {
     try {
       const createdExecutor = new this.executorModel();
+
       createdExecutor.name = createExecutorInput.name;
+
       return createdExecutor.save();
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -29,7 +31,9 @@ export class ExecutorService extends AbstractService<ExecutorDocument> {
   async update(id: string, updateExecutorInput: UpdateExecutorInput) {
     try {
       const updatedExecutor = await this.findOne(id);
+
       updatedExecutor.name = updateExecutorInput.name;
+
       await updatedExecutor.save();
       return await this.findOne(id);
     } catch (error: unknown) {

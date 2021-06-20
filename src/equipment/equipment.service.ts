@@ -22,10 +22,13 @@ export class EquipmentService extends AbstractService<EquipmentDocument> {
 
     if (createEquipmentInput.count)
       createdEquipment.count = createEquipmentInput.count;
+
     if (createEquipmentInput.name)
       createdEquipment.name = createEquipmentInput.name;
+
     if (createEquipmentInput.notes)
       createdEquipment.notes = createEquipmentInput.notes;
+
     if (createEquipmentInput.releaseYear)
       createdEquipment.releaseYear = createEquipmentInput.releaseYear;
 
@@ -37,6 +40,7 @@ export class EquipmentService extends AbstractService<EquipmentDocument> {
     updateEquipmentInput: UpdateEquipmentInput,
   ): Promise<EquipmentDocument> {
     const found = await this.findOne(id);
+
     if (updateEquipmentInput.count) found.count = updateEquipmentInput.count;
 
     if (updateEquipmentInput.name) found.name = updateEquipmentInput.name;
@@ -47,7 +51,6 @@ export class EquipmentService extends AbstractService<EquipmentDocument> {
       found.releaseYear = updateEquipmentInput.releaseYear;
 
     await found.save();
-
     return await this.findOne(id);
   }
 }

@@ -6,5 +6,5 @@ export class CreateOrderComponentOperationInput {
   componentOperationId: string;
 
   @Field(() => String, { nullable: true })
-  employeeId: string;
+  employeeId?: string;
 }

@@ -24,10 +24,4 @@ export class CreateEquipmentInput {
   @IsNumber()
   @Field(() => Int, { defaultValue: 0, description: 'Count of Equipment' })
   count: number;
-
-  // TODO Добавить поле "Доступные операции"
-  // @Field(() => Operation, {
-  //   description: 'Count of Equipment',
-  // })
-  // operations: OperationDocument[];
 }

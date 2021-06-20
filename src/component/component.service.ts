@@ -21,7 +21,9 @@ export class ComponentService extends AbstractService<ComponentDocument> {
     createComponentInput: CreateComponentInput,
   ): Promise<ComponentDocument> {
     const createdComponent = new this.componentModel();
+
     createdComponent.name = createComponentInput.name;
+
     createdComponent.notes = createComponentInput.notes;
 
     const promiseOperations = createComponentInput.operationsId.map((id) =>
@@ -41,7 +43,9 @@ export class ComponentService extends AbstractService<ComponentDocument> {
     updateComponentInput: UpdateComponentInput,
   ): Promise<ComponentDocument> {
     const updatedComponent = await this.findOne(id);
+
     updatedComponent.name = updateComponentInput.name;
+
     updatedComponent.notes = updateComponentInput.notes;
 
     if (updateComponentInput.operationsId) {

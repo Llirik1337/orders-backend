@@ -11,8 +11,7 @@ import {
 } from 'src/employee/entities/employee.entity';
 import { BaseModel } from '../../_core';
 
-export type OrderComponentOperationDocument = OrderComponentOperation &
-  Document;
+export type OrderComponentOperationDocument = OrderComponentOperation & Document;
 
 @Schema({ timestamps: true })
 @ObjectType()
