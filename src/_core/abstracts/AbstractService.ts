@@ -62,4 +62,16 @@ export abstract class AbstractService<
     await found.delete();
     return found;
   }
+
+  validateProperty(prop: any): boolean {
+    let isValid = true;
+
+    if (prop === undefined) {
+      isValid = false;
+    }
+
+    // added something validation rules ...
+
+    return isValid;
+  }
 }
