@@ -11,9 +11,11 @@ export class BaseModel {
   @Prop({ required: false })
   deletedAt: Date | null;
 
-  @Field(() => Date)
-  createdAt: Date;
+  @Field(() => Date, { nullable: true })
+  @Prop({ required: false })
+  createdAt: Date | null;
 
-  @Field(() => Date)
-  updatedAt: Date;
+  @Field(() => Date, { nullable: true })
+  @Prop({ required: false })
+  updatedAt: Date | null;
 }

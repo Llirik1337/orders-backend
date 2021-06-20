@@ -57,7 +57,6 @@ export class OrderService extends AbstractService<OrderDocument> {
     createdOrder.customer = customer;
     createdOrder.status = status;
 
-    await createdOrder.save();
     return await createdOrder.save();
   }
 
@@ -100,6 +99,6 @@ export class OrderService extends AbstractService<OrderDocument> {
     }
 
     await updatedOrder.save();
-    return await updatedOrder.save();
+    return await this.findOne(id);
   }
 }

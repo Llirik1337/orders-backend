@@ -14,7 +14,7 @@ import { BaseModel } from '../../_core';
 export type OrderDocument = Order & Document;
 
 @ObjectType()
-@Schema()
+@Schema({ timestamps: true })
 export class Order extends BaseModel {
   @Prop({ required: true, type: MongooseSchema.Types.String })
   @Field(() => String, { nullable: false })

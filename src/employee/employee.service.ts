@@ -46,6 +46,7 @@ export class EmployeeService extends AbstractService<EmployeeDocument> {
       );
     }
 
-    return await updatedEmployee.save();
+    await updatedEmployee.save();
+    return await this.findOne(id);
   }
 }
