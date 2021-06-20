@@ -22,15 +22,17 @@ export class BlankMaterialService extends AbstractService<BlankMaterialDocument>
 
   async create(createBlankMaterialInput: CreateBlankMaterialInput) {
     const blank = new this.blankMaterialModel();
+
     blank.length = createBlankMaterialInput.length;
+
     blank.width = createBlankMaterialInput.width;
 
     blank.material = await this.materialService.findOne(
       createBlankMaterialInput.materialId,
     );
-    blank.diff =
-      (blank.width * blank.length) /
-      (blank.material.width * blank.material.length);
+
+    blank.diff = this.getDiff(blank);
+
     await blank.save();
     return blank;
   }
@@ -40,19 +42,27 @@ export class BlankMaterialService extends AbstractService<BlankMaterialDocument>
 
     if (updateBlankMaterialInput.length)
       blank.length = updateBlankMaterialInput.length;
+
     if (updateBlankMaterialInput.width)
       blank.width = updateBlankMaterialInput.width;
+
     if (updateBlankMaterialInput.materialId) {
       blank.material = await this.materialService.findOne(
         updateBlankMaterialInput.materialId,
       );
     }
 
-    blank.diff =
-      (blank.width * blank.length) /
-      (blank.material.width * blank.material.length);
+    blank.diff = this.getDiff(blank);
 
     await blank.save();
     return blank;
+  }
+
+  getDiff(blank: BlankMaterialDocument) {
+    const diff =
+      (blank.width * blank.length) /
+      (blank.material.width * blank.material.length);
+
+    return diff;
   }
 }
