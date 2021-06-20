@@ -1,4 +1,4 @@
-import { InputType, Int, Field } from '@nestjs/graphql';
+import { Field, InputType, Int } from '@nestjs/graphql';
 import { IsNumber, IsString } from 'class-validator';
 
 @InputType()
@@ -32,10 +32,4 @@ export class CreateEquipmentInput {
   @IsNumber()
   @Field(() => Int, { defaultValue: 0, description: 'Count of Equipment' })
   count: number;
-
-  // TODO Добавить поле "Доступные операции"
-  // @Field(() => Operation, {
-  //   description: 'Count of Equipment',
-  // })
-  // operations: OperationDocument[];
 }

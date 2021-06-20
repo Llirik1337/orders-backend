@@ -27,6 +27,73 @@ export class DocumentsService {
     private readonly calculationService: CalculationsService,
   ) {}
 
+  private static getNotes(order: OrderDocument) {
+    return new Paragraph({
+      text: order.notes,
+      spacing: {
+        after: 200,
+        before: 200,
+      },
+    });
+  }
+
+  private static getContactInfo(order: OrderDocument) {
+    const person = new TextRun({
+      break: 1,
+      text: 'Контактное лицо: Станчикова Кристина Сергеевна',
+    });
+    const email = new TextRun({
+      break: 1,
+      text: 'E-mail: stanchikova_ks@voenmeh.ru',
+    });
+    const phone = new TextRun({ break: 1, text: 'Тел.: 8-967-593-07-63' });
+    return new Paragraph({
+      children: [person, email, phone],
+    });
+  }
+
+  private static getLogo(order: OrderDocument) {
+    const imagePath = path.resolve(__dirname, '../../images/title.png');
+    console.log(imagePath);
+
+    const imageBuffer = fs.readFileSync(imagePath).toString('base64');
+    return new Paragraph({
+      alignment: AlignmentType.CENTER,
+      children: [
+        new ImageRun({
+          data: imageBuffer,
+          transformation: {
+            width: 600,
+            height: 100,
+          },
+        }),
+      ],
+    });
+  }
+
+  private static disableBorderSide() {
+    return {
+      color: 'none',
+      size: 0,
+      style: BorderStyle.NONE,
+    };
+  }
+
+  private static getCostumer(order: OrderDocument) {
+    return new Paragraph({
+      alignment: AlignmentType.RIGHT,
+      spacing: {
+        after: 1000,
+        before: 1000,
+      },
+      children: [
+        new TextRun({
+          text: `Получатель: ${order.customer.fullName}`,
+        }),
+      ],
+    });
+  }
+
   /**
    * Get document to order by id
    * @param id Order id
@@ -111,7 +178,7 @@ export class DocumentsService {
       verticalAlign: VerticalAlign.CENTER,
     });
 
-    const header = new TableRow({
+    return new TableRow({
       tableHeader: true,
       cantSplit: true,
       children: [
@@ -124,8 +191,6 @@ export class DocumentsService {
         costWithNDC,
       ],
     });
-
-    return header;
   }
 
   getComponentRow(calculation: Calculation) {
@@ -257,28 +322,58 @@ export class DocumentsService {
     return [result, costWithOutNDC, costNDC, costWithNDC];
   }
 
-  private getNotes(order: OrderDocument) {
-    return new Paragraph({
-      text: order.notes,
-      spacing: {
-        after: 200,
-        before: 200,
+  async getDocument(order: OrderDocument) {
+    const logo = DocumentsService.getLogo(order);
+    const header = this.getHeader(order);
+    const customer = DocumentsService.getCostumer(order);
+    const timestamp = this.getTimestamp(order);
+    const table = await this.getTable(order);
+    const notes = DocumentsService.getNotes(order);
+    const confirm = this.getConfirm(order);
+    const contactInfo = DocumentsService.getContactInfo(order);
+    return new Document({
+      title: `${order.name}_${moment().format()}`,
+      creator: order.customer.company,
+      description: order.notes,
+      keywords: order.name,
+      styles: {
+        default: {
+          document: {
+            run: {
+              font: 'Arial Narrow',
+            },
+          },
+        },
       },
+      sections: [
+        {
+          children: [logo, header, customer, timestamp, table, notes, confirm],
+          footers: {
+            default: {
+              options: { children: [contactInfo] },
+            },
+          },
+        },
+      ],
     });
   }
 
-  private getContactInfo(order: OrderDocument) {
-    const person = new TextRun({
-      break: 1,
-      text: 'Контактное лицо: Станчикова Кристина Сергеевна',
-    });
-    const email = new TextRun({
-      break: 1,
-      text: 'E-mail: stanchikova_ks@voenmeh.ru',
-    });
-    const phone = new TextRun({ break: 1, text: 'Тел.: 8-967-593-07-63' });
+  getTimestamp(order: OrderDocument) {
+    const createdAt = order.createdAt;
+    const dateString = moment(createdAt)
+      .locale('ru')
+      .format('Do MMMM YYYY [года]');
     return new Paragraph({
-      children: [person, email, phone],
+      alignment: AlignmentType.CENTER,
+      spacing: {
+        after: 500,
+        before: 500,
+      },
+      children: [
+        new TextRun({
+          text: `Коммерческое предложение "${order.name}" от ${dateString}`,
+        }),
+      ],
     });
   }
 
@@ -288,7 +383,7 @@ export class DocumentsService {
 
     const imageBuffer = fs.readFileSync(imagePath).toString('base64');
 
-    const disableSide = this.disableBorderSide();
+    const disableSide = DocumentsService.disableBorderSide();
     // console.log('image -> ', imageBuffer);
 
     return new Table({
@@ -348,62 +443,6 @@ export class DocumentsService {
     });
   }
 
-  private getLogo(order: OrderDocument) {
-    const imagePath = path.resolve(__dirname, '../../images/title.png');
-    console.log(imagePath);
-
-    const imageBuffer = fs.readFileSync(imagePath).toString('base64');
-    return new Paragraph({
-      alignment: AlignmentType.CENTER,
-      children: [
-        new ImageRun({
-          data: imageBuffer,
-          transformation: {
-            width: 600,
-            height: 100,
-          },
-        }),
-      ],
-    });
-  }
-
-  async getDocument(order: OrderDocument) {
-    const logo = this.getLogo(order);
-    const header = this.getHeader(order);
-    const customer = this.getCostumer(order);
-    const timestamp = this.getTimestamp(order);
-    const table = await this.getTable(order);
-    const notes = this.getNotes(order);
-    const confirm = this.getConfirm(order);
-    const contactInfo = this.getContactInfo(order);
-    const document = new Document({
-      title: `${order.name}_${moment().format()}`,
-      creator: order.customer.company,
-      description: order.notes,
-      keywords: order.name,
-      styles: {
-        default: {
-          document: {
-            run: {
-              font: 'Arial Narrow',
-            },
-          },
-        },
-      },
-      sections: [
-        {
-          children: [logo, header, customer, timestamp, table, notes, confirm],
-          footers: {
-            default: {
-              options: { children: [contactInfo] },
-            },
-          },
-        },
-      ],
-    });
-    return document;
-  }
-
   private getHeader(order: OrderDocument) {
     const disabledBorder = this.disableBorderTable();
     const getLine = (...args: string[]) => {
@@ -421,12 +460,12 @@ export class DocumentsService {
         ),
       });
     };
-    const table = new Table({
+    return new Table({
       columnWidths: [6000, 3000],
       borders: {
         ...disabledBorder,
-        insideHorizontal: this.disableBorderSide(),
-        insideVertical: this.disableBorderSide(),
+        insideHorizontal: DocumentsService.disableBorderSide(),
+        insideVertical: DocumentsService.disableBorderSide(),
       },
       rows: [
         getLine(
@@ -438,63 +477,17 @@ export class DocumentsService {
         getLine('8 (812) 495-77-30', ''),
       ],
     });
-    return table;
   }
 
   private disableBorderTable() {
-    const disableBorderSide = this.disableBorderSide();
+    const disableBorderSide = DocumentsService.disableBorderSide();
 
-    const disabledBorder = {
+    return {
       bottom: disableBorderSide,
       left: disableBorderSide,
       right: disableBorderSide,
       top: disableBorderSide,
     };
-    return disabledBorder;
-  }
-
-  private disableBorderSide() {
-    return {
-      color: 'none',
-      size: 0,
-      style: BorderStyle.NONE,
-    };
-  }
-
-  private getCostumer(order: OrderDocument) {
-    const text = new Paragraph({
-      alignment: AlignmentType.RIGHT,
-      spacing: {
-        after: 1000,
-        before: 1000,
-      },
-      children: [
-        new TextRun({
-          text: `Получатель: ${order.customer.fullName}`,
-        }),
-      ],
-    });
-    return text;
-  }
-
-  getTimestamp(order: OrderDocument) {
-    const createdAt = order.createdAt;
-    const dateString = moment(createdAt)
-      .locale('ru')
-      .format('Do MMMM YYYY [года]');
-    const text = new Paragraph({
-      alignment: AlignmentType.CENTER,
-      spacing: {
-        after: 500,
-        before: 500,
-      },
-      children: [
-        new TextRun({
-          text: `Коммерческое предложение "${order.name}" от ${dateString}`,
-        }),
-      ],
-    });
-    return text;
   }
 
   private async getTable(order: OrderDocument) {
@@ -521,11 +514,9 @@ export class DocumentsService {
       children: this.getResultRow(calculations),
     });
     const tableHeader = this.getDocumentTableHeader();
-    const table = new Table({
+    return new Table({
       columnWidths: [500, 3000, 500, 1500, 1500, 1500, 1500],
       rows: [tableHeader, ...rows, resultRow],
     });
-
-    return table;
   }
 }

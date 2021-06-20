@@ -1,6 +1,5 @@
-import { InputType, Int, Field } from '@nestjs/graphql';
+import { Field, InputType } from '@nestjs/graphql';
 import { IsArray, IsString } from 'class-validator';
-import { Operation } from 'src/operation/entities/operation.entity';
 
 @InputType()
 export class CreateComponentInput {

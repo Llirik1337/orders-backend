@@ -17,4 +17,5 @@ async function bootstrap() {
 
   await app.listen(serverPort);
 }
-bootstrap();
+
+bootstrap().then().catch(console.log);

@@ -1,14 +1,13 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
+import { BaseModel } from '../../_core';
+
 export type CustomerDocument = Customer & Document;
 
 @ObjectType()
 @Schema({ timestamps: true, id: true })
-export class Customer {
-  @Field(() => String)
-  _id: string;
-
+export class Customer extends BaseModel {
   @Prop({ type: MongooseSchema.Types.String })
   @Field(() => String, { nullable: false })
   fullName: string;
@@ -32,11 +31,6 @@ export class Customer {
   @Prop({ type: MongooseSchema.Types.String })
   @Field(() => String, { nullable: true })
   notes: string;
-
-  @Field(() => Date)
-  createdAt: Date;
-
-  @Field(() => Date)
-  updatedAt: Date;
 }
+
 export const CustomerSchema = SchemaFactory.createForClass(Customer);

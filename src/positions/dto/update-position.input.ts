@@ -1,5 +1,5 @@
 import { CreatePositionInput } from './create-position.input';
-import { InputType, Field, Int, PartialType } from '@nestjs/graphql';
+import { Field, InputType, PartialType } from '@nestjs/graphql';
 import { IsMongoId } from 'class-validator';
 
 @InputType()

@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { EquipmentService } from './equipment.service';
 import { Equipment } from './entities/equipment.entity';
 import { CreateEquipmentInput } from './dto/create-equipment.input';
@@ -16,8 +16,11 @@ export class EquipmentResolver {
   }
 
   @Query(() => [Equipment], { name: 'equipments' })
-  async findAll() {
-    return await this.equipmentService.findAll();
+  async findAll(
+    @Args('deleted', { type: () => Boolean, defaultValue: false })
+    deleted: boolean,
+  ) {
+    return await this.equipmentService.findAll(deleted);
   }
 
   @Query(() => Equipment, { name: 'equipment' })
@@ -33,6 +36,23 @@ export class EquipmentResolver {
       updateEquipmentInput.id,
       updateEquipmentInput,
     );
+  }
+
+  @Mutation(() => Equipment)
+  async recoveryEquipment(@Args('id', { type: () => String }) id: string) {
+    return await this.equipmentService.recovery(id);
+  }
+
+  @Mutation(() => [Equipment])
+  async recoveryEquipments(
+    @Args('ids', { type: () => [String] }) ids: string[],
+  ) {
+    return await this.equipmentService.recoveryList(ids);
+  }
+
+  @Mutation(() => Equipment)
+  async forceRemoveEquipment(@Args('id', { type: () => String }) id: string) {
+    return await this.equipmentService.forceRemove(id);
   }
 
   @Mutation(() => Equipment)

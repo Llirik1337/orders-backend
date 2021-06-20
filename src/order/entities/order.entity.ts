@@ -1,7 +1,7 @@
 import { Field, Float, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
-import { round } from 'src/common';
+import { round } from 'src/_core/common';
 import { Executor } from 'src/executor/entities/executor.entity';
 import {
   OrderComponent,
@@ -9,15 +9,13 @@ import {
 } from 'src/order-component/entities/order-component.entity';
 import { OrderStatus } from 'src/order-status/entities/order-status.entity';
 import { Customer } from '../../customer/entities/customer.entity';
+import { BaseModel } from '../../_core';
 
 export type OrderDocument = Order & Document;
 
 @ObjectType()
-@Schema({ timestamps: true, id: true })
-export class Order {
-  @Field(() => String)
-  _id: string;
-
+@Schema()
+export class Order extends BaseModel {
   @Prop({ required: true, type: MongooseSchema.Types.String })
   @Field(() => String, { nullable: false })
   name: string;
@@ -65,16 +63,10 @@ export class Order {
     autopopulate: true,
   })
   @Field(() => Executor, { nullable: true })
-  executor: Executor;
+  executor?: Executor;
 
   @Field(() => Float, { nullable: false })
   cost: number;
-
-  @Field(() => Date)
-  createdAt: Date;
-
-  @Field(() => Date)
-  updatedAt: Date;
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);

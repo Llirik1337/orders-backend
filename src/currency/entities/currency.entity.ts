@@ -1,13 +1,13 @@
-import { Field, Int, Float, ObjectType } from '@nestjs/graphql';
-import { Prop, SchemaFactory, Schema } from '@nestjs/mongoose';
+import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
+import { BaseModel } from '../../_core';
+
 export type CurrencyDocument = Currency & Document;
+
 @ObjectType()
 @Schema({ timestamps: true, id: true })
-export class Currency {
-  @Field(() => String)
-  _id: string;
-
+export class Currency extends BaseModel {
   @Prop({ type: MongooseSchema.Types.String, required: true })
   @Field(() => String, { nullable: false })
   NumCode: string;
@@ -27,11 +27,6 @@ export class Currency {
   @Field(() => Float, { nullable: false })
   @Prop({ type: MongooseSchema.Types.Number, required: true })
   Value: number;
-
-  @Field(() => Date)
-  createdAt: Date;
-
-  @Field(() => Date)
-  updatedAt: Date;
 }
+
 export const CurrencySchema = SchemaFactory.createForClass(Currency);

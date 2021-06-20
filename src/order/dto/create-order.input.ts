@@ -25,5 +25,5 @@ export class CreateOrderInput {
 
   @IsMongoId()
   @Field(() => String, { nullable: true })
-  executorId: string;
+  executorId?: string;
 }

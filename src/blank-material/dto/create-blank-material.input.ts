@@ -1,5 +1,5 @@
 import { Field, Float, InputType } from '@nestjs/graphql';
-import { IsMongoId, IsNumber, IsString } from 'class-validator';
+import { IsMongoId, IsNumber } from 'class-validator';
 
 @InputType()
 export class CreateBlankMaterialInput {

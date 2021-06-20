@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { OrderComponentService } from './order-component.service';
 import { OrderComponentResolver } from './order-component.resolver';
 import { ComponentModule } from 'src/component/component.module';
-import { ComponentOperationModule } from 'src/component-operation/component-operation.module';
 import {
   OrderComponent,
   OrderComponentSchema,

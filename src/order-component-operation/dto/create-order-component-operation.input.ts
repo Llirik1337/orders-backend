@@ -1,4 +1,4 @@
-import { InputType, Field } from '@nestjs/graphql';
+import { Field, InputType } from '@nestjs/graphql';
 
 @InputType()
 export class CreateOrderComponentOperationInput {
@@ -6,5 +6,5 @@ export class CreateOrderComponentOperationInput {
   componentOperationId: string;
 
   @Field(() => String, { nullable: true })
-  employeeId: string;
+  employeeId?: string;
 }

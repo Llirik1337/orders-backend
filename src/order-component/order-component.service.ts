@@ -1,7 +1,6 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { leanOptions } from 'src/common';
 import { ComponentService } from 'src/component/component.service';
 import { OrderComponentOperationService } from 'src/order-component-operation/order-component-operation.service';
 import { CreateOrderComponentInput } from './dto/create-order-component.input';
@@ -10,24 +9,27 @@ import {
   OrderComponent,
   OrderComponentDocument,
 } from './entities/order-component.entity';
+import { AbstractService } from '../_core';
 
 @Injectable()
-export class OrderComponentService {
+export class OrderComponentService extends AbstractService<OrderComponentDocument> {
   constructor(
     @InjectModel(OrderComponent.name)
     private readonly orderComponentModel: Model<OrderComponentDocument>,
     private readonly componentService: ComponentService,
     private readonly orderComponentOperationService: OrderComponentOperationService,
-  ) {}
+  ) {
+    super(orderComponentModel);
+  }
+
   async create(createOrderComponentInput: CreateOrderComponentInput) {
     const createdOrderComponent = new this.orderComponentModel();
+
     createdOrderComponent.count = createOrderComponentInput.count;
 
-    const component = await this.componentService.findOne(
+    createdOrderComponent.component = await this.componentService.findOne(
       createOrderComponentInput.componentId,
     );
-
-    createdOrderComponent.component = component;
 
     if (
       createOrderComponentInput.batchOperationsId &&
@@ -38,9 +40,9 @@ export class OrderComponentService {
         (id) => this.orderComponentOperationService.findOne(id),
       );
 
-      const batchOperations = await Promise.all(promiseBatchOperations);
-
-      createdOrderComponent.batchOperations = batchOperations;
+      createdOrderComponent.batchOperations = await Promise.all(
+        promiseBatchOperations,
+      );
     }
 
     if (
@@ -52,28 +54,13 @@ export class OrderComponentService {
         (id) => this.orderComponentOperationService.findOne(id),
       );
 
-      const orderComponentOperations = await Promise.all(
+      createdOrderComponent.orderComponentOperations = await Promise.all(
         promiseBatchOperations,
       );
-
-      createdOrderComponent.orderComponentOperations = orderComponentOperations;
     }
 
     await createdOrderComponent.save();
     return createdOrderComponent;
-  }
-
-  async findAll() {
-    return await this.orderComponentModel.find().lean(leanOptions);
-  }
-
-  async findOne(id: string) {
-    const found = await this.orderComponentModel.findById(id);
-    if (!found)
-      throw new NotFoundException({
-        message: `OrderComponent not found by id ${id}`,
-      });
-    return found;
   }
 
   async update(
@@ -82,17 +69,11 @@ export class OrderComponentService {
   ) {
     const createdOrderComponent = await this.findOne(id);
 
-    if (updateOrderComponentInput.count) {
-      createdOrderComponent.count = updateOrderComponentInput.count;
-    }
+    createdOrderComponent.count = updateOrderComponentInput.count;
 
-    if (updateOrderComponentInput.componentId){
-      const component = await this.componentService.findOne(
-        updateOrderComponentInput.componentId,
-      );
-
-      if (component) createdOrderComponent.component = component;
-    }
+    createdOrderComponent.component = await this.componentService.findOne(
+      updateOrderComponentInput.componentId,
+    );
 
     if (
       updateOrderComponentInput.batchOperationsId &&
@@ -103,9 +84,9 @@ export class OrderComponentService {
         (id) => this.orderComponentOperationService.findOne(id),
       );
 
-      const batchOperations = await Promise.all(promiseBatchOperations);
-
-      createdOrderComponent.batchOperations = batchOperations;
+      createdOrderComponent.batchOperations = await Promise.all(
+        promiseBatchOperations,
+      );
     }
 
     if (
@@ -117,20 +98,12 @@ export class OrderComponentService {
         (id) => this.orderComponentOperationService.findOne(id),
       );
 
-      const orderComponentOperations = await Promise.all(
+      createdOrderComponent.orderComponentOperations = await Promise.all(
         promiseBatchOperations,
       );
-
-      createdOrderComponent.orderComponentOperations = orderComponentOperations;
     }
 
     await createdOrderComponent.save();
     return await this.findOne(id);
-  }
-
-  async remove(id: string) {
-    const found = await this.findOne(id);
-    await found.delete();
-    return found;
   }
 }

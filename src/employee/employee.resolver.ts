@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { EmployeeService } from './employee.service';
 import { Employee } from './entities/employee.entity';
 import { CreateEmployeeInput } from './dto/create-employee.input';
@@ -9,8 +9,11 @@ export class EmployeeResolver {
   constructor(private readonly employeeService: EmployeeService) {}
 
   @Query(() => [Employee], { name: 'employees' })
-  async findAll() {
-    return await this.employeeService.findAll();
+  async findAll(
+    @Args('deleted', { type: () => Boolean, defaultValue: false })
+    deleted: boolean,
+  ) {
+    return await this.employeeService.findAll(deleted);
   }
 
   @Query(() => Employee, { name: 'employee' })
@@ -33,6 +36,23 @@ export class EmployeeResolver {
       updateEmployeeInput.id,
       updateEmployeeInput,
     );
+  }
+
+  @Mutation(() => Employee)
+  async recoveryEmployee(@Args('id', { type: () => String }) id: string) {
+    return await this.employeeService.recovery(id);
+  }
+
+  @Mutation(() => [Employee])
+  async recoveryEmployees(
+    @Args('ids', { type: () => [String] }) ids: string[],
+  ) {
+    return await this.employeeService.recoveryList(ids);
+  }
+
+  @Mutation(() => Employee)
+  async forceRemoveEmployee(@Args('id', { type: () => String }) id: string) {
+    return await this.employeeService.forceRemove(id);
   }
 
   @Mutation(() => Employee)

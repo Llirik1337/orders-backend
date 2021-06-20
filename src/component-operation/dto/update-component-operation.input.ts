@@ -1,6 +1,6 @@
 import { CreateComponentOperationInput } from './create-component-operation.input';
-import { InputType, Field, Int, PartialType } from '@nestjs/graphql';
-import { IsMongoId, IsString } from 'class-validator';
+import { Field, InputType, PartialType } from '@nestjs/graphql';
+import { IsMongoId } from 'class-validator';
 
 @InputType()
 export class UpdateComponentOperationInput extends PartialType(

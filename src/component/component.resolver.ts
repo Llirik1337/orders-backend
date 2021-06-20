@@ -16,13 +16,33 @@ export class ComponentResolver {
   }
 
   @Query(() => [Component], { name: 'components' })
-  async findAll() {
-    return await this.componentService.findAll();
+  async findAll(
+    @Args('deleted', { type: () => Boolean, defaultValue: false })
+    deleted: boolean,
+  ) {
+    return await this.componentService.findAll(deleted);
   }
 
   @Query(() => Component, { name: 'component' })
   async findOne(@Args('id', { type: () => String }) id: string) {
     return await this.componentService.findOne(id);
+  }
+
+  @Mutation(() => Component)
+  async recoveryComponent(@Args('id', { type: () => String }) id: string) {
+    return await this.componentService.recovery(id);
+  }
+
+  @Mutation(() => [Component])
+  async recoveryComponents(
+    @Args('ids', { type: () => [String] }) ids: string[],
+  ) {
+    return await this.componentService.recoveryList(ids);
+  }
+
+  @Mutation(() => Component)
+  async forceRemoveComponent(@Args('id', { type: () => String }) id: string) {
+    return await this.componentService.forceRemove(id);
   }
 
   @Mutation(() => Component)

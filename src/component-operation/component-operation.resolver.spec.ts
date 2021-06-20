@@ -10,7 +10,9 @@ describe('ComponentOperationResolver', () => {
       providers: [ComponentOperationResolver, ComponentOperationService],
     }).compile();
 
-    resolver = module.get<ComponentOperationResolver>(ComponentOperationResolver);
+    resolver = module.get<ComponentOperationResolver>(
+      ComponentOperationResolver,
+    );
   });
 
   it('should be defined', () => {

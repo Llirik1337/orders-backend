@@ -1,5 +1,5 @@
-import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { ICalculationItem } from '../ICalculationItem';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { ICalculationItem } from '../interfaces/ICalculationItem';
 import { Cost } from './cost.entity';
 import { FOT } from './fot.entity';
 
@@ -7,8 +7,10 @@ import { FOT } from './fot.entity';
 export class Calculation implements ICalculationItem {
   @Field(() => String)
   _id: string;
+
   @Field(() => String, { description: 'Example field (placeholder)' })
   name: string;
+
   @Field(() => Int, { description: 'Example field (placeholder)' })
   count: number;
 

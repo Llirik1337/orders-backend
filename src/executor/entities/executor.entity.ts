@@ -1,15 +1,13 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
+import { BaseModel } from '../../_core';
 
 export type ExecutorDocument = Executor & Document;
 
 @ObjectType()
 @Schema({ timestamps: true, id: true })
-export class Executor {
-  @Field(() => String)
-  _id: string;
-
+export class Executor extends BaseModel {
   @Prop({
     type: MongooseSchema.Types.String,
     required: true,
@@ -18,12 +16,6 @@ export class Executor {
   })
   @Field(() => String, { nullable: false })
   name: string;
-
-  @Field(() => Date)
-  createdAt: Date;
-
-  @Field(() => Date)
-  updatedAt: Date;
 }
 
 export const ExecutorSchema = SchemaFactory.createForClass(Executor);

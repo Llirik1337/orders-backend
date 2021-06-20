@@ -1,5 +1,6 @@
-import { InputType, Int, Field, Float } from '@nestjs/graphql';
-import { IsArray, IsMongoId, IsNumber, IsString } from 'class-validator';
+import { Field, Float, InputType } from '@nestjs/graphql';
+import { IsArray, IsNumber, IsString } from 'class-validator';
+
 @InputType()
 export class CreateComponentOperationInput {
   @IsNumber()

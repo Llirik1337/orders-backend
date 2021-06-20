@@ -1,39 +1,31 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { leanOptions } from 'src/common';
 import { CreateCurrencyInput } from './dto/create-currency.input';
 import { UpdateCurrencyInput } from './dto/update-currency.input';
 import { Currency, CurrencyDocument } from './entities/currency.entity';
+import { AbstractService } from '../_core';
 
 @Injectable()
-export class CurrencyService {
+export class CurrencyService extends AbstractService<CurrencyDocument> {
   constructor(
     @InjectModel(Currency.name) private currencyModel: Model<CurrencyDocument>,
-  ) {}
+  ) {
+    super(currencyModel);
+  }
+
   async create(
     createCurrencyInput: CreateCurrencyInput,
   ): Promise<CurrencyDocument> {
     const createdCurrency = new this.currencyModel();
+
     createdCurrency.CharCode = createCurrencyInput.CharCode;
     createdCurrency.Name = createCurrencyInput.Name;
     createdCurrency.Nominal = createCurrencyInput.Nominal;
     createdCurrency.NumCode = createCurrencyInput.NumCode;
     createdCurrency.Value = createCurrencyInput.Value;
-    return createdCurrency.save();
-  }
 
-  async findAll() {
-    return await this.currencyModel.find().lean(leanOptions);
-  }
-
-  async findOne(id: string): Promise<CurrencyDocument> {
-    const found = await this.currencyModel.findById(id);
-    if (!found)
-      throw new NotFoundException({
-        message: `Currency not found by id ${id}`,
-      });
-    return found;
+    return await createdCurrency.save();
   }
 
   async update(
@@ -41,6 +33,7 @@ export class CurrencyService {
     updateCurrencyInput: UpdateCurrencyInput,
   ): Promise<CurrencyDocument> {
     const found = await this.findOne(id);
+
     if (updateCurrencyInput.CharCode)
       found.CharCode = updateCurrencyInput.CharCode;
 
@@ -56,11 +49,5 @@ export class CurrencyService {
 
     await found.save();
     return await this.findOne(id);
-  }
-
-  async remove(id: string): Promise<CurrencyDocument> {
-    const found = await this.findOne(id);
-    await found.delete();
-    return found;
   }
 }
