@@ -19,12 +19,29 @@ export class CustomerService extends AbstractService<CustomerDocument> {
   ): Promise<CustomerDocument> {
     const createdCustomer = new this.customerModel();
 
-    createdCustomer.address = createCustomerInput.address;
-    createdCustomer.company = createCustomerInput.company;
-    createdCustomer.email = createCustomerInput.email;
-    createdCustomer.fullName = createCustomerInput.fullName;
-    createdCustomer.notes = createCustomerInput.notes;
-    createdCustomer.phone = createCustomerInput.phone;
+    if (this.validateProperty(createCustomerInput?.address)) {
+      createdCustomer.address = createCustomerInput.address;
+    }
+
+    if (this.validateProperty(createCustomerInput?.company)) {
+      createdCustomer.company = createCustomerInput.company;
+    }
+
+    if (this.validateProperty(createCustomerInput?.email)) {
+      createdCustomer.email = createCustomerInput.email;
+    }
+
+    if (this.validateProperty(createCustomerInput.fullName)) {
+      createdCustomer.fullName = createCustomerInput.fullName;
+    }
+
+    if (this.validateProperty(createCustomerInput.notes)) {
+      createdCustomer.notes = createCustomerInput.notes;
+    }
+
+    if (this.validateProperty(createCustomerInput.phone)) {
+      createdCustomer.phone = createCustomerInput.phone;
+    }
 
     return await createdCustomer.save();
   }
@@ -35,22 +52,30 @@ export class CustomerService extends AbstractService<CustomerDocument> {
   ): Promise<CustomerDocument> {
     const found = await this.findOne(id);
 
-    if (updateCustomerInput.address)
+    if (this.validateProperty(updateCustomerInput?.address)) {
       found.address = updateCustomerInput.address;
+    }
 
-    if (updateCustomerInput.company)
+    if (this.validateProperty(updateCustomerInput?.company)) {
       found.company = updateCustomerInput.company;
+    }
 
-    if (updateCustomerInput.email) found.email = updateCustomerInput.email;
+    if (this.validateProperty(updateCustomerInput?.email)) {
+      found.email = updateCustomerInput.email;
+    }
 
-    if (updateCustomerInput.fullName)
+    if (this.validateProperty(updateCustomerInput?.fullName)) {
       found.fullName = updateCustomerInput.fullName;
+    }
 
-    if (updateCustomerInput.notes) found.notes = updateCustomerInput.notes;
+    if (this.validateProperty(updateCustomerInput?.notes)) {
+      found.notes = updateCustomerInput.notes;
+    }
 
-    if (updateCustomerInput.phone) found.phone = updateCustomerInput.phone;
+    if (this.validateProperty(updateCustomerInput?.phone)) {
+      found.phone = updateCustomerInput.phone;
+    }
 
-    await found.save();
-    return await this.findOne(id);
+    return await found.save();
   }
 }

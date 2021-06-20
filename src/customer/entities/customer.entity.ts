@@ -18,19 +18,19 @@ export class Customer extends BaseModel {
 
   @Prop({ type: MongooseSchema.Types.String })
   @Field(() => String, { nullable: true })
-  email: string;
+  email?: string;
 
   @Prop({ type: MongooseSchema.Types.String })
   @Field(() => String, { nullable: true })
-  phone: string;
+  phone?: string;
 
   @Prop({ type: MongooseSchema.Types.String })
   @Field(() => String, { nullable: true })
-  address: string;
+  address?: string;
 
   @Prop({ type: MongooseSchema.Types.String })
   @Field(() => String, { nullable: true })
-  notes: string;
+  notes?: string;
 }
 
 export const CustomerSchema = SchemaFactory.createForClass(Customer);
