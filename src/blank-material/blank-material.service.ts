@@ -23,30 +23,37 @@ export class BlankMaterialService extends AbstractService<BlankMaterialDocument>
   async create(createBlankMaterialInput: CreateBlankMaterialInput) {
     const blank = new this.blankMaterialModel();
 
-    blank.length = createBlankMaterialInput.length;
+    if (this.validateProperty(createBlankMaterialInput?.length)) {
+      blank.length = createBlankMaterialInput.length;
+    }
 
-    blank.width = createBlankMaterialInput.width;
+    if (this.validateProperty(createBlankMaterialInput?.width)) {
+      blank.width = createBlankMaterialInput.width;
+    }
 
-    blank.material = await this.materialService.findOne(
-      createBlankMaterialInput.materialId,
-    );
+    if (this.validateProperty(createBlankMaterialInput.materialId)) {
+      blank.material = await this.materialService.findOne(
+        createBlankMaterialInput.materialId,
+      );
+    }
 
     blank.diff = this.getDiff(blank);
 
-    await blank.save();
-    return blank;
+    return blank.save();
   }
 
   async update(id: string, updateBlankMaterialInput: UpdateBlankMaterialInput) {
     const blank = await this.findOne(id);
 
-    if (updateBlankMaterialInput.length)
+    if (this.validateProperty(updateBlankMaterialInput?.length)) {
       blank.length = updateBlankMaterialInput.length;
+    }
 
-    if (updateBlankMaterialInput.width)
+    if (this.validateProperty(updateBlankMaterialInput?.width)) {
       blank.width = updateBlankMaterialInput.width;
+    }
 
-    if (updateBlankMaterialInput.materialId) {
+    if (this.validateProperty(updateBlankMaterialInput?.materialId)) {
       blank.material = await this.materialService.findOne(
         updateBlankMaterialInput.materialId,
       );
@@ -54,8 +61,7 @@ export class BlankMaterialService extends AbstractService<BlankMaterialDocument>
 
     blank.diff = this.getDiff(blank);
 
-    await blank.save();
-    return blank;
+    return blank.save();
   }
 
   getDiff(blank: BlankMaterialDocument) {
