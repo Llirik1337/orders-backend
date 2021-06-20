@@ -19,11 +19,25 @@ export class MaterialService extends AbstractService<MaterialDocument> {
   ): Promise<MaterialDocument> {
     const createdMaterial = new this.materialModel();
 
-    createdMaterial.name = createMaterialInput.name;
-    createdMaterial.cost = createMaterialInput.cost;
-    createdMaterial.count = createMaterialInput.count;
-    createdMaterial.length = createMaterialInput.length;
-    createdMaterial.width = createMaterialInput.width;
+    if (this.validateProperty(createMaterialInput?.name)) {
+      createdMaterial.name = createMaterialInput.name;
+    }
+
+    if (this.validateProperty(createMaterialInput?.cost)) {
+      createdMaterial.cost = createMaterialInput.cost;
+    }
+
+    if (this.validateProperty(createMaterialInput?.count)) {
+      createdMaterial.count = createMaterialInput.count;
+    }
+
+    if (this.validateProperty(createMaterialInput?.length)) {
+      createdMaterial.length = createMaterialInput.length;
+    }
+
+    if (this.validateProperty(createMaterialInput?.width)) {
+      createdMaterial.width = createMaterialInput.width;
+    }
 
     return await createdMaterial.save();
   }
@@ -34,17 +48,26 @@ export class MaterialService extends AbstractService<MaterialDocument> {
   ): Promise<MaterialDocument> {
     const found = await this.findOne(id);
 
-    if (updateMaterialInput.cost) found.cost = updateMaterialInput.cost;
+    if (this.validateProperty(updateMaterialInput?.cost)) {
+      found.cost = updateMaterialInput.cost;
+    }
 
-    if (updateMaterialInput.count) found.count = updateMaterialInput.count;
+    if (this.validateProperty(updateMaterialInput?.count)) {
+      found.count = updateMaterialInput.count;
+    }
 
-    if (updateMaterialInput.length) found.length = updateMaterialInput.length;
+    if (this.validateProperty(updateMaterialInput?.length)) {
+      found.length = updateMaterialInput.length;
+    }
 
-    if (updateMaterialInput.name) found.name = updateMaterialInput.name;
+    if (this.validateProperty(updateMaterialInput?.name)) {
+      found.name = updateMaterialInput.name;
+    }
 
-    if (updateMaterialInput.width) found.width = updateMaterialInput.width;
+    if (this.validateProperty(updateMaterialInput?.width)) {
+      found.width = updateMaterialInput.width;
+    }
 
-    await found.save();
-    return await this.findOne(id);
+    return await found.save();
   }
 }
