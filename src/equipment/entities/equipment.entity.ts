@@ -14,15 +14,15 @@ export class Equipment extends BaseModel {
 
   @Prop({ type: MongooseSchema.Types.String })
   @Field(() => String, { defaultValue: '', nullable: true })
-  notes: string;
+  notes?: string;
 
   @Prop({ type: MongooseSchema.Types.String })
   @Field(() => String, { defaultValue: '', nullable: true })
-  specifications: string;
+  specifications?: string;
 
   @Prop({ type: MongooseSchema.Types.Number })
   @Field(() => Int, { defaultValue: 0, nullable: true })
-  releaseYear: number;
+  releaseYear?: number;
 
   @Prop({ type: MongooseSchema.Types.Number })
   @Field(() => Int, { defaultValue: 0 })

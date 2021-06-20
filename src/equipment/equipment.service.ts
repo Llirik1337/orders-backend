@@ -20,22 +20,29 @@ export class EquipmentService extends AbstractService<EquipmentDocument> {
   ): Promise<EquipmentDocument> {
     const createdEquipment = new this.equipmentModel();
 
-    if (createEquipmentInput.count)
+    if (this.validateProperty(createEquipmentInput?.count)) {
       createdEquipment.count = createEquipmentInput.count;
+    }
 
-    if (createEquipmentInput.name)
+    if (this.validateProperty(createEquipmentInput?.name)) {
       createdEquipment.name = createEquipmentInput.name;
+    }
 
-    if (createEquipmentInput.specifications)
+    if (this.validateProperty(createEquipmentInput?.specifications)) {
       createdEquipment.specifications = createEquipmentInput.specifications;
+    }
 
-    if (createEquipmentInput.notes)
+    if (this.validateProperty(createEquipmentInput?.notes)) {
       createdEquipment.notes = createEquipmentInput.notes;
+    }
 
-    if (createEquipmentInput.releaseYear)
+    if (this.validateProperty(createEquipmentInput?.releaseYear)) {
       createdEquipment.releaseYear = createEquipmentInput.releaseYear;
-    if (createEquipmentInput.notes)
+    }
+
+    if (this.validateProperty(createEquipmentInput?.notes)) {
       createdEquipment.notes = createEquipmentInput.notes;
+    }
 
     return await createdEquipment.save();
   }
@@ -46,19 +53,26 @@ export class EquipmentService extends AbstractService<EquipmentDocument> {
   ): Promise<EquipmentDocument> {
     const found = await this.findOne(id);
 
-    if (updateEquipmentInput.count) found.count = updateEquipmentInput.count;
+    if (this.validateProperty(updateEquipmentInput?.count)) {
+      found.count = updateEquipmentInput.count;
+    }
 
-    if (updateEquipmentInput.name) found.name = updateEquipmentInput.name;
+    if (this.validateProperty(updateEquipmentInput?.name)) {
+      found.name = updateEquipmentInput.name;
+    }
 
-    if (updateEquipmentInput.notes) found.notes = updateEquipmentInput.notes;
+    if (this.validateProperty(updateEquipmentInput?.notes)) {
+      found.notes = updateEquipmentInput.notes;
+    }
 
-    if (updateEquipmentInput.specifications)
+    if (this.validateProperty(updateEquipmentInput?.specifications)) {
       found.specifications = updateEquipmentInput.specifications;
+    }
 
-    if (updateEquipmentInput.releaseYear)
+    if (this.validateProperty(updateEquipmentInput?.releaseYear)) {
       found.releaseYear = updateEquipmentInput.releaseYear;
+    }
 
-    await found.save();
-    return await this.findOne(id);
+    return await found.save();
   }
 }

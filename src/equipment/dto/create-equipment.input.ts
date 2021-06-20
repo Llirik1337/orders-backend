@@ -1,5 +1,5 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
-import { IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 @InputType()
 export class CreateEquipmentInput {
@@ -10,6 +10,7 @@ export class CreateEquipmentInput {
   })
   name: string;
 
+  @IsOptional()
   @IsString()
   @Field(() => String, {
     nullable: true,
@@ -18,6 +19,7 @@ export class CreateEquipmentInput {
   })
   specifications?: string;
 
+  @IsOptional()
   @IsString()
   @Field(() => String, {
     nullable: true,
@@ -26,10 +28,19 @@ export class CreateEquipmentInput {
   })
   notes?: string;
 
-  @Field(() => Int, { defaultValue: 0, nullable: true })
+  @IsOptional()
+  @IsNumber()
+  @Field(() => Int, {
+    nullable: true,
+    defaultValue: 0,
+    description: '',
+  })
   releaseYear?: number;
 
   @IsNumber()
-  @Field(() => Int, { defaultValue: 0, description: 'Count of Equipment' })
+  @Field(() => Int, {
+    defaultValue: 0,
+    description: 'Count of Equipment'
+  })
   count: number;
 }
