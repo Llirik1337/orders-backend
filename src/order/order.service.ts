@@ -62,6 +62,10 @@ export class OrderService extends AbstractService<OrderDocument> {
       );
     }
 
+    if (this.validateProperty(createOrderInput?.finishAt)) {
+      createdOrder.finishAt = createOrderInput?.finishAt;
+    }
+
     return await createdOrder.save();
   }
 
@@ -105,6 +109,10 @@ export class OrderService extends AbstractService<OrderDocument> {
       updatedOrder.executor = await this.executorService.findOne(
         updateOrderInput.executorId,
       );
+    }
+
+    if (this.validateProperty(updateOrderInput?.finishAt)) {
+      updatedOrder.finishAt = updateOrderInput.finishAt;
     }
 
     return await updatedOrder.save();

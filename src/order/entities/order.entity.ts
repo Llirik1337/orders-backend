@@ -67,9 +67,17 @@ export class Order extends BaseModel {
 
   @Field(() => Float, { nullable: false })
   cost: number;
+
+  @Field(() => Date, { nullable: true })
+  @Prop({ required: false })
+  finishAt?: Date | null;
+
+  @Field(() => Float, { nullable: true })
+  durationAt?: number;
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);
+
 const cost = OrderSchema.virtual('cost');
 cost.get(function (this: Order) {
   let cost = 0;
@@ -77,4 +85,17 @@ cost.get(function (this: Order) {
     if (component.cost) cost += round(component.cost, 2);
   }
   return round(cost, 2);
+});
+
+const duration = OrderSchema.virtual('durationAt');
+duration.get(function (this: Order) {
+  console.log('hmm');
+  if (this.createdAt && this.finishAt) {
+    const oneDay = 1000 * 60 * 60 * 24;
+    const diff = Math.round(
+      (this.finishAt.getTime() - this.createdAt.getTime()) / oneDay,
+    );
+
+    return diff;
+  }
 });
