@@ -74,6 +74,10 @@ export class Order extends BaseModel {
 
   @Field(() => Float, { nullable: true })
   durationAt?: number;
+
+  @Prop({ required: false, type: MongooseSchema.Types.Boolean })
+  @Field(() => Boolean, { nullable: true })
+  isFirst?: boolean;
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);

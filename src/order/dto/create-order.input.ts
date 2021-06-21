@@ -1,5 +1,12 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsArray, IsDate, IsMongoId, IsOptional, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsDate,
+  IsMongoId,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 @InputType()
 export class CreateOrderInput {
@@ -32,4 +39,9 @@ export class CreateOrderInput {
   @IsDate()
   @Field(() => Date, { nullable: true })
   finishAt?: Date;
+
+  @IsOptional()
+  @IsBoolean()
+  @Field(() => Boolean, { nullable: true })
+  isFirst?: boolean;
 }

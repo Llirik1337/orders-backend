@@ -66,6 +66,10 @@ export class OrderService extends AbstractService<OrderDocument> {
       createdOrder.finishAt = createOrderInput?.finishAt;
     }
 
+    if (this.validateProperty(createOrderInput?.isFirst)) {
+      createdOrder.isFirst = createOrderInput?.isFirst;
+    }
+
     return await createdOrder.save();
   }
 
@@ -113,6 +117,10 @@ export class OrderService extends AbstractService<OrderDocument> {
 
     if (this.validateProperty(updateOrderInput?.finishAt)) {
       updatedOrder.finishAt = updateOrderInput.finishAt;
+    }
+
+    if (this.validateProperty(updateOrderInput?.isFirst)) {
+      updatedOrder.isFirst = updateOrderInput.isFirst;
     }
 
     return await updatedOrder.save();
