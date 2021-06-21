@@ -89,7 +89,6 @@ cost.get(function (this: Order) {
 
 const duration = OrderSchema.virtual('durationAt');
 duration.get(function (this: Order) {
-  console.log('hmm');
   if (this.createdAt && this.finishAt) {
     const oneDay = 1000 * 60 * 60 * 24;
     const diff = Math.round(
