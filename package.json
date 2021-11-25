@@ -39,7 +39,7 @@
     "joi": "^17.4.0",
     "moment": "^2.29.1",
     "mongoose": "^5.12.2",
-    "mongoose-autopopulate": "^0.12.3",
+    "mongoose-autopopulate": "^0.16.0",
     "mongoose-lean-virtuals": "^0.7.6",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
