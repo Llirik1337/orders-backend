@@ -37,7 +37,7 @@
     "graphql": "^15.5.0",
     "graphql-tools": "^7.0.4",
     "joi": "^17.4.0",
-    "moment": "^2.29.1",
+    "moment": "^2.29.2",
     "mongoose": "^5.12.2",
     "mongoose-autopopulate": "^0.12.3",
     "mongoose-lean-virtuals": "^0.7.6",
