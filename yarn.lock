@@ -1329,12 +1329,12 @@
     jsonc-parser "3.0.0"
     pluralize "8.0.0"
 
-"@nestjs/serve-static@^2.1.4":
-  version "2.1.4"
-  resolved "https://registry.yarnpkg.com/@nestjs/serve-static/-/serve-static-2.1.4.tgz#d25f7691b0cb19d3f12d161129dd1469dfdc880d"
-  integrity sha512-w2PpLKzQOB8rJ+vMOy28xm8jwE8VjJfA9U+KOm0H0OY62g2oOWJ+OQPSDogP7XxAzZwq+Bt8wNU2oS8+z6v6Zg==
+"@nestjs/serve-static@^5.0.0":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@nestjs/serve-static/-/serve-static-5.0.1.tgz#1c57aa706204ea490f00d5f158d92cf4d5d1c9f3"
+  integrity sha512-s9wtFS9tKR7/Z7X5lVMAIpEGazZN49Ouvy1pNqRLGzI41ameuVWY9vaxZp9oMg83fCcRPMDj8q/6kpwLlosVgg==
   dependencies:
-    path-to-regexp "0.1.7"
+    path-to-regexp "8.2.0"
 
 "@nestjs/testing@^7.6.17":
   version "7.6.18"
@@ -7925,6 +7925,11 @@ path-to-regexp@3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/path-to-regexp/-/path-to-regexp-3.2.0.tgz#fa7877ecbc495c601907562222453c43cc204a5f"
   integrity sha512-jczvQbCUS7XmS7o+y1aEO9OBVFeZBQ1MDSEqmO7xSoPgOPoowY/SxLpZ6Vh97/8qHZOteiCKb7gkG9gA2ZUxJA==
+
+path-to-regexp@8.2.0:
+  version "8.2.0"
+  resolved "https://registry.yarnpkg.com/path-to-regexp/-/path-to-regexp-8.2.0.tgz#73990cc29e57a3ff2a0d914095156df5db79e8b4"
+  integrity sha512-TdrF7fW9Rphjq4RjrW0Kp2AW0Ahwu9sRGTkS6bvDi0SCwZlEZYmcfDbEsTz8RVk0EHIS/Vd1bv3JhG+1xZuAyQ==
 
 path-type@^1.0.0:
   version "1.1.0"
